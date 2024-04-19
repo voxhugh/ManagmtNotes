@@ -27,6 +27,7 @@
 - C++中main函数和类并列
 - 类与结构体的区别在于成员的默认访问权限，class私有，struct公共
 - void也可以主动return;规避后续代码
+- break：搭配 `if` 退出循环；搭配 `switch` 退出开关
 
 
 
