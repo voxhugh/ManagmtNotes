@@ -787,7 +787,7 @@ void printDeque(const deque<int>& d)
 
 双向循环链表，list中的迭代器只支持前移和后移，属于**双向迭代器**
 
-<https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/list%E5%AE%B9%E5%99%A8.jpg"  />
+<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/list%E5%AE%B9%E5%99%A8.jpg" alt="list容器"  />
 
 插入操作和删除操作都不会造成原有list迭代器的失效，这在vector是不成立的
 
