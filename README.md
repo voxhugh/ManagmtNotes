@@ -560,7 +560,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 ### ==vector容器==
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/vector%E5%AE%B9%E5%99%A8.jpg" style="zoom:130%;" />
+<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/vector容器.jpg" style="zoom:130%;" />
 
 **构造：**
 
@@ -643,9 +643,9 @@ for (int i = 0; i < 100000; i++) {
 
 双端数组，头部增删速度比vector快，但元素访问速度要慢
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/deque%E5%AE%B9%E5%99%A8.jpg" alt="deque容器" style="zoom:130%;" />
+<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/deque容器.jpg" alt="deque容器" style="zoom:130%;" />
 
-![deque内部工作原理](https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/%E4%B8%AD%E6%8E%A7%E5%99%A8.jpg)
+![deque内部工作原理](https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/中控器.jpg)
 
 **构造：**
 
@@ -725,7 +725,7 @@ void printDeque(const deque<int>& d)
 
 栈中只有顶端的元素才可以被外界使用，因此栈不允许有遍历行为（遍历是非质变算法）
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/stack%E5%AE%B9%E5%99%A8.jpg"  />
+<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/stack容器.jpg"  />
 
 **构造：**
 
@@ -755,7 +755,7 @@ void printDeque(const deque<int>& d)
 
 队列中只有队头和队尾才可以被外界使用，因此队列不允许有遍历行为
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/queue%E5%AE%B9%E5%99%A8.jpg" alt="queue容器"  />
+<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/queue容器.jpg" alt="queue容器"  />
 
 **构造：**
 
@@ -787,7 +787,7 @@ void printDeque(const deque<int>& d)
 
 双向循环链表，list中的迭代器只支持前移和后移，属于**双向迭代器**
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/list%E5%AE%B9%E5%99%A8.jpg" alt="list容器"  />
+<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/list容器.jpg" alt="list容器"  />
 
 插入操作和删除操作都不会造成原有list迭代器的失效，这在vector是不成立的
 
