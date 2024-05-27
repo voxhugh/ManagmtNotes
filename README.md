@@ -8,7 +8,7 @@
 
 ## 基础
 
-`while(condition)`							//表达式是执行条件
+`while(condition)`							//表达式是合法条件
 
 `for(int i=0;i<len;i++)`			   		//遍历语句条件<长度
 
