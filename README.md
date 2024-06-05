@@ -275,7 +275,7 @@ Host 别名
 
 `sudo apt upgrade`	更新已安装的包
 
-
+`git rebase --exec 'GIT_COMMITTER_DATE="$(git log -1 --format=%at)" git commit --amend --no-edit -n -S' -i HEAD~n`	为前n次commit签名
 
 ## Vim
 
