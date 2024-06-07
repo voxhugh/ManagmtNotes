@@ -364,3 +364,121 @@ Vim中共有三种模式： **命令模式**  **末行模式**  **编辑模式**
 `:行号`	行跳转
 
 `!命令`	执行shell命令
+
+## GCC
+
+`gcc -o Dest a.c`
+
+- **注意：c文件gcc，cpp文件g++**
+
+**选项：**
+
+`-E/S/c`	预处理/编译/汇编
+
+`-o [destFile] [srcFile]`	编译链接
+
+`-I`	指定头文件的搜索目录
+
+`-L`	库的路径
+
+`-l`	库名
+
+`-fpic`	生成与位置无关的代码
+
+`-shared`	生成共享目标文件
+
+## 静态库&动态库
+
+**静态库：libNAME.a**
+
+**动态库：libNAME.so**
+
+#### 静态库
+
+**制作**
+
+```shell
+# 汇编
+$ gcc srcFile.c -c
+# 打包	c:创建库 s:创建索引 r:插入模块
+$ ar rcs libNAME.a srcFile.o
+# 发布：libNAME.a srcFile.h
+```
+
+**使用**
+
+```shell
+# 编译 静态库,头文件,测试代码
+$ gcc -o Dest main.c -L ./ -l NAME
+```
+
+#### 动态库
+
+**制作**
+
+```shell
+# 汇编
+$ gcc srcFile.c -c -fpic
+# 打包
+$ gcc -o libNAME.so srcFile.o -shared
+# 发布：libNAME.so srcFile.h
+```
+
+**使用**
+
+```shell
+# 编译 动态库,头文件,测试代码
+$ gcc -o Dest main.c -L ./ -l NAME
+```
+
+**关于动态库无法加载问题**
+
+`ldd`	检测程序能否加载到动态库
+
+- 添加系统环境变量
+  1. 找到配置文件 *~/.bashrc*		//此为用户级别，系统级别：*/etc/profile*
+  2. 在文件中追加 `export LD_LIBRARY_PATH =$LD_LIBRARY_PATH :动态库的绝对路径`
+  3. 重启终端或执行`. ~/.bashrc`	// . 是 source 的简写
+- 更新系统动态库缓存
+  1. 找到动态库所在的绝对路径（不含库名，例如：*/home/voxhugh/Library/*）
+  2. 将以上路径追加至文件 */etc/ld.so.conf* 中
+  3. 更新配置文件数据至缓存中 `sudo ldconfig`
+
+- 拷贝库的软链接至库目录
+
+## Makefile
+
+**make：解释 makefile 中的指令，实现自动化编译**
+
+
+
+**规则**
+
+```makefile
+# 每条规则的语法格式:
+target1,target2...: depend1, depend2, ...
+	command
+	......
+	......
+```
+
+**变量**
+
+1. 自定义变量
+
+   ```makefile
+   # 定义时必须初始化
+   obj=a.o  b.o  c.o  c.o
+   $(obj)	# 取变量的值
+   ```
+
+2. 内建变量
+
+3. 自动变量
+
+   ```makefile
+   $^	# 所有依赖文件	(以空格间隔且不重复)
+   $@	# 目标文件
+   $<	# 首个依赖文件	
+   ```
+
