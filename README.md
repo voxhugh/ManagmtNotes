@@ -375,7 +375,7 @@ Vim中共有三种模式： **命令模式**  **末行模式**  **编辑模式**
 
 `-E/S/c`	预处理/编译/汇编
 
-`-o [destFile] [srcFile]`	编译链接
+`-o [destFile] [srcFile]`	链接
 
 `-I`	指定头文件的搜索目录
 
@@ -472,8 +472,6 @@ target1,target2...: depend1, depend2, ...
    $(obj)	# 取变量的值
    ```
 
-2. 内建变量
-
 3. 自动变量
 
    ```makefile
@@ -481,4 +479,106 @@ target1,target2...: depend1, depend2, ...
    $@	# 目标文件
    $<	# 首个依赖文件	
    ```
+
+**模式匹配**
+
+```makefile
+# 依赖一个,目标一个, 通过通配符 % 匹配文件名
+%.o:%.c
+	gcc $< -c
+```
+
+**函数**
+
+```makefile
+# 获取指定目录下指定类型的文件名
+$(wildcard PATTERN...)
+# 按指定模式替换指定文件名的后缀
+$(patsubst <pattern>,<replacement>,<text>)
+
+# wildcard举例: 
+src = $(wildcard /home/Tom/a/*.c *.c)
+# patsubst举例：
+src = a.cpp b.cpp c.cpp
+obj = $(patsubst %.cpp, %.o, $(src)) 
+```
+
+**完美编写示范**
+
+```makefile
+# 搜索当前目录下的源文件
+src=$(wildcard *.c)
+# 将源文件的后缀替换为 .o
+obj=$(patsubst %.c, %.o, $(src))
+target=Dest
+
+# 链接
+$(target):$(obj)
+        gcc -o $(target) $(obj)
+
+# 汇编
+%.o:%.c
+        gcc $< -c
+
+# 删除 生成文件 可执行程序
+.PHONY:clean	# 声明为伪文件，防止make检测时间戳
+clean:
+        -rm $(obj) $(target) 
+        echo "hello"
+```
+
+## GDB调试
+
+```shell
+# -g 程序调试
+$ gcc -o Dest main.c -g
+# 启动gdb
+$ gdb Dest
+# 设置参数，启动时传入
+$ set args 参数1 参数2 .... ...
+# 查看命令行参数
+$ show args
+# 执行程序
+$ r
+# 查看代码			（a.c的第10行附近：a.c:10） 
+$ l
+# 第13行设置断点		（a.c中：a.c:13）
+$ b 13
+# 第20行设置条件断点
+$ b 20 if i==5
+# 查看断点
+$ i b
+# 删除前两个断点
+$ d 1-2
+# 设置 3 4 断点无效
+$ dis 3 4
+# 生效 3 断点
+$ ena 3
+# 继续执行
+$ c
+# 打印变量值
+$ p i
+# 打印变量类型
+$ ptype array
+# 自动显示变量 a[i]
+$ display a[i]
+# 查看自动显示列表
+$ i display
+# 删除 2-4 自动显示
+$ undisplay 2-4
+# 禁用 1 自动显示
+$ dis display 1
+# 当前 阻塞至函数1前一行，单步调试进入函数
+$ s
+# 函数内无有效断点，跳出
+$ finish
+# 当前 阻塞至函数2前一行，单步调试跳过函数
+$ n
+# 当前 刚进入循环体，在结束行执行跳出
+$ until
+# 当前 刚进入两位数循环，设置变量值实现跳出
+$ set var i=100
+# 退出gdb
+$ q
+```
 
