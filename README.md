@@ -14,6 +14,12 @@
 
 `using namespace` 							//后续代码使用指定命名空间
 
+`string str = R"(D:\Steam\kanon.exe)"`		//原始字面量，表示字符串的实际含义
+
+`long long num = 123456789LL`				//long long 类型，至少8B
+
+`static_assert(sizeof(long) == 8, "错误, 非64位平台")`	//静态断言，编译时检查，违反警告
+
 **总结：**
 
 - '0'：48
@@ -151,6 +157,12 @@ const可以区分重载的版本
 
 
 
+**初始化列表：**
+
+`Person() :a(0), b(1.4) {}`		//按声明顺序，显式**初始化**类成员
+
+- **注意：**非静态成员允许类内就地初始化，且早于初始化列表
+
  **匿名对象：**
 
 `Person([参])`					//省略对象名，当前行执行结束马上析构
@@ -241,6 +253,12 @@ if(m_Ptr != NULL)
 `mutable int m_a;`			//mutable修饰的属性常函数里仍可写
 
 - 常对象只能调用常函数
+
+
+
+`void func() final{}`		//final修饰虚函数不可被重写，修饰类不可被继承
+
+`void func() override{}`		//override显式表明重写
 
 
 
