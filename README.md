@@ -8,33 +8,15 @@
 
 ## 基础
 
-`while(condition)`							//表达式是合法条件
-
-`for(int i=0;i<len;i++)`			   		//遍历语句条件<长度
-
-`using namespace` 							//后续代码使用指定命名空间
-
-`string str = R"(D:\Steam\kanon.exe)"`		//原始字面量，表示字符串的实际含义
-
-`long long num = 123456789LL`				//long long 类型，至少8B
-
-`static_assert(sizeof(long) == 8, "错误, 非64位平台")`	//静态断言，编译时检查，违反警告
-
-`to_string()`			//数值转字符串
-
-`stoi` , `stod`			 //字符串转数值
-
-**总结：**
-
 - '0'：48
 - %size：[0,size-1]
 - \t：%8为0位置输出切入点
 - 三目运算返回的是变量
 - true本质是1，false是0
+- 能取地址的叫左值，字面量则是右值
 - 在数组索引中不是具体变量就是地址
 - 数组在函数中传参用数组名会比指针更为直观
 - 数组在内存中是连续存放的，相邻差一个sizeof
-- NULL是宏常量，代表0号内存空间，[0,255]为系统占用
 - C++声明结构体变量时struct关键字可省略
 - 数据的清除只要将记录的数量置0，做逻辑清空即可
 - C++中main函数和类并列
@@ -46,19 +28,39 @@
 
 ## 关键字
 
-`void func() const{}`		//常函数，const修饰this指针
+`to_string()`			//数值转字符串
+
+`stoi` , `stod`			 //字符串转数值
+
+`NULL` , `nullptr`		  //NULL：宏常量0	nullptr：初始化空指针，隐式匹配指针类型
+
+`using` , `typedef`		//using与typedef类似，但using能定义模板别名
+
+`using namespace` 							//后续代码使用指定命名空间
+
+`while(expression)`							//表达式是合法条件
+
+`for(int i=0;i<len;i++)`			   		//遍历语句条件<长度
+
+`for(const auto& it : v)`					 //基于范围的for循环，先确定迭代范围，高效遍历
+
+`void func() final{}`			//final修饰虚函数不可被重写，修饰类不可被继承
+
+`void func() override{}`		 //override显式表明重写
+
+`void func() noexcept{}`		 //noexcept修饰的函数不会抛出异常
+
+`void func() const{}`		  //常函数，const修饰this指针	常对象只能调用常函数
 
 `mutable int m_a;`			//mutable修饰的属性常函数里仍可写
 
-- 常对象只能调用常函数
+`const` , `constexpr`			//const ⇔ constexpr，“只读”const，“常量”constexpr
 
+`long long num = 123456789LL`				//long long 类型，至少8B
 
+`string str = R"(D:\Steam\kanon.exe)"`		//原始字面量，表示字符串的实际含义
 
-`void func() final{}`		//final修饰虚函数不可被重写，修饰类不可被继承
-
-`void func() override{}`		//override显式表明重写
-
-`void func() noexcept{}`		//noexcept修饰的函数不会抛出异常
+`static_assert(sizeof(long) == 8, "错误, 非64位平台")`	//静态断言，编译时检查，违反警告
 
 
 
@@ -85,8 +87,6 @@
 
 ## 内存四区
 
-- **注意：**不要返回本函数的局部变量地址
-
 `new`				//在堆区开辟内存，返回该数据类型的指针
 
 `delete`			//直接接地址，释放堆区单个内存空间，释放数组还要加[]
@@ -97,12 +97,15 @@
 |  栈区  |            局部变量，局部常量            |    运行后    | 编译器控制 |
 |  堆区  |                                          |    运行后    | 程序员控制 |
 
+- **注意：**不要返回本函数的局部变量地址
+
 
 
 ## 指针
 
 - 指针即地址
 - *解引用，&取址
+- 指针的作用就是间址
 - 指针变量所占大小为一个字长
 - int * 不是指针标志，是一种数据类型
 - 空指针和野指针都不是主动申请的空间，忌访问
@@ -127,7 +130,7 @@
 
 ## 引用
 
-`int &nickname = name;`				//本质是指针常量实现
+`int &P = N->next`				//引用变量是一个别名，本质是指针常量实现
 
 - 可以作为形参、返回值
 - 作为函数的返回值是一个变量，可以作为左值
@@ -141,7 +144,7 @@ const可以区分重载的版本
 
 - `func(10);`					//调用有const
 
-  
+
 
 ## 形参默认值
 
@@ -265,7 +268,9 @@ if(m_Ptr != NULL)
 
 `int (*fp)(int a)`			//定义函数指针fp
 
-`typedef int (*F)(int a)`	//typedef可简化定义，F是别名
+`typedef int (*F)(int a)`	  //typedef简化定义，F是别名
+
+`using F = int (*)(int a)`	//using简化定义，直观清晰
 
 - 函数名就是地址			//成员函数需要&
 - 可以作为函数形参
@@ -325,6 +330,25 @@ ostream & operator<<(ostream &cout,Person &p)			//左移运算符重载
 `decltype((Person.m_Age)) a = 0`	//a：int&
 
 - **注意：**当表达式为 **左值** 或 **()** 时推导结果是一个引用，且保留const、volatile关键字
+
+
+
+`auto func(T& t) -> decltype(test(t))`		//返回类型后置，auto会追踪decltype推导的类型
+
+
+
+## Lambda表达式
+
+`auto f = [](int a){ return a+10 }`			//匿名函数定义
+
+| 捕获列表 | 作用              |
+| -------- | ----------------- |
+| []       | 不捕捉            |
+| [&]      | 按引用捕捉        |
+| [=]      | 按值捕捉          |
+| [=, &f]  | 按值捕捉，f按引用 |
+
+- **注意：**Lambda表达式通常被看作仿函数，[]时可转换成函数指针
 
 
 
