@@ -177,15 +177,31 @@ const可以区分重载的版本
 
 **初始化列表：**
 
-`Person() :a(0), b(1.4) {}`		//按声明顺序，显式**初始化**类成员
+`Person(int a,double b) :x(a), y(b) {}`		//按声明顺序，显式**初始化**类成员
+
+`Person p{520,13.14}`
 
 - **注意：**非静态成员允许类内就地初始化，且早于初始化列表
 
- **匿名对象：**
+`initializer_list<T>` , `size()` , `begin()` , `end()`	//动态初始化列表容器
+
+
+
+**匿名对象：**
 
 `Person([参])`					//省略对象名，当前行执行结束马上析构
 
 - **注意：**不能用拷贝构造初始化匿名对象，编译器认为`Person(p) === Person p`
+
+
+
+**委托构造：**
+
+`Person(string name, int age):Person(age) {}`		//调用重载的其他构造函数
+
+**继承构造：**
+
+`using Base::Base`			//子类声明使用父类构造函数
 
 
 
@@ -247,6 +263,37 @@ if(m_Ptr != NULL)
 **开发人员命令提示工具：**
 
 `cl /d1 reportSingleClassLayout类名 文件名`		//跳转到文件所在路径，可以用命令查看类的对象模型
+
+
+
+## 可调用对象
+
+- 可调用对象：**函数指针**，**仿函数**，可转换为函数指针的类对象，类成员（函数）指针
+
+`#include <functional>`			//包装器
+
+
+
+**包装器：**
+
+`function<int(int, double)> f = add`			//包装成一个对象，可直接调用
+
+**绑定器：**
+
+`auto f = bind(func, x, y)`			//绑定函参并返回一个仿函数，实现降元
+
+`bind(func, 2, placeholders::_1)(10)`			//为调用时第一个实参占位
+
+
+
+```c++
+//搭配绑定器包装 类成员函数
+function<void(int, int)> f = bind(&Person::add, &p, placeholders::_1, placeholders::2)
+//搭配绑定器包装 类成员变量
+function<int&(void)> f = bind(&Person::m_Age, &p)
+```
+
+- **注意：**function不能包装类成员（函数）指针
 
 
 
