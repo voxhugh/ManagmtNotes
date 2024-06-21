@@ -105,7 +105,7 @@
 
 - 指针即地址
 - *解引用，&取址
-- 指针的作用就是间址
+- 指针的作用是间址
 - 指针变量所占大小为一个字长
 - int * 不是指针标志，是一种数据类型
 - 空指针和野指针都不是主动申请的空间，忌访问
@@ -332,6 +332,57 @@ function<int&(void)> f = bind(&Person::m_Age, &p)
 
 
 
+## 智能指针
+
+维护指针的资源，自动销毁堆区对象
+
+
+
+`get()`			    //获取原指针地址
+
+`reset()`			//reset解除管理，有参可初始化智能指针
+
+`use_count()`		//获取管理当前对象的引用计数
+
+`make_shared<int>(10)`			//make_shared创建内存对象，可直接初始化智能指针
+
+- **注意：**`.` 调用智能指针api，`->`调用间址内存api；不能用同一原指针初始化多个共享指针
+
+**共享指针**
+
+`shared_ptr<int> sp(new int(10))`			//初始化，多个智能指针可管理同一块内存
+
+**独占指针**
+
+`unique_ptr<int> up(new int(10))`			//初始化独占型，仅允许构造或move
+
+**弱引用指针**
+
+`weak_ptr<int> wp(sp)`			//监视共享指针管理的资源
+
+`weak_ptr::expired()`			  //判断观测资源是否已经被释放
+
+`weak_ptr::lock()`				//获取监视的共享指针对象
+
+```c++
+//1.解决 返回管理this的共享指针
+struct Person : public enable_shared_from_this<Person>
+{
+    shared_ptr<Person> func()
+    {
+        return shared_from_this();
+    }
+};
+//2.解决 循环引用
+shared_ptr<A> a(new A);
+shared_ptr<B> b(new B);
+a->bp = b;		//A::shared_ptr<B> bp
+b->ap = a;		//B::shared_ptr<A> ap
+/*此时引用计数无法减为零，会造成内存泄漏，需要将ap或bp改为weak_ptr，因为weak_ptr不占引用计数*/
+```
+
+
+
 ## 友元
 
 **意义：**作友元可以访问类内私有成员
@@ -398,6 +449,34 @@ ostream & operator<<(ostream &cout,Person &p)			//左移运算符重载
 | [=, &f]  | 按值捕捉，f按引用 |
 
 - **注意：**Lambda表达式通常被看作仿函数，[]时可转换成函数指针
+
+
+
+## POD类型
+
+普通旧数据，用于说明一个类型的属性，分为 **“平凡”** 和 **“标准布局”** 类型
+
+
+
+**“平凡”**
+
+- 不定义：构造、析构、拷贝构造、移动构造、operator=
+- 不包含：虚函数、虚基类
+
+**“标准布局”**
+
+- 非静态成员访问权限相同
+- 非静态成员不同时出现于父子类或多个父类
+- 首个非静态成员类型非父类
+
+- 无虚函数，虚基类
+- 非静态成员递归满足以上所有
+
+
+
+`is_trivial<Person>::value`				 //判断“平凡”
+
+`is_standard_layout<Person>::value`		//判断“标准布局”
 
 
 
