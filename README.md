@@ -548,6 +548,30 @@ void cast()
 
 
 
+## 多线程
+
+`#include <thread>`
+
+
+
+`this_thread::get_id()`					//获取当前线程ID
+
+`this_thread::sleep_for()`				 //休眠指定时间，参数是一个时间段
+
+`this_thread::sleep_until()`			    //休眠至指定时刻，参数是一个时间点
+
+`this_thread::yield()`					//主动放弃已抢到的CPU资源一次
+
+`get_id()`								 //获取子线程ID
+
+`join()`								     //阻塞当前线程并等待子线程执行完毕
+
+`detach()`								 //分离子线程，当前线程退出会一并销毁所有子线程
+
+`static hardware_concurrency()`		     //获取计算机的CPU核心数
+
+
+
 ## 继承
 
 `class Son:public Base`			//class 子类:继承方式 父类
@@ -668,7 +692,8 @@ ifs.eof()
 
 - 尽量不用c++字符串而是用字符数组，底层是c写的
 
-  
+
+
 
 ## 模板
 
