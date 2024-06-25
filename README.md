@@ -446,7 +446,7 @@ ostream & operator<<(ostream &cout,Person &p)			//左移运算符重载
 
 
 
-## Lambda表达式
+## 匿名函数
 
 `auto f = [](int a){ return a+10 }`			//匿名函数定义
 
@@ -458,14 +458,6 @@ ostream & operator<<(ostream &cout,Person &p)			//左移运算符重载
 | [=, &f]  | 按值捕捉，f按引用 |
 
 - **注意：**Lambda表达式通常被看作仿函数，[]时可转换成函数指针
-
-
-
-## 日期时间库
-
-`#include <chrono>` , `std::chrono`			//chrono库
-
-
 
 
 
@@ -494,6 +486,65 @@ ostream & operator<<(ostream &cout,Person &p)			//左移运算符重载
 `is_trivial<Person>::value`				 //判断“平凡”
 
 `is_standard_layout<Person>::value`		//判断“标准布局”
+
+
+
+## 日期时间
+
+```c++
+#include <chrono>
+#include <iostream>
+using namespace std;
+using namespace std::chrono;
+// 时间间隔
+void interval()
+{
+    seconds s(1);							// 一秒
+    minutes min(1);							// 一分钟
+	hours h(1);								// 一小时
+	duration<double, ratio<9, 7>> f1(3);	// T：9/7s  f：3
+	duration<double, ratio<6, 5>> f2(1);	// T：6/5s  f：1
+	// f1 和 f2 统一时钟周期：	9,6取最大公约数	7,5取最小公倍数
+	duration<double, ratio<3, 35>> hz = f1 - f2;
+    hz.count();								//获取f
+}
+// 时钟
+void clocks()
+{
+	// 新纪元1970.1.1时间 + 1天
+	duration<int, ratio<60*60*24>> day(1);
+	system_clock::time_point ppt(day);
+	// 系统当前时间
+	system_clock::time_point today = system_clock::now();
+	// 转换为time_t时间类型
+	time_t tm = system_clock::to_time_t(today+day);
+	cout << "明天的日期是:	" << ctime(&tm);
+
+	// 获取开始时间点
+	steady_clock::time_point start = steady_clock::now();
+	// 执行业务流程...
+	// 获取结束时间点
+	steady_clock::time_point last = steady_clock::now();
+	// 计算差值
+	auto dt = last - start;
+	cout << "总共耗时: " << dt.count() << "纳秒" << endl;
+}
+// 转换
+void cast()
+{
+    using Clock = chrono::steady_clock;
+	using Ms = chrono::milliseconds;
+	using Sec = chrono::seconds;
+	template<class Duration>
+	using TimePoint = chrono::time_point<Clock, Duration>;
+    // 整数时长：时钟周期纳秒转毫秒，需要 duration_cast 显式转换
+	auto int_ms = duration_cast<Ms>(last - start);
+    // 毫秒转秒，损失精度使用 time_point_cast 显示转换
+	TimePoint<Sec> time_point_sec(Sec(6));
+    TimePoint<Ms> time_point_ms(Ms(6789));
+	time_point_sec = time_point_cast<Sec>(time_point_ms); // 6000 ms
+}
+```
 
 
 
