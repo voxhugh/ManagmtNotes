@@ -550,9 +550,15 @@ void cast()
 
 ## 多线程
 
-`#include <thread>`
+`#include <thread>`			//线程
+
+`#include <mutex>`			//互斥量
+
+`#include <condition_variable>`	//条件变量
 
 
+
+**线程：**`thread`
 
 `this_thread::get_id()`					//获取当前线程ID
 
@@ -569,6 +575,40 @@ void cast()
 `detach()`								 //分离子线程，当前线程退出会一并销毁所有子线程
 
 `static hardware_concurrency()`		     //获取计算机的CPU核心数
+
+`call_once(once_flag,func,args)`		   //函数只被调用一次，once_flag对象须多线程可见
+
+**互斥量：**`mutex`
+
+`lock()`									  //对临界区加锁，加锁失败被阻塞
+
+`unlock()`								      //解锁
+
+`try_lock()`								  //加锁，失败返回false
+
+`lock_guard<mutex> lock(mx)`				 //哨兵锁管理互斥量，资源获取即初始化，析构自动解锁
+
+`unique_lock<mutex> locker(mx)`			   //RAII管理互斥量，可主动解锁
+
+`recursive_mutex`							//递归互斥量，允许一个线程对同一互斥量获取多次
+
+`timed_mutex`								//超时互斥量，超过指定时间解除阻塞
+
+`try_lock_for()` , `try_lock_until()`		    //加锁，失败阻塞指定时间后返回false，t_mtx下的api
+
+**条件变量：**`condition_variable`
+
+`wait(locker)`							 //阻塞线程
+
+`wait_for()` , `wait_until()`				//阻塞线程指定时间
+
+`notify_one()` , `notify_all()`			    //唤醒一个或多个被阻塞的线程
+
+
+
+
+
+**注意：**一个互斥量维护一个临界资源，线程传入类成员函数时用法同绑定器
 
 
 
