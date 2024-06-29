@@ -1,7 +1,5 @@
 # C++
 
-- 记录学习过程的核心事项总结
-
 [TOC]
 
 
@@ -141,7 +139,7 @@
 - 作为函数的返回值是一个变量，可以作为左值
 - 给常量引用赋常量值合法，编译器隐式在栈中分配空间初始化并把指针带回
 
-
+------
 
 **右值引用：**
 
@@ -178,7 +176,7 @@
 
  ⇔ `Person p = Person(参)`  ⇔ `Person p = 参`
 
-
+------
 
 **初始化列表：**
 
@@ -190,7 +188,7 @@
 
 `initializer_list<T>` , `size()` , `begin()` , `end()`	//动态初始化列表容器
 
-
+------
 
 **委托构造：**
 
@@ -275,37 +273,6 @@ if(m_Ptr != NULL)
 
 
 
-## 可调用对象
-
-- 可调用对象：**函数指针**，**仿函数**，可转换为函数指针的类对象，类成员（函数）指针
-
-`#include <functional>`			//包装器
-
-
-
-**包装器：**
-
-`function<int(int, double)> f = add`			//包装成一个对象，可直接调用
-
-**绑定器：**
-
-`auto f = bind(func, x, y)`			//绑定函参并返回一个仿函数，实现降元
-
-`bind(func, 2, placeholders::_1)(10)`			//为调用时第一个实参占位
-
-
-
-```c++
-//搭配绑定器包装 类成员函数
-function<void(int, int)> f = bind(&Person::add, &p, placeholders::_1, placeholders::2)
-//搭配绑定器包装 类成员变量
-function<int&(void)> f = bind(&Person::m_Age, &p)
-```
-
-- **注意：**function不能包装类成员（函数）指针
-
-
-
 ## this指针
 
 **本质：**指针常量
@@ -336,57 +303,6 @@ function<int&(void)> f = bind(&Person::m_Age, &p)
 - 声明必须加作用域
 - 只能指向非静态成员函数
 - 使用 `.*` 或 `->*` 调用指向的函数
-
-
-
-## 智能指针
-
-维护指针的资源，自动销毁堆区对象
-
-
-
-`get()`			    //获取原指针地址
-
-`reset()`			//reset解除管理，有参可初始化智能指针
-
-`use_count()`		//获取管理当前对象的引用计数
-
-`make_shared<int>(10)`			//make_shared创建内存对象，可直接初始化智能指针
-
-- **注意：**`.` 调用智能指针api，`->`调用间址内存api；不能用同一原指针初始化多个共享指针
-
-**共享指针**
-
-`shared_ptr<int> sp(new int(10))`			//初始化，多个智能指针可管理同一块内存
-
-**独占指针**
-
-`unique_ptr<int> up(new int(10))`			//初始化独占型，仅允许构造或move
-
-**弱引用指针**
-
-`weak_ptr<int> wp(sp)`			//监视共享指针管理的资源
-
-`weak_ptr::expired()`			  //判断观测资源是否已经被释放
-
-`weak_ptr::lock()`				//获取监视的共享指针对象
-
-```c++
-//1.解决 返回管理this的共享指针
-struct Person : public enable_shared_from_this<Person>
-{
-    shared_ptr<Person> func()
-    {
-        return shared_from_this();
-    }
-};
-//2.解决 循环引用
-shared_ptr<A> a(new A);
-shared_ptr<B> b(new B);
-a->bp = b;		//A::shared_ptr<B> bp
-b->ap = a;		//B::shared_ptr<A> ap
-/*此时引用计数无法减为零，会造成内存泄漏，需要将ap或bp改为weak_ptr，因为weak_ptr不占引用计数*/
-```
 
 
 
@@ -458,157 +374,6 @@ ostream & operator<<(ostream &cout,Person &p)			//左移运算符重载
 | [=, &f]  | 按值捕捉，f按引用 |
 
 - **注意：**Lambda表达式通常被看作仿函数，[]时可转换成函数指针
-
-
-
-## POD类型
-
-普通旧数据，用于说明一个类型的属性，分为 **“平凡”** 和 **“标准布局”** 类型
-
-
-
-**“平凡”**
-
-- 不定义：构造、析构、拷贝构造、移动构造、operator=
-- 不包含：虚函数、虚基类
-
-**“标准布局”**
-
-- 非静态成员访问权限相同
-- 非静态成员不同时出现于父子类或多个父类
-- 首个非静态成员类型非父类
-
-- 无虚函数，虚基类
-- 非静态成员递归满足以上所有
-
-
-
-`is_trivial<Person>::value`				 //判断“平凡”
-
-`is_standard_layout<Person>::value`		//判断“标准布局”
-
-
-
-## 日期时间
-
-```c++
-#include <chrono>
-#include <iostream>
-using namespace std;
-using namespace std::chrono;
-// 时间间隔
-void interval()
-{
-    seconds s(1);							// 一秒
-    minutes min(1);							// 一分钟
-	hours h(1);								// 一小时
-	duration<double, ratio<9, 7>> f1(3);	// T：9/7s  f：3
-	duration<double, ratio<6, 5>> f2(1);	// T：6/5s  f：1
-	// f1 和 f2 统一时钟周期：	9,6取最大公约数	7,5取最小公倍数
-	duration<double, ratio<3, 35>> hz = f1 - f2;
-    hz.count();								//获取f
-}
-// 时钟
-void clocks()
-{
-	// 新纪元1970.1.1时间 + 1天
-	duration<int, ratio<60*60*24>> day(1);
-	system_clock::time_point ppt(day);
-	// 系统当前时间
-	system_clock::time_point today = system_clock::now();
-	// 转换为time_t时间类型
-	time_t tm = system_clock::to_time_t(today+day);
-	cout << "明天的日期是:	" << ctime(&tm);
-
-	// 获取开始时间点
-	steady_clock::time_point start = steady_clock::now();
-	// 执行业务流程...
-	// 获取结束时间点
-	steady_clock::time_point last = steady_clock::now();
-	// 计算差值
-	auto dt = last - start;
-	cout << "总共耗时: " << dt.count() << "纳秒" << endl;
-}
-// 转换
-void cast()
-{
-    using Clock = chrono::steady_clock;
-	using Ms = chrono::milliseconds;
-	using Sec = chrono::seconds;
-	template<class Duration>
-	using TimePoint = chrono::time_point<Clock, Duration>;
-    // 整数时长：时钟周期纳秒转毫秒，需要 duration_cast 显式转换
-	auto int_ms = duration_cast<Ms>(last - start);
-    // 毫秒转秒，损失精度使用 time_point_cast 显示转换
-	TimePoint<Sec> time_point_sec(Sec(6));
-    TimePoint<Ms> time_point_ms(Ms(6789));
-	time_point_sec = time_point_cast<Sec>(time_point_ms); // 6000 ms
-}
-```
-
-
-
-## 多线程
-
-`#include <thread>`			//线程
-
-`#include <mutex>`			//互斥量
-
-`#include <condition_variable>`	//条件变量
-
-
-
-**线程：**`thread`
-
-`this_thread::get_id()`					//获取当前线程ID
-
-`this_thread::sleep_for()`				 //休眠指定时间，参数是一个时间段
-
-`this_thread::sleep_until()`			    //休眠至指定时刻，参数是一个时间点
-
-`this_thread::yield()`					//主动放弃已抢到的CPU资源一次
-
-`get_id()`								 //获取子线程ID
-
-`join()`								     //阻塞当前线程并等待子线程执行完毕
-
-`detach()`								 //分离子线程，当前线程退出会一并销毁所有子线程
-
-`static hardware_concurrency()`		     //获取计算机的CPU核心数
-
-`call_once(once_flag,func,args)`		   //函数只被调用一次，once_flag对象须多线程可见
-
-**互斥量：**`mutex`
-
-`lock()`									  //对临界区加锁，加锁失败被阻塞
-
-`unlock()`								      //解锁
-
-`try_lock()`								  //加锁，失败返回false
-
-`lock_guard<mutex> lock(mx)`				 //哨兵锁管理互斥量，资源获取即初始化，析构自动解锁
-
-`unique_lock<mutex> locker(mx)`			   //RAII管理互斥量，可主动解锁
-
-`recursive_mutex`							//递归互斥量，允许一个线程对同一互斥量获取多次
-
-`timed_mutex`								//超时互斥量，超过指定时间解除阻塞
-
-`try_lock_for()` , `try_lock_until()`		    //加锁，失败阻塞指定时间后返回false，t_mtx下的api
-
-**条件变量：**`condition_variable`
-
-`wait(locker)`							 //阻塞线程
-
-`wait_for()` , `wait_until()`				//阻塞线程指定时间
-
-`notify_one()` , `notify_all()`			    //唤醒一个或多个被阻塞的线程
-
-
-
-
-
-**注意：**一个互斥量维护一个临界资源，线程传入类成员函数时用法同绑定器
 
 
 
@@ -1545,3 +1310,273 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 `set_difference(iterator beg1,iterator end1,iterator beg2,iterator end2, iterator dest);`
 
 - 求两个容器的差集	目标容器开辟空间需要从**两个容器取较大值**
+
+
+
+## 可调用对象
+
+- 可调用对象：**函数指针**，**仿函数**，可转换为函数指针的类对象，类成员（函数）指针
+
+`#include <functional>`			//包装器
+
+
+
+**包装器：**
+
+`function<int(int, double)> f = add`			//包装成一个对象，可直接调用
+
+**绑定器：**
+
+`auto f = bind(func, x, y)`			//绑定函参并返回一个仿函数，实现降元
+
+`bind(func, 2, placeholders::_1)(10)`			//为调用时第一个实参占位
+
+
+
+```c++
+//搭配绑定器包装 类成员函数
+function<void(int, int)> f = bind(&Person::add, &p, placeholders::_1, placeholders::2)
+//搭配绑定器包装 类成员变量
+function<int&(void)> f = bind(&Person::m_Age, &p)
+```
+
+- **注意：**function不能包装类成员（函数）指针
+
+
+
+## 智能指针
+
+维护指针的资源，自动销毁堆区对象
+
+
+
+`get()`			    //获取原指针地址
+
+`reset()`			//reset解除管理，有参可初始化智能指针
+
+`use_count()`		//获取管理当前对象的引用计数
+
+`make_shared<int>(10)`			//make_shared创建内存对象，可直接初始化智能指针
+
+- **注意：**`.` 调用智能指针api，`->`调用间址内存api；不能用同一原指针初始化多个共享指针
+
+**共享指针**
+
+`shared_ptr<int> sp(new int(10))`			//初始化，多个智能指针可管理同一块内存
+
+**独占指针**
+
+`unique_ptr<int> up(new int(10))`			//初始化独占型，仅允许构造或move
+
+**弱引用指针**
+
+`weak_ptr<int> wp(sp)`			//监视共享指针管理的资源
+
+`weak_ptr::expired()`			  //判断观测资源是否已经被释放
+
+`weak_ptr::lock()`				//获取监视的共享指针对象
+
+```c++
+//1.解决 返回管理this的共享指针
+struct Person : public enable_shared_from_this<Person>
+{
+    shared_ptr<Person> func()
+    {
+        return shared_from_this();
+    }
+};
+//2.解决 循环引用
+shared_ptr<A> a(new A);
+shared_ptr<B> b(new B);
+a->bp = b;		//A::shared_ptr<B> bp
+b->ap = a;		//B::shared_ptr<A> ap
+/*此时引用计数无法减为零，会造成内存泄漏，需要将ap或bp改为weak_ptr，因为weak_ptr不占引用计数*/
+```
+
+
+
+## POD类型
+
+普通旧数据，用于说明一个类型的属性，分为 **“平凡”** 和 **“标准布局”** 类型
+
+
+
+**“平凡”**
+
+- 不定义：构造、析构、拷贝构造、移动构造、operator=
+- 不包含：虚函数、虚基类
+
+**“标准布局”**
+
+- 非静态成员访问权限相同
+- 非静态成员不同时出现于父子类或多个父类
+- 首个非静态成员类型非父类
+
+- 无虚函数，虚基类
+- 非静态成员递归满足以上所有
+
+
+
+`is_trivial<Person>::value`				 //判断“平凡”
+
+`is_standard_layout<Person>::value`		//判断“标准布局”
+
+
+
+## 日期时间
+
+```c++
+#include <chrono>
+#include <iostream>
+using namespace std;
+using namespace std::chrono;
+// 时间间隔
+void interval()
+{
+    seconds s(1);							// 一秒
+    minutes min(1);							// 一分钟
+	hours h(1);								// 一小时
+	duration<double, ratio<9, 7>> f1(3);	// T：9/7s  f：3
+	duration<double, ratio<6, 5>> f2(1);	// T：6/5s  f：1
+	// f1 和 f2 统一时钟周期：	9,6取最大公约数	7,5取最小公倍数
+	duration<double, ratio<3, 35>> hz = f1 - f2;
+    hz.count();								//获取f
+}
+// 时钟
+void clocks()
+{
+	// 新纪元1970.1.1时间 + 1天
+	duration<int, ratio<60*60*24>> day(1);
+	system_clock::time_point ppt(day);
+	// 系统当前时间
+	system_clock::time_point today = system_clock::now();
+	// 转换为time_t时间类型
+	time_t tm = system_clock::to_time_t(today+day);
+	cout << "明天的日期是:	" << ctime(&tm);
+
+	// 获取开始时间点
+	steady_clock::time_point start = steady_clock::now();
+	// 执行业务流程...
+	// 获取结束时间点
+	steady_clock::time_point last = steady_clock::now();
+	// 计算差值
+	auto dt = last - start;
+	cout << "总共耗时: " << dt.count() << "纳秒" << endl;
+}
+// 转换
+void cast()
+{
+    using Clock = chrono::steady_clock;
+	using Ms = chrono::milliseconds;
+	using Sec = chrono::seconds;
+	template<class Duration>
+	using TimePoint = chrono::time_point<Clock, Duration>;
+    // 整数时长：时钟周期纳秒转毫秒，需要 duration_cast 显式转换
+	auto int_ms = duration_cast<Ms>(last - start);
+    // 毫秒转秒，损失精度使用 time_point_cast 显示转换
+	TimePoint<Sec> time_point_sec(Sec(6));
+    TimePoint<Ms> time_point_ms(Ms(6789));
+	time_point_sec = time_point_cast<Sec>(time_point_ms); // 6000 ms
+}
+```
+
+
+
+## 多线程
+
+`#include <thread>`			//线程
+
+`#include <mutex>`			//互斥量
+
+`#include <condition_variable>`	//条件变量
+
+`#include <atomic>`			//原子变量
+
+`#include <future>`			//未来
+
+
+
+**线程** `thread`
+
+`this_thread::get_id()`					//获取当前线程ID
+
+`this_thread::sleep_for()`				 //休眠指定时间，参数是一个时间段
+
+`this_thread::sleep_until()`			    //休眠至指定时刻，参数是一个时间点
+
+`this_thread::yield()`					//主动放弃已抢到的CPU资源一次
+
+`get_id()`								 //获取子线程ID
+
+`join()`								     //阻塞当前线程并等待子线程执行完毕
+
+`detach()`								 //分离子线程，当前线程退出会一并销毁所有子线程
+
+`static hardware_concurrency()`		     //获取计算机的CPU核心数
+
+`call_once(once_flag,func,args)`		   //函数只被调用一次，once_flag对象须多线程可见
+
+**互斥量 **`mutex`
+
+`lock()`									  //对临界区加锁，加锁失败被阻塞
+
+`unlock()`								      //解锁
+
+`try_lock()`								  //加锁，失败返回false
+
+`lock_guard<mutex> lock(mx)`				 //哨兵锁管理互斥量，资源获取即初始化，析构自动解锁
+
+`unique_lock<mutex> locker(mx)`			   //RAII管理互斥量，可主动解锁
+
+`recursive_mutex`							//递归互斥量，允许一个线程对同一互斥量获取多次
+
+`timed_mutex`								//超时互斥量，超过指定时间解除阻塞
+
+`try_lock_for()` , `try_lock_until()`		    //加锁，失败阻塞指定时间后返回false，t_mtx下的api
+
+**条件变量** `condition_variable`
+
+`wait(locker)`							 //阻塞线程
+
+`wait_for()` , `wait_until()`				//阻塞线程指定时间
+
+`notify_one()` , `notify_all()`			    //唤醒一个或多个被阻塞的线程
+
+`condition_variable_any`				    //支持多种互斥量
+
+**原子变量** `atomic`
+
+`atomic_int`							//整形的模板特化，还有bool、char、int、long、指针等
+
+**未来** `future<T>`
+
+`get()`								  //获取数据，阻塞至子线程数据就绪
+
+`wait()`								//阻塞当前线程
+
+------
+
+`get_future()`						//得到 *promise* 中管理的future对象
+
+`set_value()`						 //存储传出数据，立即让状态就绪
+
+------
+
+`get_future()`						//得到 *packaged_task* 中管理的future对象
+
+------
+
+`async(func,arg1,arg2...)`			//创建线程执行任务并返回一个future对象
+
+**总结：**
+
+- 一个互斥量维护一个临界资源，线程传入类成员函数时用法同绑定器
+
+- 原子变量只能封装整形数据
+
+- 主线程promise对象作为子线程任务函数形参，packaged_task对象包装并充当任务函数，都须传引用ref(obj)
+
+- 获取数据：*packaged_task* 和 *async* 是任务结束return，*promise* 可以随时set_value
+- async可以指定任务执行策略
+  - *launch::async* 创建线程并执行任务
+  - *launch::deferred* 延迟调用执行任务
