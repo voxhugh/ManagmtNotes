@@ -1484,19 +1484,23 @@ void cast()
 
 ## 多线程
 
-`#include <thread>`			//线程
+`#include <thread>`				 //线程
 
-`#include <mutex>`			//互斥量
+`#include <mutex>`				   //互斥量
+
+`#include <atomic>`				 //原子变量
 
 `#include <condition_variable>`	//条件变量
 
-`#include <atomic>`			//原子变量
+`#include <semaphore>`			   //信号量
 
-`#include <future>`			//未来
+`#include <future>`				 //未来
 
 
 
-**线程** `thread`
+**线程**
+
+`thread t(func,arg1,arg2...)`			   //创建线程，执行任务
 
 `this_thread::get_id()`					//获取当前线程ID
 
@@ -1516,7 +1520,9 @@ void cast()
 
 `call_once(once_flag,func,args)`		   //函数只被调用一次，once_flag对象须多线程可见
 
-**互斥量 **`mutex`
+**互斥量**
+
+`mutex mx`								      //声明互斥量
 
 `lock()`									  //对临界区加锁，加锁失败被阻塞
 
@@ -1524,17 +1530,27 @@ void cast()
 
 `try_lock()`								  //加锁，失败返回false
 
-`lock_guard<mutex> lock(mx)`				 //哨兵锁管理互斥量，资源获取即初始化，析构自动解锁
+`lock(mtx1,mtx2,...)`						//同时加锁多个互斥量
 
-`unique_lock<mutex> locker(mx)`			   //RAII管理互斥量，可主动解锁
+`lock_guard<mutex> lock(mx)`				 //自动上锁，析构解锁（RAII 资源获取即初始化）
 
-`recursive_mutex`							//递归互斥量，允许一个线程对同一互斥量获取多次
+`unique_lock<mutex> locker(mx)`			   //自动上锁，灵活解锁
 
-`timed_mutex`								//超时互斥量，超过指定时间解除阻塞
+`recursive_mutex`							//声明递归互斥量（允许一个线程对同一互斥量获取多次）
+
+`timed_mutex`								//声明超时互斥量（超过指定时间解除阻塞）
 
 `try_lock_for()` , `try_lock_until()`		    //加锁，失败阻塞指定时间后返回false，t_mtx下的api
 
-**条件变量** `condition_variable`
+**原子变量**
+
+`atomic<char> a = 0`						//声明原子变量，只能封装整形数据
+
+`atomic_int a = 0`						    //使用模板特化声明
+
+**条件变量**
+
+`condition_variable cv`				      //声明条件变量
 
 `wait(locker)`							 //阻塞线程
 
@@ -1542,13 +1558,21 @@ void cast()
 
 `notify_one()` , `notify_all()`			    //唤醒一个或多个被阻塞的线程
 
-`condition_variable_any`				    //支持多种互斥量
+`condition_variable_any`				    //声明通用条件变量
 
-**原子变量** `atomic`
+**信号量**
 
-`atomic_int`							//整形的模板特化，还有bool、char、int、long、指针等
+`counting_semaphore<6> csem(0)` 			//创建信号量 （LeastMaxValue为6）
 
-**未来** `future<T>`
+`binary__semaphore bsem(0)` 				//LeastMaxValue为1时的模板特化
+
+`acquire()` 								 //阻塞等待
+
+`release()` 								 //唤醒
+
+**未来**
+
+`future<int> f`						  //声明一个未来
 
 `get()`								  //获取数据，阻塞至子线程数据就绪
 
@@ -1570,12 +1594,11 @@ void cast()
 
 **总结：**
 
+- *LeastMaxValue*：允许同时访问临界资源的线程的最大数目
+
 - 一个互斥量维护一个临界资源，线程传入类成员函数时用法同绑定器
-
-- 原子变量只能封装整形数据
-
+- 信号量的release能使内部计数器增加，bsem++，csem+n（n<=LeastMaxValue）
 - 主线程promise对象作为子线程任务函数形参，packaged_task对象包装并充当任务函数，都须传引用ref(obj)
-
 - 获取数据：*packaged_task* 和 *async* 是任务结束return，*promise* 可以随时set_value
 - async可以指定任务执行策略
   - *launch::async* 创建线程并执行任务
