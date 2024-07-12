@@ -698,7 +698,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 **插入和删除：**
 
-​	`push_back(ele);`  
+​	`push_back(ele);`  				//emplace_back()拥有更好的性能
 
 ​	`pop_back();`   
 
@@ -887,7 +887,7 @@ void printDeque(const deque<int>& d)
 
 ​	`size();` 
 
-### ==list容器==
+### list容器
 
 双向循环链表，list中的迭代器只支持前移和后移，属于**双向迭代器**
 
@@ -1041,9 +1041,8 @@ void test01(){	set<Person,Compare> s;}
 
 属于**关联式容器**，底层结构是用**二叉树**实现，所有元素都会在插入时自动被排序
 
-
-
-所有元素都是`pair<key,value>`，可以根据key值快速找到value值
+- 所有元素都是`pair<key,value>`，可以根据key值快速找到value值
+- `unordered_map<K,V>`	哈希表映射，具有平均常数时间复杂度
 
 
 
