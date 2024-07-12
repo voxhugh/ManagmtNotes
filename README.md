@@ -965,7 +965,7 @@ void printDeque(const deque<int>& d)
 
 属于**关联式容器**，底层结构是用**二叉树**实现，所有元素都会在插入时自动被排序
 
-`#include <set>`			//set/multiset共用同一个头文件
+`unordered_set<T>`	哈希表集合， 平均时间复杂度O(1)
 
 
 
@@ -1042,7 +1042,7 @@ void test01(){	set<Person,Compare> s;}
 属于**关联式容器**，底层结构是用**二叉树**实现，所有元素都会在插入时自动被排序
 
 - 所有元素都是`pair<key,value>`，可以根据key值快速找到value值
-- `unordered_map<K,V>`	哈希表，具有平均常数时间复杂度
+- `unordered_map<K,V>`	哈希表映射， 平均时间复杂度O(1)
 
 
 
