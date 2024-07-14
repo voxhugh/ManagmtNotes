@@ -35,13 +35,13 @@
 
 `using` , `typedef`		//using与typedef类似，但using能定义模板别名
 
-`using namespace` 							//后续代码使用指定命名空间
+`using namespace` 						  //后续代码使用指定命名空间
 
-`while(expression)`							//表达式是合法条件
+`while(expression)`					      //表达式是合法条件
 
-`for(int i=0;i<len;i++)`			   		//遍历语句条件<长度
+`for(int i=0;i<len;++i)`			   	//条件<长度，使用更高效的前置自增
 
-`for(const auto& it : v)`					 //基于范围的for循环，先确定迭代范围，高效遍历
+`for(const auto& it : v)`				 //基于范围的for循环，先确定迭代范围，高效遍历
 
 `void func() final{}`			//final修饰虚函数不可被重写，修饰类不可被继承
 
@@ -182,7 +182,7 @@
 
 `Person(int a,double b) :x(a), y(b) {}`		//按声明顺序，显式**初始化**类成员
 
-`Person p{520,13.14}`
+`Person p{520,13.14}`						     //通常用于初始化或 **return** 聚合类型
 
 - **注意：**非静态成员允许类内就地初始化，且早于初始化列表
 
@@ -965,7 +965,7 @@ void printDeque(const deque<int>& d)
 
 属于**关联式容器**，底层结构是用**二叉树**实现，所有元素都会在插入时自动被排序
 
-`unordered_set<T>`	哈希表集合， 平均时间复杂度O(1)
+`unordered_set<T>`	哈希集合， 平均时间复杂度O(1)
 
 
 
@@ -1042,7 +1042,7 @@ void test01(){	set<Person,Compare> s;}
 属于**关联式容器**，底层结构是用**二叉树**实现，所有元素都会在插入时自动被排序
 
 - 所有元素都是`pair<key,value>`，可以根据key值快速找到value值
-- `unordered_map<K,V>`	哈希表映射， 平均时间复杂度O(1)
+- `unordered_map<K,V>`	哈希映射， 平均时间复杂度O(1)
 
 
 
