@@ -701,11 +701,11 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 **插入和删除：**
 
-​	`push_back(ele);`  				//emplace_back()拥有更好的性能
+​	`push_back(ele);`  				//平替：*emplace_back()*，直接初始化，性能更高
 
 ​	`pop_back();`   
 
-​	`insert(const_iterator pos, ele);`  
+​	`insert(const_iterator pos, ele);`  		//平替：*emplace()*
 
 ​	`insert(const_iterator pos, int count,ele);`
 
@@ -1222,6 +1222,18 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 `count_if(iterator beg, iterator end, _Pred);`
 
 - 按条件统计元素个数
+
+
+
+`lower_bound(iterator beg, iterator end, value, _Pred);`
+
+- 二分查找指定元素起始位置
+
+
+
+`upper_bound(iterator beg, iterator end, value, _Pred);`
+
+- 二分查找指定元素上界
 
 ### 排序
 
