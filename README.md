@@ -17,6 +17,7 @@
 - 在数组索引中不是具体变量就是地址
 - 数组在函数中传参用数组名会比指针更为直观
 - 数组在内存中是连续存放的，相邻差一个sizeof
+- 支持
 - void也可以主动return，规避后续代码
 - C++声明结构体变量时struct关键字可省略
 - 数据的清除只要将记录的数量置0，做逻辑清空即可
@@ -30,9 +31,11 @@
 
 `to_string()`			//数值转字符串
 
-`stoi` , `stod`			 //字符串转数值
+`stoi()` , `stod()`			 //字符串转数值
 
 `gcd(n1,n2,…)`		     //最大公因数
+
+`distance(it1, it2)`	//求迭代器间距，随机访问迭代器可以直接相减
 
 `NULL` , `nullptr`		  //NULL：宏常量0	nullptr：初始化空指针，隐式匹配指针类型
 
@@ -701,11 +704,11 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 **插入和删除：**
 
-​	`push_back(ele);`  				//emplace_back()拥有更好的性能
+​	`push_back(ele);`  				//平替：*emplace_back()*，直接初始化，性能更高
 
 ​	`pop_back();`   
 
-​	`insert(const_iterator pos, ele);`  
+​	`insert(const_iterator pos, ele);`  		//平替：*emplace()*
 
 ​	`insert(const_iterator pos, int count,ele);`
 
@@ -1222,6 +1225,18 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 `count_if(iterator beg, iterator end, _Pred);`
 
 - 按条件统计元素个数
+
+
+
+`lower_bound(iterator beg, iterator end, value, _Pred);`
+
+- 二分查找指定元素起始位置
+
+
+
+`upper_bound(iterator beg, iterator end, value, _Pred);`
+
+- 二分查找指定元素上界
 
 ### 排序
 
