@@ -30,19 +30,21 @@
 
 ## 关键字
 
-`size_t`				//自然数，大小：1字长
+`size_t`				  //自然数，大小：1字长
 
 `to_string()`			//数值转字符串
 
-`stoi()` , `stod()`			 //字符串转数值
+`stoi()` , `stod()`		  //字符串转数值
 
-`gcd(n1,n2,…)`		     //最大公因数
+`gcd(n1,n2,…)`		      //最大公因数
 
-`distance(it1, it2)`	//求迭代器间距，随机访问迭代器可以直接相减
+`isdigit()` , `isalpha()`	    //是否为数字、字母
 
-`NULL` , `nullptr`		  //NULL：宏常量0	nullptr：初始化空指针，隐式匹配指针类型
+`distance(it1, it2)`		//求迭代器间距，随机访问迭代器可以直接相减
 
-`using` , `typedef`		//using与typedef类似，但using能定义模板别名
+`NULL` , `nullptr`		  	//NULL：宏常量0	nullptr：初始化空指针，隐式匹配指针类型
+
+`using` , `typedef`			//using与typedef类似，但using能定义模板别名
 
 `using namespace` 						  //后续代码使用指定命名空间
 
