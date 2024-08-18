@@ -14,6 +14,7 @@
 - C++中main函数和类并列
 - 哑结点是链表中常用的优化技巧
 - 传输出引用，而非依赖成员属性
+- 优先队列的谓词和通常逻辑相反
 - 内存中可取址的是左值，仅提供值的是右值
 - 哈希集合、映射 使用须包含各自独立的头文件
 - 在数组索引中不是具体变量就是地址
@@ -872,7 +873,7 @@ void printDeque(const deque<int>& d)
 
 <img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/queue容器.jpg" alt="queue容器"  />
 
-`priority_queue<T, fd_Container, cmp_type> q(cmp)`		 优先队列，默认大根堆
+`priority_queue<T, fd_Container, cmp_type> q(cmp)`		 优先队列，默认大堆
 
 
 
@@ -1253,7 +1254,7 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 
 `sort(iterator beg, iterator end, _Pred);`
 
--  按值查找元素
+-  正序排列
 
 
 
