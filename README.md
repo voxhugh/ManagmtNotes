@@ -30,80 +30,80 @@
 
 ## 关键字
 
-`size_t`				  //自然数，大小：1字长
+`size_t`				  // 自然数，大小：1字长
 
-`to_string()`			//数值转字符串
+`to_string()`			// 数值转字符串
 
-`stoi()` , `stod()`		  //字符串转数值
+`stoi()` , `stod()`		  // 字符串转数值
 
-`gcd(n1,n2,…)`		      //最大公因数
+`gcd(n1,n2,…)`		      // 最大公因数
 
-`isdigit()` , `isalpha()`	    //是否为数字、字母
+`isdigit()` , `isalpha()`	    // 是否为数字、字母
 
-`distance(it1, it2)`		//求迭代器间距，随机访问迭代器可以直接相减
+`distance(it1, it2)`		// 求迭代器间距，随机访问迭代器可以直接相减
 
-`NULL` , `nullptr`		  	//NULL：宏常量0	nullptr：初始化空指针，隐式匹配指针类型
+`NULL` , `nullptr`		  	// NULL：宏常量0	nullptr：初始化空指针，隐式匹配指针类型
 
-`using` , `typedef`			//using与typedef类似，但using能定义模板别名
+`using` , `typedef`			// using与typedef类似，但using能定义模板别名
 
-`using namespace` 						  //后续代码使用指定命名空间
+`using namespace` 						  // 后续代码使用指定命名空间
 
-`while(expression)`					      //表达式是合法条件
+`while(expression)`					      // 表达式是合法条件
 
-`for(int i=0;i<len;++i)`			   	//条件<长度，使用更高效的前置自增
+`for(int i=0;i<len;++i)`			   	// 条件<长度，使用更高效的前置自增
 
-`for(const auto& it : v)`				 //基于范围的for循环，先确定迭代范围，高效遍历
+`for(const auto& it : v)`				 // 基于范围的for循环，先确定迭代范围，高效遍历
 
-`void func() final{}`			//final修饰虚函数不可被重写，修饰类不可被继承
+`void func() final{}`			// final修饰虚函数不可被重写，修饰类不可被继承
 
-`void func() override{}`		 //override显式表明重写
+`void func() override{}`		 // override显式表明重写
 
-`void func() noexcept{}`		 //noexcept修饰的函数不会抛出异常
+`void func() noexcept{}`		 // noexcept修饰的函数不会抛出异常
 
-`void func() const{}`		  //常函数，const修饰this指针	常对象只能调用常函数
+`void func() const{}`		  // 常函数，const修饰this指针	常对象只能调用常函数
 
-`mutable int m_a;`			//mutable修饰的属性常函数里仍可写
+`mutable int m_a;`			// mutable修饰的属性常函数里仍可写
 
-`const` , `constexpr`			//const ⇔ constexpr，“只读”const，“常量”constexpr
+`const` , `constexpr`			// const ⇔ constexpr，“只读”const，“常量”constexpr
 
-`long long num = 123456789LL`				//long long 类型，至少8B
+`long long num = 123456789LL`				// long long 类型，至少8B
 
-`string str = R"(D:\Steam\kanon.exe)"`		//原始字面量，表示字符串的实际含义
+`string str = R"(D:\Steam\kanon.exe)"`		// 原始字面量，表示字符串的实际含义
 
-`static_assert(sizeof(long) == 8, "错误, 非64位平台")`	//静态断言，编译时检查，违反警告
+`static_assert(sizeof(long) == 8, "错误, 非64位平台")`	// 静态断言，编译时检查，违反警告
 
-`enum class Colors :char { Red, Green, Blue }`		//定义强类型枚举，指定底层类型为char
+`enum class Colors :char { Red, Green, Blue }`		// 定义强类型枚举，指定底层类型为char
 
 
 
 ## 分文件编写
 
-`#pragma once`					//防止头文件重复包含
+`#pragma once`					// 防止头文件重复包含
 
-`#include <algorithm>`			//标准算法头文件
+`#include <algorithm>`			// 标准算法头文件
 
 - 头文件声明，源文件实现（需要指明作用域）
 
 **作用域：**
 
-`Person::`						//成员函数
+`Person::`						// 成员函数
 
-`Person<int>::`					//类模板
+`Person<int>::`					// 类模板
 
 **类模板：**
 
 1. 包含.cpp源文件
-2. 将声明和实现写在一个以.hpp为后缀名的文件中						//.hpp是约定俗成的，并非规范
+2. 将声明和实现写在一个以.hpp为后缀名的文件中						// .hpp是约定俗成的，并非规范
 
 
 
 ## 内存四区
 
-`new`				   //在堆区开辟内存，返回该数据类型的指针
+`new`				   // 在堆区开辟内存，返回该数据类型的指针
 
-`new (&n)`			//定位放置new，指定在已分配内存创建对象
+`new (&n)`			// 定位放置new，指定在已分配内存创建对象
 
-`delete`		    	//直接接地址，释放堆区单个内存空间，释放数组还要加[]
+`delete`		    	// 直接接地址，释放堆区单个内存空间，释放数组还要加[]
 
 | 代码区 |                 机器指令                 | 编译后运行前 |  生命周期  |
 | :----: | :--------------------------------------: | :----------: | :--------: |
@@ -133,7 +133,7 @@
 
   
 
-`p++`			//地址后移，引用内存指向下一个相邻内存空间
+`p++`			// 地址后移，引用内存指向下一个相邻内存空间
 
 |  数组  |  地址(D)  |  值  | 大小(B) |
 | :----: | :-------: | :--: | :-----: |
@@ -144,7 +144,7 @@
 
 ## 引用
 
-`int& a = b`				//引用变量是一个别名，本质是指针常量实现
+`int& a = b`				// 引用变量是一个别名，本质是指针常量实现
 
 - 可以作为形参、返回值
 - 作为函数的返回值是一个变量，可以作为左值
@@ -154,24 +154,24 @@
 
 **右值引用：**
 
-`int&& a = 520`			//延长右值生命周期
+`int&& a = 520`			// 延长右值生命周期
 
 - **注意：**通过 **非右值** 推导&&得到的是左值引用
-  - `move(p)`				     //move将左值转为右值，转移对象的所有权
-  - `forward<T>(t)`			//forward完美转发，`<int&>`转左值，否则转右值
+  - `move(p)`				     // move将左值转为右值，转移对象的所有权
+  - `forward<T>(t)`			// forward完美转发，`<int&>`转左值，否则转右值
 
 
 
 ## 形参默认值
 
-`void func(int a,int b=1)`			//可以有默认值，但必须在签名结尾
+`void func(int a,int b=1)`			// 可以有默认值，但必须在签名结尾
 
-`template<class NameType, class AgeType = int>`		//类模板在模板参数列表可以有默认参数
+`template<class NameType, class AgeType = int>`		// 类模板在模板参数列表可以有默认参数
 
 - 声明和实现不能同时有默认参数
 - 重载碰到默认参数容易产生歧义
 
-`void func(int a,int)`			//占位参数,用纯数据类型表示
+`void func(int a,int)`			// 占位参数,用纯数据类型表示
 
 
 
@@ -179,11 +179,11 @@
 
 **调用：**
 
-`Person p`                                                   				     		 		//默认构造
+`Person p`                                                   				     		 		// 默认构造
 
 - **注意：**不要加()，编译器会认为是函数的声明
 
-`Person p(参)` 														//有参构造
+`Person p(参)` 														// 有参构造
 
  ⇔ `Person p = Person(参)`  ⇔ `Person p = 参`
 
@@ -191,33 +191,33 @@
 
 **初始化列表：**
 
-`Person(int a,double b) :x(a), y(b) {}`		//按声明顺序，显式**初始化**类成员
+`Person(int a,double b) :x(a), y(b) {}`		// 按声明顺序，显式**初始化**类成员
 
-`Person p{520,13.14}`						     //通常用于初始化或 **return** 聚合类型
+`Person p{520,13.14}`						     // 通常用于初始化或 **return** 聚合类型
 
 - **注意：**非静态成员允许类内就地初始化，且早于初始化列表
 
-`initializer_list<T>` , `size()` , `begin()` , `end()`	//动态初始化列表容器
+`initializer_list<T>` , `size()` , `begin()` , `end()`	// 动态初始化列表容器
 
 ------
 
 **委托构造：**
 
-`Person(string name, int age):Person(age) {}`		//调用重载的其他构造函数
+`Person(string name, int age):Person(age) {}`		// 调用重载的其他构造函数
 
 **继承构造：**
 
-`using Base::Base`			//子类声明使用父类构造函数
+`using Base::Base`			// 子类声明使用父类构造函数
 
 **显式指定：**
 
-`Person() = default`				//显式指定为默认构造函数，只能修饰六大函数
+`Person() = default`				// 显式指定为默认构造函数，只能修饰六大函数
 
-`void func(char c) = delete`		//显式删除函数，可有效禁用重载时的隐式类型转换
+`void func(char c) = delete`		// 显式删除函数，可有效禁用重载时的隐式类型转换
 
 **匿名对象：**
 
-`Person([参])`					//省略对象名，当前行执行结束马上析构
+`Person([参])`					// 省略对象名，当前行执行结束马上析构
 
 - **注意：**不能用拷贝构造初始化匿名对象，编译器认为`Person(p) === Person p`
 
@@ -225,13 +225,13 @@
 
 ## 拷贝构造
 
-`Person (const Person &p)`					//是一种构造函数，而且必然存在
+`Person (const Person &p)`					// 是一种构造函数，而且必然存在
 
 
 
-- 浅拷贝：简单的赋值拷贝操作                          	//默认拷贝操作
+- 浅拷贝：简单的赋值拷贝操作                          	// 默认拷贝操作
 
-- 深拷贝：在堆区重新申请空间，进行拷贝                //重写拷贝操作
+- 深拷贝：在堆区重新申请空间，进行拷贝                // 重写拷贝操作
 
 
 （以下情况务必重写拷贝构造）
@@ -247,13 +247,13 @@
 
 **移动构造：**
 
-`Person(Person&& p) : m_P(p.m_P) {p.m_P = nullptr;}`		//赋右值时会优先调用来转移属性所有权
+`Person(Person&& p) : m_P(p.m_P) {p.m_P = nullptr;}`		// 赋右值时会优先调用来转移属性所有权
 
 
 
 ## 析构
 
-`~Person()`			//在构造函数前加~号，不可重载
+`~Person()`			// 在构造函数前加~号，不可重载
 
 **释放堆区开辟的内存：**
 
@@ -274,13 +274,13 @@ if(m_Ptr != NULL)
 
 
 
-- 只有 **非静态成员变量** ∈类的对象			//子类会继承父类所有非静态成员属性
+- 只有 **非静态成员变量** ∈类的对象			// 子类会继承父类所有非静态成员属性
 - 静态成员变量类内声明，类外初始化
 - 空对象：1B
 
 **开发人员命令提示工具：**
 
-`cl /d1 reportSingleClassLayout类名 文件名`		//跳转到文件所在路径，可以用命令查看类的对象模型
+`cl /d1 reportSingleClassLayout类名 文件名`		// 跳转到文件所在路径，可以用命令查看类的对象模型
 
 
 
@@ -292,21 +292,21 @@ if(m_Ptr != NULL)
 
 - 隐含在每一个非静态成员函数内，指向 被调用的成员函数 所属的对象
 
-`*this` 			//返回对象本身，链式编程思想
+`*this` 			// 返回对象本身，链式编程思想
 
-`this->`			//成员属性前默认添加
+`this->`			// 成员属性前默认添加
 
 
 
 ## 函数指针
 
-`int (*fp)(int a)`			//定义函数指针fp
+`int (*fp)(int a)`			// 定义函数指针fp
 
-`typedef int (*F)(int a)`	  //typedef简化定义，F是别名
+`typedef int (*F)(int a)`	  // typedef简化定义，F是别名
 
-`using F = int (*)(int a)`	//using简化定义，直观清晰
+`using F = int (*)(int a)`	// using简化定义，直观清晰
 
-- 函数名就是地址			//成员函数需要&
+- 函数名就是地址			// 成员函数需要&
 - 可以作为函数形参
 
 **类成员函数指针：**
@@ -321,61 +321,61 @@ if(m_Ptr != NULL)
 
 **意义：**作友元可以访问类内私有成员
 
-`friend void func();`					   //全局函数作友元，在类内写声明并用friend关键字修饰
+`friend void func();`					   // 全局函数作友元，在类内写声明并用friend关键字修饰
 
-`friend void GoodGay::func();`			//成员函数作友元还需要加作用域
+`friend void GoodGay::func();`			// 成员函数作友元还需要加作用域
 
-`template<typename T> class Person{ friend T; }`		//为类模板声明友元类
+`template<typename T> class Person{ friend T; }`		// 为类模板声明友元类
 
 
 
 ## 运算符重载
 
-`operator_`				//_为重载的运算符
+`operator_`				// _为重载的运算符
 
 **意义：**能简化自定义数据类型间的运算，支持动态绑定
 
 ```c++
 /*左移配合友元可以实现输出自定义数据类型，但只能全局函数重载，成员函数实现不了对象本身在cout右侧*/
-ostream & operator<<(ostream &cout,Person &p)			//左移运算符重载
+ostream & operator<<(ostream &cout,Person &p)			// 左移运算符重载
 ```
 
-- `int& operator++()`			    //前置递增
-- `int operator++(int)`			//后置递增
+- `int& operator++()`			    // 前置递增
+- `int operator++(int)`			// 后置递增
 
-`operator=`			//配合深拷贝
+`operator=`			// 配合深拷贝
 
-`operator[]`			//对象[索引]直接访问某成员指针维护的数组元素
+`operator[]`			// 对象[索引]直接访问某成员指针维护的数组元素
 
-`operator()`			//仿函数，对象()调用
+`operator()`			// 仿函数，对象()调用
 
 
 
 ## 自动类型推导
 
-`auto x = 3.14`			//x为double
+`auto x = 3.14`			// x为double
 
-`auto it = v.begin()`		//it为迭代器
+`auto it = v.begin()`		// it为迭代器
 
 - **注意：**只有变量为 **指针** 或 **引用** 时推导结果才保留const、volatile关键字
 
 
 
-`decltype(b) a = 10`				//a：int
+`decltype(b) a = 10`				// a：int
 
-`decltype((Person.m_Age)) a = 0`	//a：int&
+`decltype((Person.m_Age)) a = 0`	// a：int&
 
 - **注意：**当表达式为 **左值** 或 **()** 时推导结果是一个引用，且保留const、volatile关键字
 
 
 
-`auto func(T& t) -> decltype(test(t))`		//返回类型后置，auto会追踪decltype推导的类型
+`auto func(T& t) -> decltype(test(t))`		// 返回类型后置，auto会追踪decltype推导的类型
 
 
 
 ## 匿名函数
 
-`auto f = [](int a){ return a+10 }`			//匿名函数定义
+`auto f = [](int a){ return a+10 }`			// 匿名函数定义
 
 | 捕获列表 | 作用              |
 | -------- | ----------------- |
@@ -390,7 +390,7 @@ ostream & operator<<(ostream &cout,Person &p)			//左移运算符重载
 
 ## 继承
 
-`class Son:public Base`			//class 子类:继承方式 父类
+`class Son:public Base`			// class 子类:继承方式 父类
 
 - 继承方式：决定子类继承后的最大访问权限
 - 父类所有非静态成员属性都会被继承
@@ -402,10 +402,10 @@ ostream & operator<<(ostream &cout,Person &p)			//左移运算符重载
 
 - 编译器会隐藏父类中所有同名成员函数
 
-`s.Base::xxx`		//访问父类成员需要加作用域
+`s.Base::xxx`		// 访问父类成员需要加作用域
 
 ```c++
-Son::Base::m_Age				//静态成员通过子类类名访问父类成员
+Son::Base::m_Age				// 静态成员通过子类类名访问父类成员
 /*	第一个:: 类名方式访问
 	第二个:: 父类作用域下	*/
 ```
@@ -419,7 +419,7 @@ Son::Base::m_Age				//静态成员通过子类类名访问父类成员
 - 子类继承两份相同数据，导致资源浪费，用虚继承来解决
 
 ```C++
-//vbptr：虚基类指针     vbtable：虚基类表
+// vbptr：虚基类指针     vbtable：虚基类表
 
 class Sheep : virtual public Animal{}
 
@@ -442,7 +442,7 @@ vbtable里含有相对偏移，可以定位到唯一的m_Age*/
 **实现：**
 
 ```C++
-//vfptr：虚函数指针     vftable：虚函数表
+// vfptr：虚函数指针     vftable：虚函数表
 
 /*当Animal中多了虚函数会生成一个vfptr
 
@@ -457,7 +457,7 @@ Cat 虚函数表内也存有 &Animal::function
 
 - 开发提倡开闭原则：对扩展进行开放，对修改进行关闭
 
-`virtual void func()=0;`			//纯虚函数，实质是一条声明
+`virtual void func()=0;`			// 纯虚函数，实质是一条声明
 
 - 抽象类：含纯虚函数的类，无法实例化对象，一般不写构造函数
 - 案例：零件抽象类，电脑类里写组装函数，维护指针来调用接口，零件厂商实现
@@ -499,10 +499,10 @@ ofs << “写入的数据”;
 ofs.close();
 ```
 
-`while(ifs >> buf)`		//读入字符数组
+`while(ifs >> buf)`		// 读入字符数组
 
 ```C++
-ifs >> ch				//判断空文件
+ifs >> ch				// 判断空文件
 ifs.eof()
 ```
 
@@ -518,13 +518,13 @@ ifs.eof()
 **语法：**
 
 ```c++
-template<typename/class T,…>        	//模板声明
-//函数/类
+template<typename/class T,…>        	// 模板声明
+// 函数/类
 ```
 
 ```
-func<int>(a,b)                		//显式指定类型
-func(a,b)                   		//自动类型推导（不发生自动类型转换，只适用函数模板）
+func<int>(a,b)                		// 显式指定类型
+func(a,b)                   		// 自动类型推导（不发生自动类型转换，只适用函数模板）
 ```
 
 **注意：**必须确定T的类型才能使用
@@ -537,13 +537,13 @@ func(a,b)                   		//自动类型推导（不发生自动类型转换
 
 2. 函数模板匹配更好时，优先函数模板
 
-3. `func<>(a,b)`		//空模板参数列表，能强制调用函数模板
+3. `func<>(a,b)`		// 空模板参数列表，能强制调用函数模板
 
 4. 函数模板可以重载
 
    
 
-- `template<> void func(Person p1,Person p2)`		//具体化的模板可以解决自定义类型的通用化
+- `template<> void func(Person p1,Person p2)`		// 具体化的模板可以解决自定义类型的通用化
 
 - 学模板不是为了写，而是为了在STL中运用系统提供的模板
 - 类模板中的成员函数在调用时创建
@@ -554,7 +554,7 @@ func(a,b)                   		//自动类型推导（不发生自动类型转换
 2. 参数模板化：`func(Person<T1,T2>&p)`
 3. 整个类模板化：`func(T &p)`
 
-`typeid(T).name()` 			//以字符串形式返回T的具体数据类型
+`typeid(T).name()` 			// 以字符串形式返回T的具体数据类型
 
 - 全局函数配合友元在类模板外实现，需要先声明类模板再实现全局函数
 
@@ -566,11 +566,11 @@ func(a,b)                   		//自动类型推导（不发生自动类型转换
 
 - 迭代器：指针
 
-`for(vector<Person>::iterator it=v.begin();it!=v.end();it++)`			//迭代器遍历容器
+`for(vector<Person>::iterator it=v.begin();it!=v.end();it++)`			// 迭代器遍历容器
 
-`#include <algorithm>`		//所有不支持随机访问迭代器的容器，不可以用标准算法
+`#include <algorithm>`		// 所有不支持随机访问迭代器的容器，不可以用标准算法
 
-`vector<Person>`				//*it是<>里面的Person
+`vector<Person>`				// *it是<>里面的Person
 
 
 
@@ -635,7 +635,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 ​	`int find(const char c,int pos=0) const;`
 
-​	`int rfind(const string& str,int pos=npos) const;`		//  rfind是从右向左查
+​	`int rfind(const string& str,int pos=npos) const;`		//   rfind是从右向左查
 
 ​	`int rfind(const char* s,int pos=npos) const;`
 
@@ -649,7 +649,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 **字符串比较：**
 
-​	`int compare(const string &s) const;`			// 相等返回0
+​	`int compare(const string &s) const;`			//  相等返回0
 
 ​	`int compare(const char * s) const;`
 
@@ -703,17 +703,17 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 ​	`size();`  
 
-​	`resize(int num);` 				//将元素批量搬入容器时须提前开辟空间
+​	`resize(int num);` 				// 将元素批量搬入容器时须提前开辟空间
 
 ​	`resize(int num, elem);` 
 
 **插入和删除：**
 
-​	`push_back(ele);`  				//平替：*emplace_back()*，直接初始化，性能更高
+​	`push_back(ele);`  				// 平替：*emplace_back()*，直接初始化，性能更高
 
 ​	`pop_back();`   
 
-​	`insert(const_iterator pos, ele);`  		//平替：*emplace()*
+​	`insert(const_iterator pos, ele);`  		// 平替：*emplace()*
 
 ​	`insert(const_iterator pos, int count,ele);`
 
@@ -735,11 +735,11 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 **互换容器**：
 
-​	`swap(vec);` 				//可以使两个容器互换，达到实用的收缩内存效果
+​	`swap(vec);` 				// 可以使两个容器互换，达到实用的收缩内存效果
 
 **预留空间：**
 
-​	`reserve(int len);`		//预留len个元素长度，预留位置不初始化，元素不可访问
+​	`reserve(int len);`		// 预留len个元素长度，预留位置不初始化，元素不可访问
 
 ```c++
 /*利用动态扩展机制，统计开辟次数*/
@@ -794,7 +794,7 @@ void printDeque(const deque<int>& d)
 
 ​	`deque.empty();`
 
-​	`deque.size();` 				//deque没有容量的概念
+​	`deque.size();` 				// deque没有容量的概念
 
 ​	`deque.resize(num);` 
 
@@ -834,7 +834,7 @@ void printDeque(const deque<int>& d)
 
 **排序：**
 
-​	`sort(iterator beg, iterator end)`		//默认升序，属于标准算法
+​	`sort(iterator beg, iterator end)`		// 默认升序，属于标准算法
 
 ### stack容器
 
@@ -871,6 +871,10 @@ void printDeque(const deque<int>& d)
 队列中只有队头和队尾才可以被外界使用，因此队列不允许有遍历行为
 
 <img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/queue容器.jpg" alt="queue容器"  />
+
+`priority_queue<T, fd_Container, cmp_type> q(cmp)`		 优先队列，默认大根堆
+
+
 
 **构造：**
 
@@ -970,7 +974,7 @@ void printDeque(const deque<int>& d)
 
 ​	`reverse();`
 
-​	`sort();` 		//默认升序，是list容器的成员算法
+​	`sort();` 		// 默认升序，是list容器的成员算法
 
 ### set/multiset 容器
 
@@ -1010,7 +1014,7 @@ void printDeque(const deque<int>& d)
 
 **查找和统计：**
 
-​	`find(key);`                  //查找key是否存在：存在返回该键的元素的迭代器；不存在，返回`set.end();`
+​	`find(key);`                  // 查找key是否存在：存在返回该键的元素的迭代器；不存在，返回`set.end();`
 
 ​	`count(key);`
 
@@ -1019,8 +1023,8 @@ void printDeque(const deque<int>& d)
 ***set和multiset区别：***
 
 ```c++
-pair<iterator, bool> insert(value_type&& _Val);			//set插入数据时返回bool
-iterator insert(value_type&& _Val);						//multiset可以插入重复数据
+pair<iterator, bool> insert(value_type&& _Val);			// set插入数据时返回bool
+iterator insert(value_type&& _Val);						// multiset可以插入重复数据
 ```
 
 ***pair对组：***
@@ -1040,7 +1044,7 @@ class Compare
 public:
 	bool operator()(const Person& p1, const Person &p2)
 	{
-		return p1.m_Age > p2.m_Age;			//按照年龄降序
+		return p1.m_Age > p2.m_Age;			// 按照年龄降序
 	}
 };
 void test01(){	set<Person,Compare> s;}
@@ -1082,7 +1086,7 @@ void test01(){	set<Person,Compare> s;}
 m.insert(pair<int, int>(1, 10));
 m.insert(make_pair(2, 20));
 m.insert(map<int, int>::value_type(3, 30));
-m[4] = 40; 			//建议获取某个key的value，而非修改
+m[4] = 40; 			// 建议获取某个key的value，而非修改
 ```
 
 ​	`clear();`
@@ -1095,7 +1099,7 @@ m[4] = 40; 			//建议获取某个key的value，而非修改
 
 **查找和统计：**
 
-​	`find(key);`                 //用法同set
+​	`find(key);`                 // 用法同set
 
 ​	`count(key);`
 
@@ -1135,47 +1139,47 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 
 **算数仿函数：**
 
-​	`template<class T> T plus<T>`             	   //加法
+​	`template<class T> T plus<T>`             	   // 加法
 
-​	`template<class T> T minus<T>`        	      //减法
+​	`template<class T> T minus<T>`        	      // 减法
 
-​	`template<class T> T multiplies<T>`  	  //乘法
+​	`template<class T> T multiplies<T>`  	  // 乘法
 
-​	`template<class T> T divides<T>`      	   //除法
+​	`template<class T> T divides<T>`      	   // 除法
 
-​	`template<class T> T modulus<T>`     	    //取模
+​	`template<class T> T modulus<T>`     	    // 取模
 
-​	`template<class T> T negate<T>`       	    //取反
+​	`template<class T> T negate<T>`       	    // 取反
 
 **关系仿函数：**
 
-​	`template<class T> bool equal_to<T>`                    //等于
+​	`template<class T> bool equal_to<T>`                    // 等于
 
-​	`template<class T> bool not_equal_to<T>`            //不等于
+​	`template<class T> bool not_equal_to<T>`            // 不等于
 
-​	`template<class T> bool greater<T>`      		//大于
+​	`template<class T> bool greater<T>`      		// 大于
 
-​	`template<class T> bool greater_equal<T>` 	//大于等于
+​	`template<class T> bool greater_equal<T>` 	// 大于等于
 
-​	`template<class T> bool less<T>` 			 //小于
+​	`template<class T> bool less<T>` 			 // 小于
 
-​	`template<class T> bool less_equal<T>`     	 //小于等于
+​	`template<class T> bool less_equal<T>`     	 // 小于等于
 
 **逻辑仿函数：**
 
-​	`template<class T> bool logical_and<T>`	    	//与
+​	`template<class T> bool logical_and<T>`	    	// 与
 
-​	`template<class T> bool logical_or<T>`                	//或
+​	`template<class T> bool logical_or<T>`                	// 或
 
-​	`template<class T> bool logical_not<T>`              	//非
+​	`template<class T> bool logical_not<T>`              	// 非
 
 ## STL - 算法
 
-`#include <algorithm>`			   //比较、 交换、查找、遍历操作、复制、修改等等
+`#include <algorithm>`			   // 比较、 交换、查找、遍历操作、复制、修改等等
 
- `#include <functional>` 			//定义了一些模板类,用以声明函数对象
+ `#include <functional>` 			// 定义了一些模板类,用以声明函数对象
 
-`#include <numeric>`				//只包括几个在序列上面进行简单数学运算的模板函数
+`#include <numeric>`				// 只包括几个在序列上面进行简单数学运算的模板函数
 
 
 
@@ -1339,26 +1343,26 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 
 - 可调用对象：**函数指针**，**仿函数**，可转换为函数指针的类对象，类成员（函数）指针
 
-`#include <functional>`			//包装器
+`#include <functional>`			// 包装器
 
 
 
 **包装器：**
 
-`function<int(int, double)> f = add`			//包装成一个对象，可直接调用
+`function<int(int, double)> f = add`			// 包装成一个对象，可直接调用
 
 **绑定器：**
 
-`auto f = bind(func, x, y)`			//绑定函参并返回一个仿函数，实现降元
+`auto f = bind(func, x, y)`			// 绑定函参并返回一个仿函数，实现降元
 
-`bind(func, 2, placeholders::_1)(10)`			//为调用时第一个实参占位
+`bind(func, 2, placeholders::_1)(10)`			// 为调用时第一个实参占位
 
 
 
 ```c++
-//搭配绑定器包装 类成员函数
+// 搭配绑定器包装 类成员函数
 function<void(int, int)> f = bind(&Person::add, &p, placeholders::_1, placeholders::2)
-//搭配绑定器包装 类成员变量
+// 搭配绑定器包装 类成员变量
 function<int&(void)> f = bind(&Person::m_Age, &p)
 ```
 
@@ -1372,34 +1376,34 @@ function<int&(void)> f = bind(&Person::m_Age, &p)
 
 
 
-`get()`			    //获取原指针地址
+`get()`			    // 获取原指针地址
 
-`reset()`			//reset解除管理，有参可初始化智能指针
+`reset()`			// reset解除管理，有参可初始化智能指针
 
-`use_count()`		//获取管理当前对象的引用计数
+`use_count()`		// 获取管理当前对象的引用计数
 
-`make_shared<int>(10)`			//make_shared创建内存对象，可直接初始化智能指针
+`make_shared<int>(10)`			// make_shared创建内存对象，可直接初始化智能指针
 
 - **注意：**`.` 调用智能指针api，`->`调用间址内存api；不能用同一原指针初始化多个共享指针
 
 **共享指针**
 
-`shared_ptr<int> sp(new int(10))`			//初始化，多个智能指针可管理同一块内存
+`shared_ptr<int> sp(new int(10))`			// 初始化，多个智能指针可管理同一块内存
 
 **独占指针**
 
-`unique_ptr<int> up(new int(10))`			//初始化独占型，仅允许构造或move
+`unique_ptr<int> up(new int(10))`			// 初始化独占型，仅允许构造或move
 
 **弱引用指针**
 
-`weak_ptr<int> wp(sp)`			//监视共享指针管理的资源
+`weak_ptr<int> wp(sp)`			// 监视共享指针管理的资源
 
-`weak_ptr::expired()`			  //判断观测资源是否已经被释放
+`weak_ptr::expired()`			  // 判断观测资源是否已经被释放
 
-`weak_ptr::lock()`				//获取监视的共享指针对象
+`weak_ptr::lock()`				// 获取监视的共享指针对象
 
 ```c++
-//1.解决 返回管理this的共享指针
+// 1.解决 返回管理this的共享指针
 struct Person : public enable_shared_from_this<Person>
 {
     shared_ptr<Person> func()
@@ -1407,11 +1411,11 @@ struct Person : public enable_shared_from_this<Person>
         return shared_from_this();
     }
 };
-//2.解决 循环引用
+// 2.解决 循环引用
 shared_ptr<A> a(new A);
 shared_ptr<B> b(new B);
-a->bp = b;		//A::shared_ptr<B> bp
-b->ap = a;		//B::shared_ptr<A> ap
+a->bp = b;		// A::shared_ptr<B> bp
+b->ap = a;		// B::shared_ptr<A> ap
 /*此时引用计数无法减为零，会造成内存泄漏，需要将ap或bp改为weak_ptr，因为weak_ptr不占引用计数*/
 ```
 
@@ -1439,9 +1443,9 @@ b->ap = a;		//B::shared_ptr<A> ap
 
 
 
-`is_trivial<Person>::value`				 //判断“平凡”
+`is_trivial<Person>::value`				 // 判断“平凡”
 
-`is_standard_layout<Person>::value`		//判断“标准布局”
+`is_standard_layout<Person>::value`		// 判断“标准布局”
 
 
 
@@ -1452,40 +1456,40 @@ b->ap = a;		//B::shared_ptr<A> ap
 #include <iostream>
 using namespace std;
 using namespace std::chrono;
-// 时间间隔
+//  时间间隔
 void interval()
 {
-    seconds s(1);							// 一秒
-    minutes min(1);							// 一分钟
-	hours h(1);								// 一小时
-	duration<double, ratio<9, 7>> f1(3);	// T：9/7s  f：3
-	duration<double, ratio<6, 5>> f2(1);	// T：6/5s  f：1
-	// f1 和 f2 统一时钟周期：	9,6取最大公约数	7,5取最小公倍数
+    seconds s(1);							//  一秒
+    minutes min(1);							//  一分钟
+	hours h(1);								//  一小时
+	duration<double, ratio<9, 7>> f1(3);	//  T：9/7s  f：3
+	duration<double, ratio<6, 5>> f2(1);	//  T：6/5s  f：1
+	//  f1 和 f2 统一时钟周期：	9,6取最大公约数	7,5取最小公倍数
 	duration<double, ratio<3, 35>> hz = f1 - f2;
-    hz.count();								//获取f
+    hz.count();								// 获取f
 }
-// 时钟
+//  时钟
 void clocks()
 {
-	// 新纪元1970.1.1时间 + 1天
+	//  新纪元1970.1.1时间 + 1天
 	duration<int, ratio<60*60*24>> day(1);
 	system_clock::time_point ppt(day);
-	// 系统当前时间
+	//  系统当前时间
 	system_clock::time_point today = system_clock::now();
-	// 转换为time_t时间类型
+	//  转换为time_t时间类型
 	time_t tm = system_clock::to_time_t(today+day);
 	cout << "明天的日期是:	" << ctime(&tm);
 
-	// 获取开始时间点
+	//  获取开始时间点
 	steady_clock::time_point start = steady_clock::now();
-	// 执行业务流程...
-	// 获取结束时间点
+	//  执行业务流程...
+	//  获取结束时间点
 	steady_clock::time_point last = steady_clock::now();
-	// 计算差值
+	//  计算差值
 	auto dt = last - start;
 	cout << "总共耗时: " << dt.count() << "纳秒" << endl;
 }
-// 转换
+//  转换
 void cast()
 {
     using Clock = chrono::steady_clock;
@@ -1493,12 +1497,12 @@ void cast()
 	using Sec = chrono::seconds;
 	template<class Duration>
 	using TimePoint = chrono::time_point<Clock, Duration>;
-    // 整数时长：时钟周期纳秒转毫秒，需要 duration_cast 显式转换
+    //  整数时长：时钟周期纳秒转毫秒，需要 duration_cast 显式转换
 	auto int_ms = duration_cast<Ms>(last - start);
-    // 毫秒转秒，损失精度使用 time_point_cast 显示转换
+    //  毫秒转秒，损失精度使用 time_point_cast 显示转换
 	TimePoint<Sec> time_point_sec(Sec(6));
     TimePoint<Ms> time_point_ms(Ms(6789));
-	time_point_sec = time_point_cast<Sec>(time_point_ms); // 6000 ms
+	time_point_sec = time_point_cast<Sec>(time_point_ms); //  6000 ms
 }
 ```
 
@@ -1506,113 +1510,113 @@ void cast()
 
 ## 多线程
 
-`#include <thread>`				 //线程
+`#include <thread>`				 // 线程
 
-`#include <mutex>`				   //互斥量
+`#include <mutex>`				   // 互斥量
 
-`#include <atomic>`				 //原子变量
+`#include <atomic>`				 // 原子变量
 
-`#include <condition_variable>`	//条件变量
+`#include <condition_variable>`	// 条件变量
 
-`#include <semaphore>`			   //信号量
+`#include <semaphore>`			   // 信号量
 
-`#include <future>`				 //未来
+`#include <future>`				 // 未来
 
 
 
 **线程**
 
-`thread t(func,arg1,arg2...)`			   //创建线程，执行任务
+`thread t(func,arg1,arg2...)`			   // 创建线程，执行任务
 
-`this_thread::get_id()`					//获取当前线程ID
+`this_thread::get_id()`					// 获取当前线程ID
 
-`this_thread::sleep_for()`				 //休眠指定时间，参数是一个时间段
+`this_thread::sleep_for()`				 // 休眠指定时间，参数是一个时间段
 
-`this_thread::sleep_until()`			    //休眠至指定时刻，参数是一个时间点
+`this_thread::sleep_until()`			    // 休眠至指定时刻，参数是一个时间点
 
-`this_thread::yield()`					//主动放弃已抢到的CPU资源一次
+`this_thread::yield()`					// 主动放弃已抢到的CPU资源一次
 
-`get_id()`								 //获取子线程ID
+`get_id()`								 // 获取子线程ID
 
-`join()`								     //阻塞当前线程并等待子线程执行完毕
+`join()`								     // 阻塞当前线程并等待子线程执行完毕
 
-`detach()`								 //分离子线程，当前线程退出会一并销毁所有子线程
+`detach()`								 // 分离子线程，当前线程退出会一并销毁所有子线程
 
-`static hardware_concurrency()`		     //获取计算机的CPU核心数
+`static hardware_concurrency()`		     // 获取计算机的CPU核心数
 
-`call_once(once_flag,func,args)`		   //函数只被调用一次，once_flag对象须多线程可见
+`call_once(once_flag,func,args)`		   // 函数只被调用一次，once_flag对象须多线程可见
 
 **互斥量**
 
-`mutex mx`								      //声明互斥量
+`mutex mx`								      // 声明互斥量
 
-`lock()`									  //对临界区加锁，加锁失败被阻塞
+`lock()`									  // 对临界区加锁，加锁失败被阻塞
 
-`unlock()`								      //解锁
+`unlock()`								      // 解锁
 
-`try_lock()`								  //加锁，失败返回false
+`try_lock()`								  // 加锁，失败返回false
 
-`lock(mtx1,mtx2,...)`						//同时加锁多个互斥量
+`lock(mtx1,mtx2,...)`						// 同时加锁多个互斥量
 
-`lock_guard<mutex> lock(mx)`				 //自动上锁，析构解锁（RAII 资源获取即初始化）
+`lock_guard<mutex> lock(mx)`				 // 自动上锁，析构解锁（RAII 资源获取即初始化）
 
-`unique_lock<mutex> locker(mx)`			   //自动上锁，灵活解锁
+`unique_lock<mutex> locker(mx)`			   // 自动上锁，灵活解锁
 
-`recursive_mutex`							//声明递归互斥量（允许一个线程对同一互斥量获取多次）
+`recursive_mutex`							// 声明递归互斥量（允许一个线程对同一互斥量获取多次）
 
-`timed_mutex`								//声明超时互斥量（超过指定时间解除阻塞）
+`timed_mutex`								// 声明超时互斥量（超过指定时间解除阻塞）
 
-`try_lock_for()` , `try_lock_until()`		    //加锁，失败阻塞指定时间后返回false，t_mtx下的api
+`try_lock_for()` , `try_lock_until()`		    // 加锁，失败阻塞指定时间后返回false，t_mtx下的api
 
 **原子变量**
 
-`atomic<int> a = 0`						//声明原子变量，只能封装整形数据
+`atomic<int> a = 0`						// 声明原子变量，只能封装整形数据
 
-`atomic_int a = 0`						    //使用模板特化声明
+`atomic_int a = 0`						    // 使用模板特化声明
 
 **条件变量**
 
-`condition_variable cv`				      //声明条件变量
+`condition_variable cv`				      // 声明条件变量
 
-`wait(locker)`							 //阻塞线程
+`wait(locker)`							 // 阻塞线程
 
-`wait_for()` , `wait_until()`				//阻塞线程指定时间
+`wait_for()` , `wait_until()`				// 阻塞线程指定时间
 
-`notify_one()` , `notify_all()`			    //唤醒一个或多个被阻塞的线程
+`notify_one()` , `notify_all()`			    // 唤醒一个或多个被阻塞的线程
 
-`condition_variable_any`				    //声明通用条件变量
+`condition_variable_any`				    // 声明通用条件变量
 
 **信号量**
 
-`counting_semaphore<6> csem(0)` 			//创建信号量 （LeastMaxValue为6）
+`counting_semaphore<6> csem(0)` 			// 创建信号量 （LeastMaxValue为6）
 
-`binary__semaphore bsem(0)` 				//LeastMaxValue为1时的模板特化
+`binary__semaphore bsem(0)` 				// LeastMaxValue为1时的模板特化
 
-`acquire()` 								 //阻塞等待
+`acquire()` 								 // 阻塞等待
 
-`release()` 								 //唤醒
+`release()` 								 // 唤醒
 
 **未来**
 
-`future<int> f`						  //声明一个未来
+`future<int> f`						  // 声明一个未来
 
-`get()`								  //获取数据，阻塞至子线程数据就绪
+`get()`								  // 获取数据，阻塞至子线程数据就绪
 
-`wait()`								//阻塞当前线程
-
-------
-
-`get_future()`						//得到 *promise* 中管理的future对象
-
-`set_value()`						 //存储传出数据，立即让状态就绪
+`wait()`								// 阻塞当前线程
 
 ------
 
-`get_future()`						//得到 *packaged_task* 中管理的future对象
+`get_future()`						// 得到 *promise* 中管理的future对象
+
+`set_value()`						 // 存储传出数据，立即让状态就绪
 
 ------
 
-`async(func,arg1,arg2...)`			//创建线程执行任务并返回一个future对象
+`get_future()`						// 得到 *packaged_task* 中管理的future对象
+
+------
+
+`async(func,arg1,arg2...)`			// 创建线程执行任务并返回一个future对象
 
 **总结：**
 
