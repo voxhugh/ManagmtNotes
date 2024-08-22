@@ -1248,6 +1248,12 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 
 - 二分查找指定元素上界
 
+
+
+`max_element(iterator beg, iterator end, _Pred)`
+
+- 查找最大元素位置
+
 ### 排序
 
 
