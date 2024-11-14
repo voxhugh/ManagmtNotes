@@ -527,6 +527,123 @@ clean:
         echo "hello"
 ```
 
+## CMake
+
+- 跨平台自动化构建系统生成工具
+
+
+
+### 语法
+
+```cmake
+cmake_minimum_required(VERSION 3.10)		# 指定 CMake 的最低版本要求
+
+project(MyPrj CXX)					    	# 定义项目名及语言
+
+add_executable(MyExe main.cpp)				# 指定生成的目标文件和源文件
+
+add_library(MyLib STATIC library.cpp)		# 创建一个库及源文件
+
+target_link_libraries(MyExe MyLib)			# 链接目标文件和库
+
+find_package(Boost 1.70 REQUIRED)			# 查找库，指定版本
+
+include_directories(MyPrj/include)			# 设置包含目录
+
+link_directories(${Boost_LIBRARY_DIRS})		# 设置链接目录
+
+target_include_directories(MyExe PRIVATE ${PROJECT_SOURCE_DIR}/include)	# 设置目标属性
+
+if(expr)									# 条件语句，endif是结束标志
+endif()
+
+set(MY_VAR "Hello")							# 定义变量
+
+message(STATUS "Variable is ${MY_VAR}")		# 使用变量
+```
+
+### 流程
+
+```shell
+MyProject/
+├── CMakeLists.txt
+├── src/
+│   ├── main.cpp
+│   ├── lib/
+│   │   ├── module1.cpp
+│   │   ├── module2.cpp
+│   ├── include/
+│       └── mylib.h
+└── tests/
+    ├── test_main.cpp
+    └── CMakeLists.txt
+
+# 编写 CMakeLists.txt
+$ touch CMakeLists.txt src/CMakeLists.txt tests/CMakeLists.txt
+# 项目根目录下创建构建目录
+$ mkdir build && cd build
+# 构建
+$ cmake ..
+# 编译
+$ make
+# 运行测试
+$ ./MyExecutable
+$ ./TestMyLib
+```
+
+- **MyProject/**
+
+```cmake
+cmake_minimum_required(VERSION 3.10)	# 指定最低 CMake 版本
+project(MyPrj VERSION 1.0)          	# 定义项目名称和版本
+
+# 设置 C++ 标准
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# 包含头文件路径
+include_directories(${PROJECT_SOURCE_DIR}/src/include)
+
+# 添加子目录
+add_subdirectory(src)
+add_subdirectory(tests)
+```
+
+- **MyProject/src/**
+
+```cmake
+# 创建库目标
+add_library(MyLib STATIC
+    lib/module1.cpp
+    lib/module2.cpp
+)
+
+# 指定库的头文件
+target_include_directories(MyLib PUBLIC ${CMAKE_SOURCE_DIR}/src/include)
+
+# 创建可执行文件目标
+add_executable(MyExe main.cpp)
+
+# 链接库到可执行文件
+target_link_libraries(MyExe PRIVATE MyLib)
+```
+
+- **MyProject/tests/**
+
+```cmake
+# 查找 GTest 包
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
+
+# 创建测试目标
+add_executable(TestMyLib test_main.cpp)
+
+# 链接库和 GTest 到测试目标
+target_link_libraries(TestMyLib PRIVATE MyLib ${GTEST_LIBRARIES})
+```
+
+
+
 ## GDB调试
 
 ```shell
