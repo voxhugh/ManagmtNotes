@@ -147,7 +147,7 @@
 
 `find`	在特定的目录下搜索符合条件的文件	[-name "*.txt" 按名称]
 
-`ln -s 被链接的源文件 链接文件`	建立文件的软链接	[-s 软链接]
+`ln -s [目标路径] [软链接路径]`	建立文件的软链接	[-s 软链接]
 
 #### 用户／组 权限
 
@@ -538,26 +538,26 @@ clean:
 ```cmake
 cmake_minimum_required(VERSION 3.10)		# 指定 CMake 的最低版本要求
 
-project(MyPrj CXX)					    	# 定义项目名及语言
+project(MyPrj CXX)				# 定义项目名及语言
 
-add_executable(MyExe main.cpp)				# 指定生成的目标文件和源文件
+add_executable(MyExe main.cpp)			# 指定生成的目标文件和源文件
 
 add_library(MyLib STATIC library.cpp)		# 创建一个库及源文件
 
-target_link_libraries(MyExe MyLib)			# 链接目标文件和库
+target_link_libraries(MyExe MyLib)		# 链接目标文件和库
 
-find_package(Boost 1.70 REQUIRED)			# 查找库，指定版本
+find_package(Boost 1.70 REQUIRED)		# 查找库，指定版本
 
-include_directories(MyPrj/include)			# 设置包含目录
+include_directories(MyPrj/include)		# 设置包含目录
 
 link_directories(${Boost_LIBRARY_DIRS})		# 设置链接目录
 
 target_include_directories(MyExe PRIVATE ${PROJECT_SOURCE_DIR}/include)	# 设置目标属性
 
-if(expr)									# 条件语句，endif是结束标志
+if(expr)					# 条件语句，endif是结束标志
 endif()
 
-set(MY_VAR "Hello")							# 定义变量
+set(MY_VAR "Hello")				# 定义变量
 
 message(STATUS "Variable is ${MY_VAR}")		# 使用变量
 ```
