@@ -56,77 +56,307 @@ varchar(10) char(10)区别：
 
 Duplicate entry '1' for key 'PRIMARY'
 
+```sql
+-- 列出所有的数据库
 
+SHOW DATABASES;
 
-<span style="color: #00A600;">--    列出所有的数据库</span><br><span style="color: #2894FF;">SHOW DATABASES;</span><br>  
+ 
 
-<span style="color: #00A600;">--    创建数据库</span><br><span style="color: #2894FF;">CREATE DATABASE java1812 DEFAULT CHARACTER SET utf8;</span><br>  
+-- 创建数据库
 
-<span style="color: #00A600;">--      删除数据库</span><br><span style="color: #2894FF;">DROP DATABASE java1812;</span><br>  
+CREATE DATABASE java1812 DEFAULT CHARACTER SET utf8;
 
-<span style="color: #00A600;">--    --   --   --   --   --   --   --   --   --   --   --   --   --   --   --   --   --   </span><br><span style="color: #00A600;">--    数据库表的操作</span><br><span style="color: #00A600;">--    切换数据库</span><br><span style="color: #2894FF;">USE java1812;</span><br> <span style="color: #00A600;">--    创建表</span><br><span style="color: #2894FF;">CREATE TABLE student(     id INT,     NAME CHAR(10),     age INT,     gender CHAR(1) );</span><br> <span style="color: #00A600;">--    查看所有表</span><br><span style="color: #2894FF;">SHOW TABLES;</span><br>  
+ 
 
-<span style="color: #00A600;">--    查看表的结构</span><br><span style="color: #2894FF;">DESC student; --    description</span><br> <span style="color: #00A600;">--    删除表</span><br><span style="color: #2894FF;">DROP TABLE student;</span><br>  
+-- 删除数据库
 
-<span style="color: #00A600;">--    更改表的结构</span><br><span style="color: #00A600;">--    添加字段</span><br><span style="color: #2894FF;">ALTER TABLE student ADD COLUMN address CHAR(10);</span><br> <span style="color: #00A600;">--    删除字段</span><br><span style="color: #2894FF;">ALTER TABLE student DROP COLUMN address;</span><br> <span style="color: #00A600;">--    修改表的字段</span><br><span style="color: #2894FF;">ALTER TABLE student CHANGE address addr CHAR(20);</span><br> <span style="color: #00A600;">--    修改表的名字</span><br><span style="color: #2894FF;">ALTER TABLE student RENAME TO stu;</span><br>  
+DROP DATABASE java1812;
 
-<span style="color: #00A600;">--    创建表</span><br><span style="color: #2894FF;">CREATE TABLE student(     id INT PRIMARY KEY AUTO_INCREMENT,     NAME VARCHAR(10),     age INT,     gender VARCHAR(1),     php INT );</span><br>  <span style="color: #00A600;">--    * 代表查询所有的列</span><br><span style="color: #2894FF;">SELECT * FROM student;</span><br>  
+ 
 
-<span style="color: #00A600;">--    插入数据</span><br><span style="color: #00A600;">--    Duplicate entry '1' for key 'PRIMARY'</span><br><span style="color: #2894FF;">INSERT INTO student(id,NAME,age,gender) VALUES(1,'wangwu',23,'男');</span><br><span style="color: #2894FF;">INSERT INTO student(id,NAME,age,gender) VALUES(3,'赵六',23,'男');</span><br><span style="color: #2894FF;">INSERT INTO student VALUES(4,'赵六22',33,'男');</span><br> <span style="color: #00A600;">--    插入部分字段值(必须把前面的字段名都写上)</span><br><span style="color: #2894FF;">INSERT INTO student(NAME,age,gender) VALUES('小张11',23,'男');</span><br> <span style="color: #00A600;">--    一次插入多条数据</span><br><span style="color: #2894FF;">INSERT INTO student(NAME,age,gender) VALUES('小张77',23,'男'),('小王',22,'男');</span><br>  
+-- ----------------------------------
 
-<span style="color: #00A600;">--    修改数据</span><br><span style="color: #2894FF;">UPDATE student SET age=age+1;</span><br><span style="color: #2894FF;">UPDATE student SET age=age+1 WHERE id=7;</span><br>  
+-- 数据库表的操作
 
-<span style="color: #00A600;">--    删除数据</span><br><span style="color: #2894FF;">DELETE FROM student; --    删除表中所有数据（很少使用，是非常危险）</span><br><span style="color: #2894FF;">DELETE FROM student WHERE age=24; --    所有age是24的数据都被删除了，可能有多条数据都是age=24</span><br><span style="color: #2894FF;">DELETE FROM student WHERE id=12; --    因为id是主键是唯一的，所以根据id删除只能删除唯一的一条数据</span><br><span style="color: #00A600;">--    TRUNCATE删除表里面所有数据，自增的id会重新初始化为初始值1</span><br><span style="color: #2894FF;">TRUNCATE TABLE student;</span><br>  
+-- 切换数据库
 
-<span style="color: #00A600;">--    查询数据</span><br><span style="color: #00A600;">--    显示所有列(字段)数据</span><br><span style="color: #2894FF;">SELECT * FROM student; --    学习时候可以写*，但是在企业开发中需要什么字段就写什么字段</span><br><span style="color: #2894FF;">SELECT id,name,age,gender FROM student;</span><br> <span style="color: #00A600;">--    查询指定列</span><br><span style="color: #2894FF;">SELECT NAME,age FROM student;</span><br> <span style="color: #00A600;">--    查询时候添加常量列，通过as可以起别名</span><br><span style="color: #2894FF;">SELECT id,NAME,age AS '年龄','java1812' AS '班级' FROM student;</span><br> <span style="color: #00A600;">--    查询时候和并列，字段名可以当成java里面的变量来运算</span><br><span style="color: #2894FF;">SELECT id,NAME,(php+java) AS '总成绩' FROM student;</span><br> <span style="color: #00A600;">--    查询时候去掉重复的记录</span><br><span style="color: #2894FF;">SELECT DISTINCT address FROM student;</span><br>  
+USE java1812;
 
-<span style="color: #00A600;">--    条件查询 where</span><br><span style="color: #2894FF;">SELECT * FROM student WHERE NAME='小王';</span><br>  
+-- 创建表
 
-<span style="color: #00A600;">--    逻辑条件: and（同时成立） or(只要有一个成立)</span><br><span style="color: #2894FF;">SELECT * FROM student WHERE NAME='小王' AND address='青岛';</span><br><span style="color: #2894FF;">SELECT * FROM student WHERE NAME='小王' OR address='北京';</span><br>  
+CREATE TABLE student(
 
-<span style="color: #00A600;">--    比较运算： >  <   >=   <=  !=</span><br><span style="color: #2894FF;">SELECT * FROM student WHERE java>=70 AND java<=80;</span><br><span style="color: #00A600;">--    between and (等价于>= and <=)</span><br><span style="color: #2894FF;">SELECT * FROM student WHERE java BETWEEN 70 AND 80;</span><br><span style="color: #00A600;">--    查询地址不是青岛的学生信息</span><br><span style="color: #2894FF;">SELECT * FROM student WHERE address!= '青岛';</span><br>  
+  id INT,
 
-<span style="color: #00A600;">--    聚合查询</span><br><span style="color: #00A600;">--    聚合查询函数：sum(),avg(),max(),min(),count()</span><br><span style="color: #00A600;">--    统计学生php的总成绩（sum求和）</span><br><span style="color: #2894FF;">SELECT SUM(php) AS 'php总成绩' FROM student;</span><br><span style="color: #00A600;">--    统计学生php的平均值</span><br><span style="color: #2894FF;">SELECT AVG(php) AS 'php平均值' FROM student;</span><br><span style="color: #00A600;">--    统计学生php的最大值</span><br><span style="color: #2894FF;">SELECT MAX(php) AS 'php最大值' FROM student;</span><br><span style="color: #00A600;">--    统计学生表里面一共有多少学生</span><br><span style="color: #2894FF;">SELECT COUNT(*) AS '总人数' FROM student;</span><br>  
+  NAME CHAR(10),
 
-<span style="color: #00A600;">--    查询排序</span><br><span style="color: #00A600;">--    语法：order by 字段  asc/desc  默认是asc升序，可以不写</span><br><span style="color: #2894FF;">SELECT * FROM student ORDER BY php;</span><br><span style="color: #2894FF;">SELECT * FROM student ORDER BY php ASC;</span><br><span style="color: #2894FF;">SELECT * FROM student ORDER BY php DESC;</span><br> <span style="color: #00A600;">--    多个条件排序</span><br><span style="color: #00A600;">--    需求：先按照php降序，java升序(整体是按照php降序，如果php相同的数据再按照java标准排序)</span><br><span style="color: #2894FF;">SELECT * FROM student ORDER BY php DESC, java ASC;</span><br>  
+  age INT,
 
-<span style="color: #00A600;">--    分组查询(group by)</span><br><span style="color: #00A600;">--    需求：查询男女分别有多少人</span><br> ![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_03.png)
+  gender CHAR(1)
 
-<span style="color: #2894FF;">SELECT gender,COUNT(id) FROM student GROUP BY gender;</span><br><span style="color: #00A600;">--    select后面的查询都是基于group by之后的</span><br><span style="color: #2894FF;">SELECT address,COUNT(id) FROM student GROUP BY address;</span><br>  
+);
 
-<span style="color: #00A600;">--    分组查询后筛选</span><br><span style="color: #00A600;">--    需求：address大于1</span><br><span style="color: #00A600;">--    group by之后的条件查询使用having</span><br><span style="color: #2894FF;">SELECT address AS '地址',COUNT(id) AS '人数' FROM student GROUP BY address HAVING COUNT(id)>1;</span><br>  
+ 
 
-<span style="color: #2894FF;">SELECT * FROM student;</span>
+-- 查看所有表
+
+SHOW TABLES;
+
+-- 查看表的结构
+
+DESC student; -- description
+
+-- 删除表
+
+DROP TABLE student;
+
+ 
+
+-- 更改表的结构
+
+-- 添加字段
+
+ALTER TABLE student ADD COLUMN address CHAR(10);
+
+-- 删除字段
+
+ALTER TABLE student DROP COLUMN address;
+
+-- 修改表的字段
+
+ALTER TABLE student CHANGE address addr CHAR(20);
+
+-- 修改表的名字
+
+ALTER TABLE student RENAME TO stu;
+
+ 
+
+-- 创建表
+
+CREATE TABLE student(
+
+  id INT PRIMARY KEY AUTO_INCREMENT,
+
+  NAME VARCHAR(10),
+
+  age INT,
+
+  gender VARCHAR(1),
+
+   php INT
+
+);
+
+-- * 代表查询所有的列
+
+SELECT * FROM student;
+
+ 
+
+-- 插入数据
+
+-- Duplicate entry '1' for key 'PRIMARY'
+
+INSERT INTO student(id,NAME,age,gender) VALUES(1,'wangwu',23,'男');
+
+INSERT INTO student(id,NAME,age,gender) VALUES(3,'赵六',23,'男');
+
+INSERT INTO student VALUES(4,'赵六22',33,'男');
+
+-- 插入部分字段值(必须把前面的字段名都写上)
+
+INSERT INTO student(NAME,age,gender) VALUES('小张11',23,'男');
+
+-- 一次插入多条数据
+
+INSERT INTO student(NAME,age,gender) VALUES('小张77',23,'男'),('小王',22,'男');
+
+ 
+
+-- 修改数据
+
+UPDATE student SET age=age+1;
+
+UPDATE student SET age=age+1 WHERE id=7;
+
+ 
+
+-- 删除数据
+
+DELETE FROM student; -- 删除表中所有数据（很少使用，是非常危险）
+
+DELETE FROM student WHERE age=24; -- 所有age是24的数据都被删除了，可能有多条数据都是age=24
+
+DELETE FROM student WHERE id=12; -- 因为id是主键是唯一的，所以根据id删除只能删除唯一的一条数据
+
+-- TRUNCATE删除表里面所有数据，自增的id会重新初始化为初始值1
+
+TRUNCATE TABLE student;
+
+ 
+
+-- 查询数据
+
+-- 显示所有列(字段)数据
+
+SELECT * FROM student; -- 学习时候可以写*，但是在企业开发中需要什么字段就写什么字段
+
+SELECT id,name,age,gender FROM student;
+
+-- 查询指定列
+
+SELECT NAME,age FROM student;
+
+-- 查询时候添加常量列，通过as可以起别名
+
+SELECT id,NAME,age AS '年龄','java1812' AS '班级' FROM student;
+
+-- 查询时候和并列，字段名可以当成java里面的变量来运算
+
+SELECT id,NAME,(php+java) AS '总成绩' FROM student;
+
+-- 查询时候去掉重复的记录
+
+SELECT DISTINCT address FROM student;
+
+ 
+
+-- 条件查询 where
+
+SELECT * FROM student WHERE NAME='小王';
+
+ 
+
+-- 逻辑条件: and（同时成立） or(只要有一个成立)
+
+SELECT * FROM student WHERE NAME='小王' AND address='青岛';
+
+SELECT * FROM student WHERE NAME='小王' OR address='北京';
+
+ 
+
+-- 比较运算: > < >= <= !=
+
+SELECT * FROM student WHERE java>=70 AND java<=80;
+
+-- between and (等价于>= and <=)
+
+SELECT * FROM student WHERE java BETWEEN 70 AND 80;
+
+-- 查询地址不是青岛的学生信息
+
+SELECT * FROM student WHERE address != '青岛';
+
+ 
+
+-- 聚合查询
+
+-- 聚合查询函数：sum(),avg(),max(),min(),count()
+
+-- 统计学生php的总成绩（sum求和）
+
+SELECT SUM(php) AS 'php总成绩' FROM student;
+
+-- 统计学生php的平均值
+
+SELECT AVG(php) AS 'php平均值' FROM student;
+
+-- 统计学生php的最大值
+
+SELECT MAX(php) AS 'php最大值' FROM student;
+
+-- 统计学生表里面一共有多少学生
+
+SELECT COUNT(*) AS '总人数' FROM student;
+
+SELECT COUNT(id) AS '总人数' FROM student;
+
+SELECT COUNT(address) AS '总人数' FROM student;
+
+-- 注意：count()函数统计的是指定列不包含NULL的数据个数
+
+ 
+
+ 
+
+-- 查询排序
+
+-- 语法：order by 字段 asc/desc 默认是asc升序，可以不写
+
+SELECT * FROM student ORDER BY php;
+
+SELECT * FROM student ORDER BY php ASC;
+
+SELECT * FROM student ORDER BY php DESC;
+
+-- 多个条件排序
+
+-- 需求：先按照php降序，java升序(整体是按照php降序，如果php相同的数据再按照java标准排序)
+
+SELECT * FROM student ORDER BY php DESC, java ASC;
+
+ 
+
+ 
+
+-- 分组查询(group by)
+
+-- 需求：查询男女分别有多少人
+```
+
+![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_03.png)
+
+```sql
+SELECT gender,COUNT(id) FROM student GROUP BY gender;
+-- select后面的查询都是基于group by之后的
+SELECT address,COUNT(id) FROM student GROUP BY address;
+  
+-- 分组查询后筛选
+-- 需求：address大于1
+-- group by之后的条件查询使用having
+SELECT address AS '地址',COUNT(id) AS '人数' FROM student GROUP BY address HAVING COUNT(id)>1;
+  
+ 
+SELECT * FROM student;
+```
 
 ------
 
 **字段属性设置:**
 
-1、not null： 不为空，表示该字段不能放“null”这个值。不写，则默认是可以为空
+1. not null： 不为空，表示该字段不能放“null”这个值。不写，则默认是可以为空
 
-2、auto_increment: 设定int类型字段的值可以“自增长”，即其值无需“写入”，而会自动获得并增加
+2. auto_increment: 设定int类型字段的值可以“自增长”，即其值无需“写入”，而会自动获得并增加
+   此属性必须随同 primary key 或 unique key 一起使用。primary key = unique key + not null
 
-此属性必须随同 primary key 或 unique key 一起使用。primary key = unique key + not null
+3. [primary] key： 设定为主键。是唯一键“加强”：不能重复并且不能使用null，并且可以作为确定任意一行数据的“关键值”，最常见的类似：where id= 8; 或 where user_name = ‘zhangsan’;
+   通常，每个表都应该有个主键，而且大多数表，喜欢使用一个id并自增长类型作为主键。
+   但：一个表只能设定一个主键。
 
-3、[primary] key： 设定为主键。是唯一键“加强”：不能重复并且不能使用null，并且可以作为确定任意一行数据的“关键值”，最常见的类似：where id= 8; 或 where user_name = ‘zhangsan’;
+4. unique [key] : 设定为唯一键：表示该字段的所有行的值不可以重复（唯一性）。
+   Duplicate entry 'zhangsan' for key 'name'
 
-通常，每个表都应该有个主键，而且大多数表，喜欢使用一个id并自增长类型作为主键。
+5. default ‘默认值’： 设定一个字段在没有插入数据的时候自动使用的值。
 
-但：一个表只能设定一个主键。
+6. comment ‘字段注释’
 
-4、unique [key] : 设定为唯一键：表示该字段的所有行的值不可以重复（唯一性）。
+```sql
+CREATE TABLE teacher(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    NAME VARCHAR(10) NOT NULL,
+    age INT COMMENT '年龄'
+    address VARCHAR(10) DEFAULT '中国', -- 插入数据时候如果不赋值，默认值是"中国"
+    UNIQUE KEY(NAME) -- 唯一键，代表这个字段不能重复
+);
+ 
+-- Duplicate entry 'zhangsan' for key 'name'
+INSERT INTO teacher(NAME) VALUES('zhangsan');
 
-Duplicate entry 'zhangsan' for key 'name'
-
-5、default ‘默认值’： 设定一个字段在没有插入数据的时候自动使用的值。
-
-6、comment ‘字段注释’
+```
 
 
-
-<span style="color: #2894FF;">CREATE TABLE teacher( <br>     	id INT PRIMARY KEY AUTO_INCREMENT, <br>     	NAME VARCHAR(10) NOT NULL, <br>     	age INT COMMENT '年龄', <br>     	address VARCHAR(10) DEFAULT '中国', --    插入数据时候如果不赋值，默认值是"中国" <br>     	UNIQUE KEY(NAME) --    唯一键，代表这个字段不能重复 <br> );</span><br>  
-
-<span style="color: #00A600;">--    Duplicate entry 'zhangsan' for key 'name'</span><br><span style="color: #2894FF;">INSERT INTO teacher(NAME) VALUES('zhangsan');</span><br>
 
 ------
 
@@ -136,6 +366,8 @@ Duplicate entry 'zhangsan' for key 'name'
 
 ![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_04.png)
 
+- inner join  left join
+
 | 学生名字 | 学生性别 | 班级名   | 课程名 |
 | -------- | -------- | -------- | ------ |
 | 张三     | 男       | Java1807 | Java   |
@@ -144,31 +376,79 @@ Duplicate entry 'zhangsan' for key 'name'
 | 李四     | 男       | Java1812 | UI     |
 | 李四     | 男       | Java1812 | H5     |
 
-> inner join  left join 
-
 ![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_05.png)
 
-<span style="color: #00A600;">--    多对多</span><br><span style="color: #00A600;">--    班级表</span><br><span style="color: #2894FF;">CREATE TABLE banji( <br>     id INT PRIMARY KEY AUTO_INCREMENT, <br>     'name' VARCHAR(10) NOT NULL <br> );</span><br><span style="color: #2894FF;">INSERT INTO banji('name') VALUES('java1807'),('java1812');</span><br> 
+```sql
+-- 多对多
+-- 班级表
+CREATE TABLE banji(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    `name` VARCHAR(10) NOT NULL
+);
+INSERT INTO banji(`name`) VALUES('java1807'),('java1812');
+ 
+SELECT * FROM banji;
+ 
+-- 学生表
+CREATE TABLE student(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    `name` VARCHAR(10) NOT NULL,
+    age INT,
+    gender CHAR(1),
+    banji_id INT,
+    FOREIGN KEY(banji_id) REFERENCES banji(id)
+);
+INSERT INTO student(`name`,age,gender,banji_id) 
+VALUES('张三',20,'男',1),('李四',21,'男',2),('王五',20,'女',1);
+-- Cannot add or update a child row: a foreign key constraint fails (`java1812`.`student`, CONSTRAINT `student_ibfk_1` FOREIGN KEY (`banji_id`) REFERENCES `banji` (`id`))
+INSERT INTO student(`name`,age,gender,banji_id) 
+VALUES('张三',20,'男',3);
+ 
+SELECT * FROM student;
+ 
+-- 课程表
+CREATE TABLE course(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    `name` VARCHAR(10) NOT NULL,
+    credit INT COMMENT '学分'
+);
+INSERT INTO course(`name`,credit) VALUES('Java',5),('UI',4),('H5',4);
+ 
+SELECT * FROM course;
+ 
+-- 班级课程表
+CREATE TABLE banji_course(
+    -- id int PRIMARY KEY AUTO_INCREMENT,
+    banji_id INT,
+    course_id INT,
+    PRIMARY KEY(banji_id,course_id), -- 联合主键
+    FOREIGN KEY(banji_id) REFERENCES banji(id), -- banji_id既是联合主键又是外键
+    FOREIGN KEY(course_id) REFERENCES course(id) -- course_id既是联合主键又是外键
+);
+INSERT INTO banji_course(banji_id,course_id) VALUES(1,1),(1,3),(2,1),(2,2),(2,3);
+ 
+SELECT * FROM banji_course;
+```
 
-<span style="color: #00A600;">--    查询班级表所有数据</span><br><span style="color: #2894FF;">SELECT * FROM banji;</span><br> 
 
-<span style="color: #00A600;">--    学生表</span><br><span style="color: #2894FF;">CREATE TABLE student( <br>     id INT PRIMARY KEY AUTO_INCREMENT, <br>     'name' VARCHAR(10) NOT NULL, <br>     age INT, <br>     gender CHAR(1), <br>     banji_id INT, <br>     FOREIGN KEY(banji_id) REFERENCES banji(id) <br> );</span><br><span style="color: #2894FF;">INSERT INTO student('name',age,gender,banji_id) <br> VALUES('张三',20,'男',1),('李四',21,'男',2),('王五',20,'女',1);</span><br><span style="color: #00A600;">--    Cannot add or update a child row: a foreign key constraint fails ('java1812'.'student', CONSTRAINT 'student_ibfk_1' FOREIGN KEY ('banji_id') REFERENCES 'banji' ('id'))</span><br><span style="color: #2894FF;">INSERT INTO student('name',age,gender,banji_id) <br> VALUES('张三',20,'男',3);</span><br> 
-
-<span style="color: #00A600;">--    查询学生表所有数据</span><br><span style="color: #2894FF;">SELECT * FROM student;</span><br> 
-
-<span style="color: #00A600;">--    课程表</span><br><span style="color: #2894FF;">CREATE TABLE course( <br>     id INT PRIMARY KEY AUTO_INCREMENT, <br>     'name' VARCHAR(10) NOT NULL, <br>     credit INT COMMENT '学分' <br> );</span><br><span style="color: #2894FF;">INSERT INTO course('name',credit) VALUES('Java',5),('UI',4),('H5',4);</span><br> 
-
-<span style="color: #00A600;">--    查询课程表所有数据</span><br><span style="color: #2894FF;">SELECT * FROM course;</span><br> 
-
-<span style="color: #00A600;">--    班级课程表</span><br><span style="color: #2894FF;">CREATE TABLE banji_course( <br>     --    id int PRIMARY KEY AUTO_INCREMENT, <br>     banji_id INT, <br>     course_id INT, <br>     PRIMARY KEY(banji_id,course_id), --    联合主键 <br>     FOREIGN KEY(banji_id) REFERENCES banji(id), --    banji_id既是联合主键又是外键 <br>     FOREIGN KEY(course_id) REFERENCES course(id) --    course_id既是联合主键又是外键 <br> );</span><br><span style="color: #2894FF;">INSERT INTO banji_course(banji_id,course_id) VALUES(1,1),(1,3),(2,1),(2,2),(2,3);</span><br> 
-
-<span style="color: #00A600;">--    查询班级课程表所有数据</span><br><span style="color: #2894FF;">SELECT * FROM banji_course;</span><br>
 
 ------
 
-<span style="color: #00A600;">--    子查询：嵌套查询，一个查询语句是另一个查询语句的条件</span><br>	<span style="color: #00A600;">--    查询班级是java1812班所有学生信息</span><br>	<span style="color: #2894FF;">SELECT * FROM student WHERE banji_id=2;</span><br>	<span style="color: #2894FF;">SELECT id FROM banji WHERE 'name'='java1812';</span><br>	<span style="color: #2894FF;">SELECT * FROM student WHERE banji_id=(SELECT id FROM banji WHERE 'name'='java1812');</span><br> 
-
-​	<span style="color: #00A600;">--    班级是java1807班或者java1812班所有学生信息</span><br>	<span style="color: #2894FF;">SELECT * FROM student WHERE banji_id=1 OR banji_id=2;</span><br>	<span style="color: #2894FF;">SELECT * FROM student WHERE banji_id IN(1,2);</span><br>	<span style="color: #2894FF;">SELECT id FROM banji WHERE 'name'='java1807' OR 'name'='java1812'; --    1,2</span><br>	<span style="color: #2894FF;">SELECT * FROM student WHERE banji_id IN(SELECT id FROM banji WHERE 'name'='java1807' OR 'name'='java1812');</span><br> <span style="color: #00A600;">--    "="：要求子查询只有一个结果。 "in"：子查询可以有多个结果</span><br>
+```sql
+-- 子查询：嵌套查询，一个查询语句是另一个查询语句的条件
+-- 查询班级是java1812班所有学生信息
+SELECT * FROM student WHERE banji_id=2;
+SELECT id FROM banji WHERE `name`='java1812';
+SELECT * FROM student WHERE banji_id=(SELECT id FROM banji WHERE `name`='java1812');
+ 
+-- 班级是java1807班或者java1812班所有学生信息
+SELECT * FROM student WHERE banji_id=1 OR banji_id=2;
+SELECT * FROM student WHERE banji_id IN(1,2);
+SELECT id FROM banji WHERE `name`='java1807' OR `name`='java1812'; -- 1,2
+SELECT * FROM student WHERE banji_id IN(SELECT id FROM banji WHERE `name`='java1807' OR `name`='java1812');
+ 
+-- "="：要求子查询只有一个结果。 "in"：子查询可以有多个结果
+```
 
 ------
 
@@ -176,7 +456,13 @@ Duplicate entry 'zhangsan' for key 'name'
 
 ![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_07.png)
 
-<span style="color: #00A600;">--    列出所有学生学习的课程名称</span><br><span style="color: #00A600;">--    学生姓名   班级名称   课程名称    学分</span><br> ![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_08.png)
+```sql
+-- 列出所有学生学习的课程名称
+
+-- 学生姓名  班级名称  课程名称  学分
+```
+
+![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_08.png)
 
 ![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_09.png)
 
@@ -184,19 +470,62 @@ Duplicate entry 'zhangsan' for key 'name'
 
 ------
 
-<span style="color: #00A600;">--    inner join on 只有左右两个表有关联的才查询出来</span><br><span style="color: #00A600;">--    left join on 左表中都显示出来，右表没有显示空</span><br><span style="color: #00A600;">--    right join on 右表都显示，左表没有显示空</span><br>
+```sql
+-- inner join on 只有左右两个表有关联的才查询出来
+-- left join on 左表中都显示出来，右表没有显示空
+-- right join on 右表都显示，左表没有显示空
+```
 
 ![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_11.png)
 
-<span style="color: #2894FF;">SELECT * <br> FROM student as s INNER JOIN banji as b <br> on s.banji_id=b.id;</span><br><span style="color: #2894FF;">SELECT * <br> FROM student as s LEFT JOIN banji as b <br> on s.banji_id=b.id;</span><br> ![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_12.png)
+```sql
+SELECT * 
+ FROM student as s INNER JOIN banji as b
+ on s.banji_id=b.id;
+SELECT * 
+ FROM student as s LEFT JOIN banji as b
+ on s.banji_id=b.id;
+```
 
-<span style="color: #2894FF;">SELECT * <br> FROM student as s RIGHT JOIN banji as b <br> on s.banji_id=b.id;</span><br> ![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_13.png)
+![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_12.png)
 
-<span style="color: #00A600;">--    没有分配课程也显示出来。</span><br><span style="color: #00A600;">--    班级名称   课程名称   学分</span><br><span style="color: #2894FF;">SELECT b.'name' AS '班级名称',c.'name' as '课程名称',c.credit as '学分' <br> FROM banji AS b LEFT JOIN banji_course AS bc <br> ON b.id=bc.banji_id <br> LEFT JOIN course as c <br> ON bc.course_id=c.id;</span><br>
+```sql
+SELECT * 
+FROM student as s RIGHT JOIN banji as b
+on s.banji_id=b.id;
+```
+
+![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_13.png)
+
+```sql
+-- 没有分配课程也显示出来。
+-- 班级名称   课程名称   学分
+SELECT b.`name` AS '班级名称',c.`name` as '课程名称',c.credit as '学分'
+FROM banji AS b LEFT JOIN banji_course AS bc
+ON b.id=bc.banji_id
+LEFT JOIN course as c
+ON bc.course_id=c.id;
+```
 
 ![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_14.png)
 
-<span style="color: #00A600;">--    统计每个班有多少学生</span><br>	<span style="color: #00A600;">--    学生数量</span><br>	<span style="color: #2894FF;">SELECT COUNT(id) as '学生数量' <br> 	FROM student GROUP BY banji_id;</span><br>	<span style="color: #00A600;">--    班级名称    数量</span><br>	<span style="color: #2894FF;">SELECT * <br>	FROM student as s <br> 	INNER JOIN banji as b <br> ON s.banji_id=b.id;</span><br>
+总结：多表查询主要是账务下面两点
+
+1. 整个查询涉及到几张表，涉及到几张表就连接这几张表。
+
+1. 如果涉及到这几张表的关系搞不清楚，画一下ER图，弄清楚表和表之间的关系（就是根据外键建立的关系）
+
+```sql
+-- 统计每个班有多少学生
+-- 学生数量
+SELECT COUNT(id) as '学生数量' 
+FROM student GROUP BY banji_id;
+-- 班级名称    数量
+SELECT * 
+FROM student as s 
+INNER JOIN banji as b
+ON s.banji_id=b.id;
+```
 
 ![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_15.png)
 
@@ -228,9 +557,25 @@ where是表达式，值为真或者假（true或者false）
 
 ![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_17.png)
 
-<span style="color: #2894FF;">SELECT b.'name' AS '班级名称',COUNT(s.id) as '学生数量' <br> FROM student as s <br> INNER JOIN banji as b <br> ON s.banji_id=b.id <br> GROUP BY s.banji_id;</span><br> ![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_18.png)
+```sql
+SELECT b.`name` AS '班级名称',COUNT(s.id) as '学生数量' 
+FROM student as s 
+INNER JOIN banji as b
+ON s.banji_id=b.id
+GROUP BY s.banji_id;
+```
 
-<span style="color: #00A600;">--    在上面基础上筛选出班级人数>1班级的名称和人数</span><br><span style="color: #2894FF;">SELECT b.'name' AS '班级名称',COUNT(s.id) as '学生数量' <br> FROM student as s <br> INNER JOIN banji as b <br> ON s.banji_id=b.id <br> GROUP BY s.banji_id <br> HAVING COUNT(s.id)>1;</span><br>
+![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_18.png)
+
+```sql
+-- 在上面基础上筛选出班级人数>1班级的名称和人数
+SELECT b.`name` AS '班级名称',COUNT(s.id) as '学生数量' 
+FROM student as s 
+INNER JOIN banji as b
+ON s.banji_id=b.id
+GROUP BY s.banji_id
+HAVING COUNT(s.id)>1;
+```
 
 ![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_19.png)
 
@@ -254,7 +599,11 @@ where是表达式，值为真或者假（true或者false）
 
 3. 语法：like '%关键字%'
 
-<span style="color: #2894FF;">SELECT * FROM student WHERE NAME LIKE '张%'; --    以张开头</span><br><span style="color: #2894FF;">SELECT * FROM student WHERE NAME LIKE '张_'; --    以张开头，而且名字是两个字</span><br><span style="color: #2894FF;">SELECT * FROM student WHERE NAME LIKE '%张%'; --    名字里面只要有张就可以</span><br>
+```sql
+SELECT * FROM student WHERE NAME LIKE '张%'; -- 以张开头
+SELECT * FROM student WHERE NAME LIKE '张_'; -- 以张开头，而且名字是两个字
+SELECT * FROM student WHERE NAME LIKE '%张%'; -- 名字里面只要有张就可以
+```
 
 如果要查找的字符里中包含"%","_"，
 
