@@ -1032,12 +1032,25 @@ pair<iterator, bool> insert(value_type&& _Val);			// set插入数据时返回boo
 iterator insert(value_type&& _Val);						// multiset可以插入重复数据
 ```
 
+------
+
 ***pair对组：***
 
 ​	成对出现的数据，可以返回两个数据	通过p.first、p.second访问
 
 ​	`pair<type, type> p ( value1, value2 );`
 ​	`pair<type, type> p = make_pair( value1, value2 );`
+
+***tuple元组：***   固定大小的异质值的汇集，是 [std::pair](https://zh.cppreference.com/w/cpp/utility/pair) 的泛化
+
+**结构化绑定：** 解包聚合对象为独立变量
+
+```c++
+auto [x, y, z] = std::tuple<int, double, char>(1, 2.5, 'Y')			// 默认值拷贝，可指定auto&
+std::tie(x, y, z) = std::make_tuple(3, 5.2, 'C')					// tie 解包聚合对象至已有变量
+```
+
+------
 
 ***容器排序：***
 
