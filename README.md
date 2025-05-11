@@ -1,6 +1,32 @@
-# Linux基础
+<h1 align="center">Linux</h1>
 
+[基础](#基础)
 
+&emsp;&emsp;[命令](#命令)
+
+&emsp;&emsp;[Vim](#Vim)
+
+&emsp;&emsp;[GCC](#GCC)
+
+&emsp;&emsp;[库](#库)
+
+&emsp;&emsp;[Makefile](#Makefile)
+
+&emsp;&emsp;[CMake](#CMake)
+
+&emsp;&emsp;[GDB](#GDB调试)
+
+[文件IO](#文件IO)
+
+&emsp;&emsp;[虚拟地址空间](#虚拟地址空间)
+
+&emsp;&emsp;[文件描述符](#文件描述符)
+
+[进程&线程](#进程和线程)
+
+&emsp;&emsp;[进程控制](#进程控制)
+
+## 基础
 
 **Linux 下文件和目录的特点**
 
@@ -50,7 +76,7 @@
 
 > * `cd` 这个终端命令是内置在系统内核中的，没有独立的文件，因此用 `which` 无法找到 `cd` 命令的位置
 
-## 终端命令
+### 命令
 
 #### 基本操作
 
@@ -277,7 +303,7 @@ Host 别名
 
 `git rebase --exec 'GIT_COMMITTER_DATE="$(git log -1 --format=%at)" git commit --amend --no-edit -n -S' -i HEAD~n`	为前n次commit签名
 
-## Vim
+### Vim
 
 Vim中共有三种模式： **命令模式**  **末行模式**  **编辑模式**
 
@@ -365,7 +391,7 @@ Vim中共有三种模式： **命令模式**  **末行模式**  **编辑模式**
 
 `!命令`	执行shell命令
 
-## GCC
+### GCC
 
 `gcc -o Dest a.c`
 
@@ -387,7 +413,7 @@ Vim中共有三种模式： **命令模式**  **末行模式**  **编辑模式**
 
 `-shared`	生成共享目标文件
 
-## 静态库&动态库
+### 库
 
 **静态库：libNAME.a**
 
@@ -446,7 +472,7 @@ $ gcc -o Dest main.c -L ./ -l NAME
 
 - 拷贝库的软链接至库目录
 
-## Makefile
+### Makefile
 
 **make：解释 makefile 中的指令，实现自动化编译**
 
@@ -527,13 +553,13 @@ clean:
         echo "hello"
 ```
 
-## CMake
+### CMake
 
 - 跨平台自动化构建系统生成工具
 
 
 
-### 语法
+#### 语法
 
 ```cmake
 cmake_minimum_required(VERSION 3.10)		# 指定 CMake 的最低版本要求
@@ -562,7 +588,7 @@ set(MY_VAR "Hello")				# 定义变量
 message(STATUS "Variable is ${MY_VAR}")		# 使用变量
 ```
 
-### 流程
+#### 流程
 
 ```shell
 MyProject/
@@ -644,7 +670,7 @@ target_link_libraries(TestMyLib PRIVATE MyLib ${GTEST_LIBRARIES})
 
 
 
-## GDB调试
+### GDB调试
 
 ```shell
 # -g 程序调试
@@ -699,3 +725,102 @@ $ set var i=100
 $ q
 ```
 
+
+
+## 文件IO
+
+Linux中一切皆文件
+
+### 虚拟地址空间
+
+运行磁盘上的可执行程序会产生进程，内核为每个 **进程** 创建专属虚拟地址空间，并将程序数据载入对应地址 。
+
+- 大小由OS决定，32位的为 2^32 B，即 4G
+
+- 进程数据经 CPU 中 MMU 从虚拟地址空间映射到物理内存
+
+<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/virtual_add_space.png" style="zoom:70%;" />
+
+- **保留区**：位于最底部，未赋予物理地址，任何对其引用均非法，程序中空指针所指的地址
+- **堆**：存放进程运行时动态分配的内存，内容匿名，只能通过指针间址，向上生长，不连续
+- **内存映射区**：加载磁盘文件或程序运行所需动态库
+- **栈**：存储局部变量、函参，向下生长，连续
+- **命令行参数**：存储进程执行时传递给 `main()` 的参数，argc，argv[]
+- **环境变量**：存储和进程相关的环境变量, 如: 工作路径, 进程所有者等信息
+
+### 文件描述符
+
+fd：进程打开或新建文件时，内核返回对应文件描述符。
+
+<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/fd_table.png" style="zoom:70%;" />
+
+- 终端是设备文件，当前终端可用 `/dev/tty` 表示
+- 每个进程 fd 表的文件打开上限默认为 1024，多 fd 可共用同一磁盘文件
+- 进程启动时，内核 PCB fd表预分配 3 个指向启动终端的fd：
+  1. `STDIN_FILENO`：标准输入，通过fd向终端文件输入数据，宏值为0
+  2. `STDOUT_FILENO`：标准输出，通过fd由终端文件输出数据，宏值为1
+  3. `STDERR_FILENO`：标准错误，通过fd由终端文件输出错误信息，宏值为2
+
+
+
+## 进程和线程
+
+程序是磁盘可执行文件，进程是其执行实例
+
+### 进程控制
+
+#### PCB
+
+进程控制块，本质是内核 `task_struct` 结构体，记录进程运行相关信息：
+
+- 进程id：唯一的 `pid_t` 类型的进程ID
+- 进程状态：就绪、运行、阻塞等
+- 进程对应的虚拟地址空间的信息
+- 绑定启动终端的信息
+- 当前工作目录：默认启动进程的目录
+- umask掩码：创建新文件时用于屏蔽操作权限
+- fd表：每个 fd 对应一个已打开的磁盘文件
+- 和信号相关的信息：函数调用/快捷键/shell命令等操作会产生信号
+- 阻塞信号集：记录阻塞当前进程已产生的信号
+- 未决信号集：记录进程中未处理的信号
+- 用户id和组id：进程所属用户和组
+- 会话和进程组：进程组是进程集合，Session 是进程组集合
+- 进程可以使用的资源上限：`ulimit -a` 查看详情
+
+`ps aux`			// 查看进程
+
+`kill -9 pid`		// 强制杀死进程
+
+#### 父子进程
+
+`fork()` 用于创建子进程
+
+<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/fork.png" style="zoom:70%;" />
+
+函数调用成功后，各自的虚拟地址空间中：
+
+- 父进程：返回子进程pid
+- 子进程：返回0
+
+<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/process_exe_loca.png" style="zoom:70%;" />
+
+父进程成功创建子进程后，子进程拥有父进程代码区所有代码，且从父进程调用 **fork()函数之后** 开始执行。
+
+故以下循环执行了3次，最终得到了 2^3 个进程
+
+```c
+for(int i=0; i<3; ++i)
+{
+    pid_t pid = fork();
+    printf("当前进程pid: %d\n", getpid());
+}
+```
+
+> 分析多进程程序需拆分代码，若无条件控制，父子进程均能执行所有代码
+
+#### 回收
+
+子进程退出时，用户区资源自释，内核区PCB资源需父进程释放 
+
+- 启动的进程创建子进程后，若父进程先退出，子进程即为孤儿进程，被系统进程领养
+- 父进程未释放先结束子进程的PCB资源，子进程即为僵尸进程，需杀死父进程，杀子无效
