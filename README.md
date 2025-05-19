@@ -1,10 +1,12 @@
 <h1 align="center">Linux</h1>
 
-[**基础**](#基础)&emsp;&emsp;[命令](#命令)&emsp;&emsp;[Vim](#Vim)&emsp;&emsp;[GCC](#GCC)&emsp;&emsp;[库](#库)&emsp;&emsp;[Makefile](#Makefile)&emsp;&emsp;[CMake](#CMake)&emsp;&emsp;[GDB](#GDB调试)
+[**🏷️基础**](#基础)&emsp;&emsp;[命令](#命令)&emsp;&emsp;[Vim](#Vim)&emsp;&emsp;[GCC](#GCC)&emsp;&emsp;[库](#库)&emsp;&emsp;[Makefile](#Makefile)&emsp;&emsp;[CMake](#CMake)&emsp;&emsp;[GDB](#GDB调试)
 
-[**文件IO**](#文件IO)
+[**🏷️文件IO**](#文件IO)
 
-[**进程&线程**](#进程和线程)&emsp;&emsp;[控制](#进程控制)&emsp;&emsp;[通信](#进程通信)&emsp;&emsp;[守护进程](#守护进程)
+[**🏷️进程**](#进程)&emsp;&emsp;[控制](#进程控制)&emsp;&emsp;[通信](#进程通信)&emsp;&emsp;[守护进程](#守护进程)&emsp;&emsp;[线程](#线程)
+
+[**🏷️套接字**](#套接字通信)&emsp;
 
 ## 基础
 
@@ -737,9 +739,9 @@ fd：进程打开或新建文件时，内核返回对应文件描述符。
 
 
 
-## 进程和线程
+## 进程
 
-程序是磁盘可执行文件，进程是其执行实例
+程序是磁盘可执行文件，进程是其执行实例，是资源分配的最小单位。
 
 ### 进程控制
 
@@ -839,3 +841,51 @@ Daemon是独立于控制终端、生存期长的后台服务进程，常以 d �
   4. 可选：使用 `umask()` 重设文件权限掩码
   5. 关闭/重定向标准输入输出和错误流（通常指向/dev/null）
   6. 执行守护进程核心逻辑
+
+### 线程
+
+线程是轻量级进程，Linux下本质为进程，是OS调度执行的最小单位。
+
+- 多线程共享地址空间、独享栈区与寄存器（内核管理）， 线程组内可互访栈数据
+- 线程更轻量级，上下文切换比进程快的多
+- 文件IO线程数2×CPU核数，复杂算法等于核数
+- 虚拟地址空间生命周期默认与主线程一致、与子线程无关
+
+**上下文切换** 是进程/线程分时调度时保存并恢复上下文以继续执行的行为
+
+
+
+## 套接字通信
+
+套接字是一套网络通信的接口，包含于标头 `<sys/socket.h>` 。
+
+<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/socket.png" style="zoom:70%;" />
+
+**字节序** 是不同计算机体系中多字节数据的内存存储顺序
+
+- 小端：低位字节存低地址、高位存高地址（PC机默认）  
+- 大端：低位字节存高地址、高位存低地址（套接字通信使用）
+
+```c
+// case: 0x12345678
+                 内存低地址位                内存的高地址位
+--------------------------------------------------------------------------->
+小端:         0x78        0x56        0x34        0x12
+大端:         0x12        0x34        0x56        0x78
+```
+
+BSD Socket 提供了用于 IP 和 端口 的转换接口：
+
+```c
+#include <arpa/inet.h>
+
+// 短整 主机字节序 -> 网络字节序
+uint16_t htons(uint16_t hostshort);	
+// 整形 主机字节序 -> 网络字节序
+uint32_t htonl(uint32_t hostlong);	
+// 短整 网络字节序 -> 主机字节序
+uint16_t ntohs(uint16_t netshort)
+// 整形 网络字节序 -> 主机字节序
+uint32_t ntohl(uint32_t netlong);
+```
+
