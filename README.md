@@ -6,7 +6,7 @@
 
 [**🏷️进程**](#进程)&emsp;&emsp;[控制](#进程控制)&emsp;&emsp;[通信](#进程通信)&emsp;&emsp;[守护进程](#守护进程)&emsp;&emsp;[线程](#线程)
 
-[**🏷️套接字**](#套接字通信)&emsp;
+[**🏷️套接字**](#套接字通信)&emsp;&emsp;[概念](#概念)&emsp;&emsp;[Socket](#Socket)
 
 ## 基础
 
@@ -861,6 +861,8 @@ Daemon是独立于控制终端、生存期长的后台服务进程，常以 d �
 
 <img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/socket.png" style="zoom:70%;" />
 
+### 概念
+
 **字节序** 是不同计算机体系中多字节数据的内存存储顺序
 
 - 小端：低位字节存低地址、高位存高地址（PC机默认）  
@@ -874,18 +876,280 @@ Daemon是独立于控制终端、生存期长的后台服务进程，常以 d �
 大端:         0x12        0x34        0x56        0x78
 ```
 
-BSD Socket 提供了用于 IP 和 端口 的转换接口：
+一些转换接口：
 
 ```c
-#include <arpa/inet.h>
-
-// 短整 主机字节序 -> 网络字节序
+// 大端 <-> 小端
 uint16_t htons(uint16_t hostshort);	
-// 整形 主机字节序 -> 网络字节序
 uint32_t htonl(uint32_t hostlong);	
-// 短整 网络字节序 -> 主机字节序
-uint16_t ntohs(uint16_t netshort)
-// 整形 网络字节序 -> 主机字节序
+uint16_t ntohs(uint16_t netshort);
 uint32_t ntohl(uint32_t netlong);
+
+// 点分十进制IP <-> 大端整形
+int inet_pton(int af, const char *src, void *dst); 
+const char *inet_ntop(int af, const void *src, char *dst, socklen_t size);
+
+// 点分十进制IPv4 <-> 大端整形，windows也适用
+in_addr_t inet_addr (const char *cp);
+char* inet_ntoa(struct in_addr in);
 ```
 
+- `inet_pton()`
+
+  - af: 地址族, AF_INET(ipv4), AF_INET6(ipv6)
+
+  - src: 入参, 点分十进制ip: 192.168.1.100
+
+  - dst: 出参, 指向大端整形IP
+  - return 1
+
+- `inet_ntop`
+
+  - af: 地址族, AF_INET(ipv4), AF_INET6(ipv6)
+
+  - src: 入参, 指向大端整形IP
+
+  - dst: 出参, 点分十进制ip
+
+  - size: 修饰dst所指内存的最大容量 B
+  - return dst
+
+**sockaddr**
+
+```c
+// 通用结构体
+struct sockaddr {
+    unsigned short sa_family;    // 地址族协议，ipv4
+    char sa_data[14];           // 端口(2B) + IP地址(4B) + 填充(8B)
+};
+
+// IPv4特化
+struct sockaddr_in {
+    short int sin_family;           // 地址族，AF_INET
+    unsigned short int sin_port;    // 端口 -> 大端
+    struct in_addr sin_addr;        // IP -> 大端
+    unsigned char sin_zero[8];      // 填充
+};
+
+struct in_addr {  uint32_t s_addr;  };
+```
+
+### Socket
+
+fd关联两块内存，读缓冲区存储待读数据，写缓冲区存储待写数据。
+
+---
+
+用于套接字通信的函数：
+
+```c
+int socket(int domain, int type, int protocol);							// 创建套接字
+int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);	// 绑定fd和ip&port
+int listen(int sockfd, int backlog);									// 监听套接字
+int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);		// 接受连接
+int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);// 建立连接
+ssize_t read(int sockfd, void *buf, size_t size);						// 接收数据
+ssize_t recv(int sockfd, void *buf, size_t size, int flags);
+ssize_t write(int fd, const void *buf, size_t len);						// 发送数据
+ssize_t send(int fd, const void *buf, size_t len, int flags);
+```
+
+- `socket()`
+  - domain: 地址族
+  - type: 传输协议, SOCK_STREAM(流式), SOCK_DGRAM(报式)
+  - protocol: 写0使用默认协议, 流式tcp, 报式udp
+  - return fd
+
+- `bind()`
+  - sockfd: 监听fd
+  - addr: 入参, 待绑的大端IP&port初始化到此结构体
+  - addrlen: sizeof(addr)
+  - return 0
+- `listen()`
+  - sockfd: fd
+  - backlog: 同时能处理的最大连接要求，最大128
+  - return 0
+- `accept()`
+  - sockfd: 监听的fd
+  - addr: 出参, 存储了client's infos
+  - addrlen: sizeof(addr)
+  - return fd
+- `connect()`
+  - sockfd: 通信的fd
+  - addr: 存储了server's infos
+  - addrlen: sizeof(addr)
+  - return 0
+- `recv()`
+  - sockfd: 通信的fd
+  - buf: 存储接收的数据
+  - size: sizeof(buf)
+  - flags: 一般指定 0
+  - return +(接收B), 0(对方断开), -1(失败)
+- `send()`
+  - fd: 通信的fd
+  - buf: 入参, 字符串str
+  - len: len(str)
+  - flags: 一般指定 0
+  - return +(发送B), -1(失败)
+
+---
+
+- **tcp server**
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <arpa/inet.h>
+
+int main()
+{
+    // 1. 创建监听的套接字
+    int lfd = socket(AF_INET, SOCK_STREAM, 0);
+    if(lfd == -1)
+    {
+        perror("socket");
+        exit(0);
+    }
+
+    // 2. 将socket()返回值和本地的IP端口绑定到一起
+    struct sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(10000);   // 大端端口
+    // INADDR_ANY代表本机的所有IP, 假设有三个网卡就有三个IP地址
+    // 这个宏可以代表任意一个IP地址
+    // 这个宏一般用于本地的绑定操作
+    addr.sin_addr.s_addr = INADDR_ANY;  // 这个宏的值为0 == 0.0.0.0
+//    inet_pton(AF_INET, "192.168.237.131", &addr.sin_addr.s_addr);
+    int ret = bind(lfd, (struct sockaddr*)&addr, sizeof(addr));
+    if(ret == -1)
+    {
+        perror("bind");
+        exit(0);
+    }
+
+    // 3. 设置监听
+    ret = listen(lfd, 128);
+    if(ret == -1)
+    {
+        perror("listen");
+        exit(0);
+    }
+
+    // 4. 阻塞等待并接受客户端连接
+    struct sockaddr_in cliaddr;
+    int clilen = sizeof(cliaddr);
+    int cfd = accept(lfd, (struct sockaddr*)&cliaddr, &clilen);
+    if(cfd == -1)
+    {
+        perror("accept");
+        exit(0);
+    }
+    // 打印客户端的地址信息
+    char ip[24] = {0};
+    printf("客户端的IP地址: %s, 端口: %d\n",
+           inet_ntop(AF_INET, &cliaddr.sin_addr.s_addr, ip, sizeof(ip)),
+           ntohs(cliaddr.sin_port));
+
+    // 5. 和客户端通信
+    while(1)
+    {
+        // 接收数据
+        char buf[1024];
+        memset(buf, 0, sizeof(buf));
+        int len = read(cfd, buf, sizeof(buf));
+        if(len > 0)
+        {
+            printf("客户端say: %s\n", buf);
+            write(cfd, buf, len);
+        }
+        else if(len  == 0)
+        {
+            printf("客户端断开了连接...\n");
+            break;
+        }
+        else
+        {
+            perror("read");
+            break;
+        }
+    }
+
+    close(cfd);
+    close(lfd);
+
+    return 0;
+}
+```
+
+- **tcp client**
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <arpa/inet.h>
+
+int main()
+{
+    // 1. 创建通信的套接字
+    int fd = socket(AF_INET, SOCK_STREAM, 0);
+    if(fd == -1)
+    {
+        perror("socket");
+        exit(0);
+    }
+
+    // 2. 连接服务器
+    struct sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(10000);   // 大端端口
+    inet_pton(AF_INET, "192.168.237.131", &addr.sin_addr.s_addr);
+
+    int ret = connect(fd, (struct sockaddr*)&addr, sizeof(addr));
+    if(ret == -1)
+    {
+        perror("connect");
+        exit(0);
+    }
+
+    // 3. 和服务器端通信
+    int number = 0;
+    while(1)
+    {
+        // 发送数据
+        char buf[1024];
+        sprintf(buf, "你好, 服务器...%d\n", number++);
+        write(fd, buf, strlen(buf)+1);
+        
+        // 接收数据
+        memset(buf, 0, sizeof(buf));
+        int len = read(fd, buf, sizeof(buf));
+        if(len > 0)
+        {
+            printf("服务器say: %s\n", buf);
+        }
+        else if(len  == 0)
+        {
+            printf("服务器断开了连接...\n");
+            break;
+        }
+        else
+        {
+            perror("read");
+            break;
+        }
+        sleep(1);   // 每隔1s发送一条数据
+    }
+
+    close(fd);
+
+    return 0;
+}
+```
+
+
+
+**TCP粘包** 因流式传输无边界导致数据粘连，解决方案是在应用层添加带长度字段的包头以标识消息边界。
