@@ -943,14 +943,14 @@ fd关联两块内存，读缓冲区存储待读数据，写缓冲区存储待写
 用于套接字通信的函数：
 
 ```c
-int socket(int domain, int type, int protocol);							// 创建套接字
-int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);	// 绑定fd和ip&port
-int listen(int sockfd, int backlog);									// 监听套接字
+int socket(int domain, int type, int protocol);					// 创建套接字
+int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);		// 绑定fd和ip&port
+int listen(int sockfd, int backlog);						// 监听套接字
 int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);		// 接受连接
-int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);// 建立连接
-ssize_t read(int sockfd, void *buf, size_t size);						// 接收数据
+int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);	// 建立连接
+ssize_t read(int sockfd, void *buf, size_t size);				// 接收数据
 ssize_t recv(int sockfd, void *buf, size_t size, int flags);
-ssize_t write(int fd, const void *buf, size_t len);						// 发送数据
+ssize_t write(int fd, const void *buf, size_t len);				// 发送数据
 ssize_t send(int fd, const void *buf, size_t len, int flags);
 ```
 
