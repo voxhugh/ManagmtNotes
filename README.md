@@ -1,6 +1,83 @@
-# C++
+<h1 align="center">C++ 知识图谱导航</h1>
 
-[TOC]
+<div align="center">
+  <img src="https://img.shields.io/badge/C++-Advanced-blue?style=for-the-badge&logo=cplusplus" alt="C++ Level">
+  <img src="https://img.shields.io/badge/Note-Tips-green?style=for-the-badge" alt="Note Type">
+</div>
+
+## 📚 核心概念
+
+| [基础](#基础)         | [关键字](#关键字) | [内存四区](#内存四区) | [指针](#指针) | [引用](#引用) |
+| --------------------- | ----------------- | --------------------- | ------------- | ------------- |
+| [构造函数](#构造函数) | [析构](#析构)     | [对象模型](#对象模型) | [多态](#多态) | [模板](#模板) |
+
+---
+
+## 🎯 目录索引
+
+### 🧐 基础
+
+- [字符与数值](#基础)
+- [作用域与生命周期](#基础)
+- [类与结构体](#基础)
+- [运算符特性](#基础)
+
+### 💡 关键字
+
+- [类型转换](#关键字)
+- [迭代器操作](#关键字)
+- [函数修饰符](#关键字)
+- [常量与类型推导](#关键字)
+
+### 🧠 内存管理
+
+- [内存四区模型](#内存四区)
+- [new/delete 操作](#内存四区)
+- [栈帧与溢出](#内存四区)
+
+### ➡️ 指针与引用
+
+- [指针操作](#指针)
+- [常量指针 vs 指针常量](#指针)
+- [右值引用](#引用)
+- [完美转发](#引用)
+
+### 🏗️ 面向对象
+
+- [构造函数重载](#构造函数)
+- [移动构造与深拷贝](#拷贝构造)
+- [虚函数表机制](#多态)
+- [抽象类与接口](#多态)
+
+### 📦 STL 容器
+
+| [vector](#vector容器) | [deque](#deque容器) | [list](#list容器)     | [set/map](#setmultiset-容器) |
+| --------------------- | ------------------- | --------------------- | ---------------------------- |
+| [stack](#stack容器)   | [queue](#queue容器) | [string](#string容器) | [智能指针](#智能指针)        |
+
+### ⚙️ 高级特性
+
+- [模板元编程](#模板)
+- [Lambda 表达式](#匿名函数)
+- [并发与线程](#多线程)
+- [时间日期库](#日期时间)
+
+### 🛠️ 工具与技巧
+
+- [文件读写](#文件操作)
+- [STL 算法](#stl---算法)
+- [函数对象与绑定](#可调用对象)
+- [POD 类型优化](#pod类型)
+
+---
+
+<div align="center">
+  <a href="#基础" style="font-size: 1.2em; margin: 0 10px">🚀 开始阅读</a> |
+  <a href="#stl---容器" style="font-size: 1.2em; margin: 0 10px">🔍 STL 专题</a> |
+  <a href="#多线程" style="font-size: 1.2em; margin: 0 10px">⚡ 并发编程</a>
+</div>
+
+
 
 
 
@@ -86,13 +163,13 @@
 
 - 头文件声明，源文件实现（需要指明作用域）
 
-**作用域：**
+**作用域**：
 
 `Person::`						// 成员函数
 
 `Person<int>::`					// 类模板
 
-**类模板：**
+**类模板**：
 
 1. 包含.cpp源文件
 2. 将声明和实现写在一个以.hpp为后缀名的文件中						// .hpp是约定俗成的，并非规范
@@ -114,7 +191,7 @@
 |  栈区  |               局部变量，局部常量               | 运行 | 编译器控制 |
 |  堆区  |                                                | 运行 | 程序员控制 |
 
-> **注意：**不要返回本函数的局部变量地址
+> **注意**：不要返回本函数的局部变量地址
 
 ---
 
@@ -136,7 +213,7 @@
 - 空指针和野指针都不是主动申请的空间，忌访问
 - 指针作为函数形参可以节省内存，const 指针可以防止误写操作
 
-**区分：**
+**区分**：
 
 - 常量指针：指向常量的指针
 
@@ -163,11 +240,11 @@
 
 ------
 
-**右值引用：**
+**右值引用**：
 
 `int&& a = 520`			// 延长右值生命周期
 
-**转发引用：**
+**转发引用**：
 
 `T&&` 					    // 右值 得到 `int&&`，否则 `int&`
 
@@ -191,11 +268,11 @@
 
 ## 构造函数
 
-**调用：**
+**调用**：
 
 `Person p`                                                   				     		 		// 默认构造
 
-- **注意：**不要加()，编译器会认为是函数的声明；堆区推荐 `new Person()`
+- **注意**：不要加()，编译器会认为是函数的声明；堆区推荐 `new Person()`
 
 `Person p(参)` 														// 有参构造
 
@@ -203,37 +280,37 @@
 
 ------
 
-**初始化列表：**
+**初始化列表**：
 
 `Person(int a,double b) :x(a), y(b) {}`		// 按声明顺序，显式**初始化**类成员
 
 `Person p{520,13.14}`						     // 通常用于初始化或 **return** 聚合类型
 
-- **注意：**非静态成员允许类内就地初始化，且早于初始化列表
+- **注意**：非静态成员允许类内就地初始化，且早于初始化列表
 
 `initializer_list<T>` , `size()` , `begin()` , `end()`	// 动态初始化列表容器
 
 ------
 
-**委托构造：**
+**委托构造**：
 
 `Person(string name, int age):Person(age) {}`		// 调用重载的其他构造函数
 
-**继承构造：**
+**继承构造**：
 
 `using Base::Base`			// 子类声明使用父类构造函数
 
-**显式指定：**
+**显式指定**：
 
 `Person() = default`				// 显式指定为默认构造函数，只能修饰六大函数
 
 `void func(char c) = delete`		// 显式删除函数，可有效禁用重载时的隐式类型转换
 
-**匿名对象：**
+**匿名对象**：
 
 `Person([参])`					// 省略对象名，当前行执行结束马上析构
 
-- **注意：**不能用拷贝构造初始化匿名对象，编译器认为`Person(p) === Person p`
+- **注意**：不能用拷贝构造初始化匿名对象，编译器认为`Person(p) === Person p`
 
 
 
@@ -255,11 +332,11 @@
 2. 涉及对象的值传递或值返回时
 
 
-- **彻底解决浅拷贝：**重写拷贝构造，重载`operator=`
+- **彻底解决浅拷贝**：重写拷贝构造，重载`operator=`
 
 
 
-**移动构造：**
+**移动构造**：
 
 `Person(Person&& p) : m_P(p.m_P) {p.m_P = nullptr;}`		// 赋右值时会优先调用来转移属性所有权
 
@@ -269,7 +346,7 @@
 
 `~Person()`			// 在构造函数前加~号，不可重载
 
-**释放堆区开辟的内存：**
+**释放堆区开辟的内存**：
 
 ```c++
 if(m_Ptr != NULL)
@@ -292,7 +369,7 @@ if(m_Ptr != NULL)
 - 静态成员变量类内声明，类外初始化
 - 空对象：1B
 
-**开发人员命令提示工具：**
+**开发人员命令提示工具**：
 
 `cl /d1 reportSingleClassLayout类名 文件名`		// 跳转到文件所在路径，可以用命令查看类的对象模型
 
@@ -300,7 +377,7 @@ if(m_Ptr != NULL)
 
 ## this指针
 
-**本质：**指针常量
+**本质**：指针常量
 
 
 
@@ -323,7 +400,7 @@ if(m_Ptr != NULL)
 - 函数名就是地址			// 成员函数需要&
 - 可以作为函数形参
 
-**类成员函数指针：**
+**类成员函数指针**：
 
 - 声明必须加作用域
 - 只能指向非静态成员函数
@@ -333,7 +410,7 @@ if(m_Ptr != NULL)
 
 ## 友元
 
-**意义：**作友元可以访问类内私有成员
+**意义**：作友元可以访问类内私有成员
 
 `friend void func();`					   // 全局函数作友元，在类内写声明并用friend关键字修饰
 
@@ -347,7 +424,7 @@ if(m_Ptr != NULL)
 
 `operator_`				// _为重载的运算符
 
-**意义：**能简化自定义数据类型间的运算，支持动态绑定
+**意义**：能简化自定义数据类型间的运算，支持动态绑定
 
 ```c++
 /*左移配合友元可以实现输出自定义数据类型，但只能全局函数重载，成员函数实现不了对象本身在cout右侧*/
@@ -371,7 +448,7 @@ ostream & operator<<(ostream &cout,Person &p)			// 左移运算符重载
 
 `auto it = v.begin()`		// it为迭代器
 
-- **注意：**只有变量为 **指针** 或 **引用** 时推导结果才保留const、volatile关键字
+- **注意**：只有变量为 **指针** 或 **引用** 时推导结果才保留const、volatile关键字
 
 
 
@@ -379,7 +456,7 @@ ostream & operator<<(ostream &cout,Person &p)			// 左移运算符重载
 
 `decltype((Person.m_Age)) a = 0`	// a：int&
 
-- **注意：**当表达式为 **左值** 或 **()** 时推导结果是一个引用，且保留const、volatile关键字
+- **注意**：当表达式为 **左值** 或 **()** 时推导结果是一个引用，且保留const、volatile关键字
 
 
 
@@ -398,7 +475,7 @@ ostream & operator<<(ostream &cout,Person &p)			// 左移运算符重载
 | [=]      | 按值捕捉          |
 | [=, &f]  | 按值捕捉，f按引用 |
 
-- **注意：**Lambda表达式通常被看作仿函数，[]时可转换成函数指针
+- **注意**：Lambda表达式通常被看作仿函数，[]时可转换成函数指针
 
 
 
@@ -430,7 +507,7 @@ Son::Base::m_Age				// 静态成员通过子类类名访问父类成员
 
 - C++允许多继承，但实际开发不建议用
 
-**菱形继承：**（🦙）
+**菱形继承**：（🦙）
 
 子类继承两份相同数据，导致资源浪费，用虚继承来解决
 
@@ -462,7 +539,7 @@ vbtable里含有相对偏移，可以定位到唯一的m_Age*/
 
 > 虚⇔可重写，纯虚⇔声明
 
-**实现：**
+**实现**：
 
 继承 + 虚函数
 
@@ -496,7 +573,7 @@ Cat 虚函数表内也存有 &Animal::function
 
 `#include <fstream>`
 
-**操作文件三大类：**
+**操作文件三大类**：
 
 - `ofstream` ：写操作
 
@@ -504,7 +581,7 @@ Cat 虚函数表内也存有 &Animal::function
 
 - `fstream` ：读写操作
 
-**文件打开方式：**（多选：| ）
+**文件打开方式**：（多选：| ）
 
 - `ios::in`———读文件
 
@@ -518,7 +595,7 @@ Cat 虚函数表内也存有 &Animal::function
 
 - `ios::binary`———二进制方式
 
-**步骤：**
+**步骤**：
 
 ```C++
 ofstream ofs;
@@ -541,9 +618,9 @@ ifs.eof()
 
 ## 模板
 
-**意义：**类型参数化
+**意义**：类型参数化
 
-**语法：**
+**语法**：
 
 ```c++
 template<typename/class T,…>        	// 模板声明
@@ -555,11 +632,11 @@ func<int>(a,b)                		// 显式指定类型
 func(a,b)                   		// 自动类型推导（不发生自动类型转换，只适用函数模板）
 ```
 
-**注意：**必须确定T的类型才能使用
+**注意**：必须确定T的类型才能使用
 
 
 
-**调用规则：**
+**调用规则**：
 
 1. 函数模板和普通函数相同，优先普通函数
 
@@ -576,7 +653,7 @@ func(a,b)                   		// 自动类型推导（不发生自动类型转�
 - 学模板不是为了写，而是为了在STL中运用系统提供的模板
 - 类模板中的成员函数在调用时创建
 
-**类模板实例化的对象当函数形参时：**
+**类模板实例化的对象当函数形参时**：
 
 1. 指定传入类型：`func(Person<string,int>&p)`
 2. 参数模板化：`func(Person<T1,T2>&p)`
@@ -611,7 +688,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 - string类内封装了char*，是一个char*型的容器
 
 
-**构造：**
+**构造**：
 
 ​	`string();`
 
@@ -621,7 +698,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 ​	`string(int n,char c);`
 
-**赋值：**
+**赋值**：
 
 ​	`string& operator=(const char* s);`
 
@@ -637,7 +714,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 ​	`string& assign=(int n,char c);`
 
-**字符串拼接：**
+**字符串拼接**：
 
 ​	`string& operator+=(const char* str);`
 
@@ -653,7 +730,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 ​	`string& append(const string &s,int pos,int n);`
 
-**查找和替换：**
+**查找和替换**：
 
 ​	`int find(const string& str,int pos=0) const;`
 
@@ -675,19 +752,19 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 ​	`string& replace(int pos,int n,const char* s);`
 
-**字符串比较：**
+**字符串比较**：
 
 ​	`int compare(const string &s) const;`			//  相等返回0
 
 ​	`int compare(const char * s) const;`
 
-**字符存取：**
+**字符存取**：
 
 ​	`char& operator[](int n);`
 
 ​	`char& at(int n);`
 
-**字符串插入和删除：**
+**字符串插入和删除**：
 
 ​	`string& insert(int pos,const char* s);`
 
@@ -697,7 +774,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 ​	`string& erase(int pos,int n=npos);`
 
-**子串获取：**
+**子串获取**：
 
 ​	`string substr(int pos=0,int n=npos) const;`
 
@@ -705,7 +782,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 <img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/vector容器.jpg" style="zoom:130%;" />
 
-**构造：**
+**构造**：
 
 ​	`vector<T> v;`
 
@@ -715,7 +792,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 ​	`vector(const vector &vec);`
 
-**赋值：**
+**赋值**：
 
 ​	`vector& operator=(const vector &vec);`
 
@@ -723,7 +800,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 ​	`assign(n, elem);`
 
-**容量和大小：**
+**容量和大小**：
 
 ​	`empty(); `
 
@@ -735,7 +812,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 ​	`resize(int num, elem);` 
 
-**插入和删除：**
+**插入和删除**：
 
 ​	`push_back(ele);`  				// 平替：*emplace_back()*，直接初始化，性能更高
 
@@ -751,7 +828,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 ​	`clear();`
 
-**数据存取：**
+**数据存取**：
 
 ​	`at(int idx); `
 
@@ -765,7 +842,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 ​	`swap(vec);` 				// 可以使两个容器互换，达到实用的收缩内存效果
 
-**预留空间：**
+**预留空间**：
 
 ​	`reserve(int len);`		// 预留len个元素长度，预留位置不初始化，元素不可访问
 
@@ -790,7 +867,7 @@ for (int i = 0; i < 100000; i++) {
 
 ![deque内部工作原理](https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/中控器.jpg)
 
-**构造：**
+**构造**：
 
 ​	`deque<T> deqT;`
 
@@ -800,7 +877,7 @@ for (int i = 0; i < 100000; i++) {
 
 ​	`deque(const deque &deq);`
 
-**赋值：**
+**赋值**：
 
 ​	`deque& operator=(const deque &deq); `
 
@@ -818,7 +895,7 @@ void printDeque(const deque<int>& d)
 }
 ```
 
-**大小：**
+**大小**：
 
 ​	`deque.empty();`
 
@@ -828,7 +905,7 @@ void printDeque(const deque<int>& d)
 
 ​	`deque.resize(num, elem);`
 
-**插入和删除：**
+**插入和删除**：
 
 ​	`push_back(elem);`
 
@@ -850,7 +927,7 @@ void printDeque(const deque<int>& d)
 
 ​	`erase(pos);`
 
-**数据存取：**
+**数据存取**：
 
 ​	`at(int idx); `
 
@@ -860,7 +937,7 @@ void printDeque(const deque<int>& d)
 
 ​	`back();`
 
-**排序：**
+**排序**：
 
 ​	`sort(iterator beg, iterator end)`		// 默认升序，属于标准算法
 
@@ -870,17 +947,17 @@ void printDeque(const deque<int>& d)
 
 <img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/stack容器.jpg"  />
 
-**构造：**
+**构造**：
 
 ​	`stack<T> stk;`
 
 ​	`stack(const stack &stk);`
 
-**赋值：**
+**赋值**：
 
 ​	`stack& operator=(const stack &stk);`
 
-**数据存取：**
+**数据存取**：
 
 ​	`push(elem);`
 
@@ -888,7 +965,7 @@ void printDeque(const deque<int>& d)
 
 ​	`top();`
 
-**大小：**
+**大小**：
 
 ​	`empty();`
 
@@ -904,17 +981,17 @@ void printDeque(const deque<int>& d)
 
 
 
-**构造：**
+**构造**：
 
 ​	`queue<T> que;`
 
 ​	`queue(const queue &que);`
 
-**赋值：**
+**赋值**：
 
 ​	`queue& operator=(const queue &que);`
 
-**数据存取：**
+**数据存取**：
 
 ​	`push(elem);`
 
@@ -924,7 +1001,7 @@ void printDeque(const deque<int>& d)
 
 ​	`front();` 
 
-**大小：**
+**大小**：
 
 ​	`empty();` 
 
@@ -938,7 +1015,7 @@ void printDeque(const deque<int>& d)
 
 插入操作和删除操作都不会造成原有list迭代器的失效，这在vector是不成立的
 
-**构造：**
+**构造**：
 
 ​	`list<T> lst;` 
 
@@ -948,7 +1025,7 @@ void printDeque(const deque<int>& d)
 
 ​	`list(const list &lst);`
 
-**赋值和交换：**
+**赋值和交换**：
 
 ​	`assign(beg, end);`
 
@@ -958,7 +1035,7 @@ void printDeque(const deque<int>& d)
 
 ​	`swap(lst);` 
 
-**大小：**
+**大小**：
 
 ​	`size();`
 
@@ -968,7 +1045,7 @@ void printDeque(const deque<int>& d)
 
 ​	`resize(num, elem);` 
 
-**插入和删除：**
+**插入和删除**：
 
 ​	`push_back(elem);`
 
@@ -992,13 +1069,13 @@ void printDeque(const deque<int>& d)
 
 ​	`remove(elem);`
 
-**数据存取：**
+**数据存取**：
 
 ​	`front();`
 
 ​	`back();`
 
-**反转和排序：**
+**反转和排序**：
 
 ​	`reverse();`
 
@@ -1012,7 +1089,7 @@ void printDeque(const deque<int>& d)
 
 
 
-**构造和赋值：**
+**构造和赋值**：
 
 ​	`set<T> st;`
 
@@ -1020,7 +1097,7 @@ void printDeque(const deque<int>& d)
 
 ​	`set& operator=(const set &st);`
 
-**大小和交换：**
+**大小和交换**：
 
 ​	`size();`
 
@@ -1028,7 +1105,7 @@ void printDeque(const deque<int>& d)
 
 ​	`swap(st);` 
 
-**插入和删除：**
+**插入和删除**：
 
 ​	`insert(elem);`
 
@@ -1040,7 +1117,7 @@ void printDeque(const deque<int>& d)
 
 ​	`erase(elem);`
 
-**查找和统计：**
+**查找和统计**：
 
 ​	`find(key);`                  // 查找key是否存在：存在返回该键的元素的迭代器；不存在，返回`set.end();`
 
@@ -1048,7 +1125,7 @@ void printDeque(const deque<int>& d)
 
 
 
-***set和multiset区别：***
+***set和multiset区别**：*
 
 ```c++
 pair<iterator, bool> insert(value_type&& _Val);			// set插入数据时返回bool
@@ -1057,16 +1134,16 @@ iterator insert(value_type&& _Val);						// multiset可以插入重复数据
 
 ------
 
-***pair对组：***
+***pair对组**：*
 
 ​	成对出现的数据，可以返回两个数据	通过p.first、p.second访问
 
 ​	`pair<type, type> p ( value1, value2 );`
 ​	`pair<type, type> p = make_pair( value1, value2 );`
 
-***tuple元组：***   固定大小的异质值的汇集，是 [std::pair](https://zh.cppreference.com/w/cpp/utility/pair) 的泛化
+***tuple元组**：*   固定大小的异质值的汇集，是 [std::pair](https://zh.cppreference.com/w/cpp/utility/pair) 的泛化
 
-**结构化绑定：** 解包聚合对象为独立变量
+**结构化绑定**： 解包聚合对象为独立变量
 
 ```c++
 auto [x, y, z] = std::tuple<int, double, char>(1, 2.5, 'Y')			// 默认值拷贝，可指定auto&
@@ -1075,7 +1152,7 @@ std::tie(x, y, z) = std::make_tuple(3, 5.2, 'C')					// tie 解包聚合对象�
 
 ------
 
-***容器排序：***
+***容器排序**：*
 
 ​	用仿函数可以指定set容器的排序规则
 
@@ -1091,7 +1168,7 @@ public:
 void test01(){	set<Person,Compare> s;}
 ```
 
-- **注意：**自定义数据类型必须指定规则
+- **注意**：自定义数据类型必须指定规则
 
 ### map/ multimap容器
 
@@ -1102,7 +1179,7 @@ void test01(){	set<Person,Compare> s;}
 
 
 
-**构造和赋值：**
+**构造和赋值**：
 
 ​	`map<T1, T2> mp;`
 
@@ -1110,7 +1187,7 @@ void test01(){	set<Person,Compare> s;}
 
 ​	`map& operator=(const map &mp);`
 
-**大小和交换：**
+**大小和交换**：
 
 ​	`size();`
 
@@ -1118,7 +1195,7 @@ void test01(){	set<Person,Compare> s;}
 
 ​	`swap(st);`
 
-**插入和删除：**
+**插入和删除**：
 
 ​	`insert(elem);`
 
@@ -1138,7 +1215,7 @@ m[4] = 40; 			// 建议获取某个key的value，而非修改
 
 ​	`erase(key);`
 
-**查找和统计：**
+**查找和统计**：
 
 ​	`find(key);`                 // 用法同set
 
@@ -1152,7 +1229,7 @@ m[4] = 40; 			// 建议获取某个key的value，而非修改
 
 重载**函数调用操作符**的类的对象，也叫**仿函数**
 
-- **本质：**是一个**类**，不是一个函数
+- **本质**：是一个**类**，不是一个函数
 
 
 
@@ -1178,7 +1255,7 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 
 
 
-**算数仿函数：**
+**算数仿函数**：
 
 ​	`template<class T> T plus<T>`             	   // 加法
 
@@ -1192,7 +1269,7 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 
 ​	`template<class T> T negate<T>`       	    // 取反
 
-**关系仿函数：**
+**关系仿函数**：
 
 ​	`template<class T> bool equal_to<T>`                    // 等于
 
@@ -1206,7 +1283,7 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 
 ​	`template<class T> bool less_equal<T>`     	 // 小于等于
 
-**逻辑仿函数：**
+**逻辑仿函数**：
 
 ​	`template<class T> bool logical_and<T>`	    	// 与
 
@@ -1364,7 +1441,7 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 
 ### 集合算法
 
-- **注意：**初始集合必须是**有序序列**，返回值是目标容器集合最后一个元素的迭代器
+- **注意**：初始集合必须是**有序序列**，返回值是目标容器集合最后一个元素的迭代器
 
 
 
@@ -1388,17 +1465,17 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 
 ## 可调用对象
 
-- 可调用对象：**函数指针**，**仿函数**，可转换为函数指针的类对象，类成员（函数）指针
+- 可调用对象**：函数指针**，**仿函数**，可转换为函数指针的类对象，类成员（函数）指针
 
 `#include <functional>`			// 包装器
 
 
 
-**包装器：**
+**包装器**：
 
 `function<int(int, double)> f = add`			// 包装成一个对象，可直接调用
 
-**绑定器：**
+**绑定器**：
 
 `auto f = bind(func, x, y)`			// 绑定函参并返回一个仿函数，实现降元
 
@@ -1413,7 +1490,7 @@ function<void(int, int)> f = bind(&Person::add, &p, placeholders::_1, placeholde
 function<int&(void)> f = bind(&Person::m_Age, &p)
 ```
 
-- **注意：**function不能包装类成员（函数）指针
+- **注意**：function不能包装类成员（函数）指针
 
 
 
@@ -1431,7 +1508,7 @@ function<int&(void)> f = bind(&Person::m_Age, &p)
 
 `make_shared<int>(10)`			// make_shared创建内存对象，可直接初始化智能指针
 
-- **注意：**`.` 调用智能指针api，`->`调用间址内存api；不能用同一原指针初始化多个共享指针
+- **注意**：`.` 调用智能指针api，`->`调用间址内存api；不能用同一原指针初始化多个共享指针
 
 **共享指针**
 
@@ -1665,7 +1742,7 @@ void cast()
 
 `async(func,arg1,arg2...)`			// 创建线程执行任务并返回一个future对象
 
-**总结：**
+**总结**：
 
 - *LeastMaxValue*：允许同时访问临界资源的线程的最大数目
 
