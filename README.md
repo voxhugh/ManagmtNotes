@@ -6,7 +6,7 @@
 
 [**🏷️进程**](#进程)&emsp;&emsp;[控制](#进程控制)&emsp;&emsp;[通信](#进程通信)&emsp;&emsp;[守护进程](#守护进程)&emsp;&emsp;[线程](#线程)
 
-[**🏷️套接字**](#套接字通信)&emsp;&emsp;[概念](#概念)&emsp;&emsp;[Socket](#Socket)
+[**🏷️套接字**](#套接字通信)&emsp;&emsp;[概念](#概念)&emsp;&emsp;[Socket](#Socket)&emsp;&emsp;[IO多路转接](#IO多路转接)
 
 ## 基础
 
@@ -1153,3 +1153,335 @@ int main()
 
 
 **TCP粘包** 因流式传输无边界导致数据粘连，解决方案是在应用层添加带长度字段的包头以标识消息边界。
+
+### IO多路转接
+
+通过阻塞监测多个fd，就绪时解除阻塞并通信，实现单线程 / 进程服务器并发。
+
+#### 1. select
+
+跨平台，FD 上限 1024，线性轮询，双态高频拷贝。
+
+```c
+#include <sys/select.h>
+struct timeval {
+    time_t      tv_sec;         /* seconds */
+    suseconds_t tv_usec;        /* microseconds */
+};
+
+int select(int nfds, fd_set *readfds, fd_set *writefds,
+           fd_set *exceptfds, struct timeval * timeout);
+```
+
+- `select()`
+  - nfds：maxfd(set1,set2,set3) + 1，线性遍历的结束条件(win指定-1)
+  - readfds：fd_set, 检测 read bufs
+  - writefds：fd_set 检测 write bufs, 不需要指定NULL
+  - exceptfds：fd_set, 检测 except stat, 不需要指定NULL
+  - timeout：超时时长，NULL | t | 0
+  - return +(fd总数), 0(超时), -1(失败)
+
+
+---
+
+`fd_set` 大小是 128 B， 与 fd表 一一对应标记状态，其操作函数：
+
+```c
+void FD_CLR(int fd, fd_set *set);		// 删除fd
+int  FD_ISSET(int fd, fd_set *set);		// fd是否在set中
+void FD_SET(int fd, fd_set *set);		// 添加fd
+void FD_ZERO(fd_set *set);				// 清空set
+```
+
+<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/fd_set_1.png" style="zoom:70%;" />
+
+<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/fd_set_2.png" style="zoom:70%;" />
+
+内核遍历读集合时，将无数据的fd在fd_set中标志位置0，有数据则保持1；
+select解除阻塞后，标志位为1的描述符就绪可通信
+
+---
+
+**处理流程**
+
+<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/select.png" style="zoom:70%;" />
+
+- server
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <arpa/inet.h>
+
+int main()
+{
+    // 1. 创建监听的fd
+    int lfd = socket(AF_INET, SOCK_STREAM, 0);
+
+    // 2. 绑定
+    struct sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(9999);
+    addr.sin_addr.s_addr = INADDR_ANY;
+    bind(lfd, (struct sockaddr*)&addr, sizeof(addr));
+
+    // 3. 设置监听
+    listen(lfd, 128);
+
+    // 将监听的fd的状态检测委托给内核检测
+    int maxfd = lfd;
+    // 初始化检测的读集合
+    fd_set rdset;
+    fd_set rdtemp;
+    // 清零
+    FD_ZERO(&rdset);
+    // 将监听的lfd设置到检测的读集合中
+    FD_SET(lfd, &rdset);
+    // 通过select委托内核检测读集合中的文件描述符状态, 检测read缓冲区有没有数据
+    // 如果有数据, select解除阻塞返回
+    // 应该让内核持续检测
+    while(1)
+    {
+        // 默认阻塞
+        // rdset 中是委托内核检测的所有的文件描述符
+        rdtemp = rdset;
+        int num = select(maxfd+1, &rdtemp, NULL, NULL, NULL);
+        // rdset中的数据被内核改写了, 只保留了发生变化的文件描述的标志位上的1, 没变化的改为0
+        // 只要rdset中的fd对应的标志位为1 -> 缓冲区有数据了
+        // 判断
+        // 有没有新连接
+        if(FD_ISSET(lfd, &rdtemp))
+        {
+            // 接受连接请求, 这个调用不阻塞
+            struct sockaddr_in cliaddr;
+            int cliLen = sizeof(cliaddr);
+            int cfd = accept(lfd, (struct sockaddr*)&cliaddr, &cliLen);
+
+            // 得到了有效的文件描述符
+            // 通信的文件描述符添加到读集合
+            // 在下一轮select检测的时候, 就能得到缓冲区的状态
+            FD_SET(cfd, &rdset);
+            // 重置最大的文件描述符
+            maxfd = cfd > maxfd ? cfd : maxfd;
+        }
+
+        // 没有新连接, 通信
+        for(int i=0; i<maxfd+1; ++i)
+        {
+			// 判断从监听的文件描述符之后到maxfd这个范围内的文件描述符是否读缓冲区有数据
+            if(i != lfd && FD_ISSET(i, &rdtemp))
+            {
+                // 接收数据
+                char buf[10] = {0};
+                // 一次只能接收10个字节, 客户端一次发送100个字节
+                // 一次是接收不完的, 文件描述符对应的读缓冲区中还有数据
+                // 下一轮select检测的时候, 内核还会标记这个文件描述符缓冲区有数据 -> 再读一次
+                // 	循环会一直持续, 知道缓冲区数据被读完位置
+                int len = read(i, buf, sizeof(buf));
+                if(len == 0)
+                {
+                    printf("客户端关闭了连接...\n");
+                    // 将检测的文件描述符从读集合中删除
+                    FD_CLR(i, &rdset);
+                    close(i);
+                }
+                else if(len > 0)
+                {
+                    // 收到了数据
+                    // 发送数据
+                    write(i, buf, strlen(buf)+1);
+                }
+                else
+                {
+                    // 异常
+                    perror("read");
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+```
+
+#### 2. poll
+
+Linux平台，线性轮询，双态高频拷贝。
+
+```c
+#include <poll.h>
+// 每个委托poll检测的fd都对应这样一个结构体
+struct pollfd {
+    int   fd;         /* 委托内核检测的文件描述符 */
+    short events;     /* 委托内核检测文件描述符的什么事件 */
+    short revents;    /* 文件描述符实际发生的事件 -> 传出 */
+};
+
+struct pollfd myfd[100];
+int poll(struct pollfd *fds, nfds_t nfds, int timeout);
+```
+
+#### 3. epoll
+
+Linux平台，红黑树管理，事件回调，共享内存。
+
+```c
+#include <sys/epoll.h>
+int epoll_create(int size);		// 创建epoll实例
+int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);	// 管理fd(增删改)
+int epoll_wait(int epfd, struct epoll_event * events, int maxevents, int timeout);	// 检测就绪fd
+```
+
+- `epoll_create()`
+  - return fd
+- `epoll_ctl()`
+  - epfd：ep fd
+  - op：操作类型, EPOLL_CTL_ADD(增), EPOLL_CTL_DEL(删), EPOLL_CTL_MOD(改)
+  - fd：目标fd
+  - event：epoll事件
+    - .events：委托epoll检测的事件, EPOLLIN(读), EPOLLOUT(写), EPOLLERR(异常)
+    - .data：user data var, 使用.fd存储待检测的fd
+  - return 0
+- `epoll_wait()`
+  - epfd：ep fd
+  - events：出参, 已就绪 fd's epoll_event array
+  - maxevents：len(events)
+  - timeout：阻塞时长
+  - return +(fd总数), 0(无), -1(失败)
+
+---
+
+**server**
+
+```c
+#include <stdio.h>
+#include <ctype.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <string.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <sys/epoll.h>
+
+int main(int argc, const char* argv[])
+{
+    // 创建监听的套接字
+    int lfd = socket(AF_INET, SOCK_STREAM, 0);
+    if(lfd == -1)
+    {
+        perror("socket error");
+        exit(1);
+    }
+
+    // 绑定
+    struct sockaddr_in serv_addr;
+    memset(&serv_addr, 0, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(9999);
+    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);  // 本地多有的ＩＰ
+    
+    // 设置端口复用
+    int opt = 1;
+    setsockopt(lfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
+    // 绑定端口
+    int ret = bind(lfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+    if(ret == -1)
+    {
+        perror("bind error");
+        exit(1);
+    }
+
+    // 监听
+    ret = listen(lfd, 64);
+    if(ret == -1)
+    {
+        perror("listen error");
+        exit(1);
+    }
+
+    // 现在只有监听的文件描述符
+    // 所有的文件描述符对应读写缓冲区状态都是委托内核进行检测的epoll
+    // 创建一个epoll模型
+    int epfd = epoll_create(100);
+    if(epfd == -1)
+    {
+        perror("epoll_create");
+        exit(0);
+    }
+
+    // 往epoll实例中添加需要检测的节点, 现在只有监听的文件描述符
+    struct epoll_event ev;
+    ev.events = EPOLLIN;    // 检测lfd读读缓冲区是否有数据
+    ev.data.fd = lfd;
+    ret = epoll_ctl(epfd, EPOLL_CTL_ADD, lfd, &ev);
+    if(ret == -1)
+    {
+        perror("epoll_ctl");
+        exit(0);
+    }
+
+    struct epoll_event evs[1024];
+    int size = sizeof(evs) / sizeof(struct epoll_event);
+    // 持续检测
+    while(1)
+    {
+        // 调用一次, 检测一次
+        int num = epoll_wait(epfd, evs, size, -1);
+        for(int i=0; i<num; ++i)
+        {
+            // 取出当前的文件描述符
+            int curfd = evs[i].data.fd;
+            // 判断这个文件描述符是不是用于监听的
+            if(curfd == lfd)
+            {
+                // 建立新的连接
+                int cfd = accept(curfd, NULL, NULL);
+                // 新得到的文件描述符添加到epoll模型中, 下一轮循环的时候就可以被检测了
+                ev.events = EPOLLIN;    // 读缓冲区是否有数据
+                ev.data.fd = cfd;
+                ret = epoll_ctl(epfd, EPOLL_CTL_ADD, cfd, &ev);
+                if(ret == -1)
+                {
+                    perror("epoll_ctl-accept");
+                    exit(0);
+                }
+            }
+            else
+            {
+                // 处理通信的文件描述符
+                // 接收数据
+                char buf[1024];
+                memset(buf, 0, sizeof(buf));
+                int len = recv(curfd, buf, sizeof(buf), 0);
+                if(len == 0)
+                {
+                    printf("客户端已经断开了连接\n");
+                    // 将这个文件描述符从epoll模型中删除
+                    epoll_ctl(epfd, EPOLL_CTL_DEL, curfd, NULL);
+                    close(curfd);
+                }
+                else if(len > 0)
+                {
+                    printf("客户端say: %s\n", buf);
+                    send(curfd, buf, len, 0);
+                }
+                else
+                {
+                    perror("recv");
+                    exit(0);
+                } 
+            }
+        }
+    }
+
+    return 0;
+}
+```
+
+**epoll 事件触发** 分为 LT 和 ET 两种模式：
+LT 是默认模式，会持续通知事件；ET 模式需要搭配 EPOLLET 标志和非阻塞 IO，仅在状态变化时触发一次，需要循环读写至出现 EAGAIN 错误，效率更高。
