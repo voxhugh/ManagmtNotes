@@ -1,12 +1,69 @@
-<h1 align="center">Linux</h1>
+<h1 align="center">Linux 知识导航</h1>
 
-[**🏷️基础**](#基础)&emsp;&emsp;[命令](#命令)&emsp;&emsp;[Vim](#Vim)&emsp;&emsp;[GCC](#GCC)&emsp;&emsp;[库](#库)&emsp;&emsp;[Makefile](#Makefile)&emsp;&emsp;[CMake](#CMake)&emsp;&emsp;[GDB](#GDB调试)
+<div align="center">
+  <img src="https://img.shields.io/badge/Linux-系统笔记-0078D7?style=flat&logo=linux" alt="Linux">
+</div>
 
-[**🏷️文件IO**](#文件IO)
+## 核心概念
 
-[**🏷️进程**](#进程)&emsp;&emsp;[控制](#进程控制)&emsp;&emsp;[通信](#进程通信)&emsp;&emsp;[守护进程](#守护进程)&emsp;&emsp;[线程](#线程)
+[基础](#基础) | [文件IO](#文件IO) | [进程](#进程) | [套接字](#套接字通信) | [开发工具](#开发工具) | [系统管理](#系统管理) | [网络通信](#网络通信)
 
-[**🏷️套接字**](#套接字通信)&emsp;&emsp;[概念](#概念)&emsp;&emsp;[Socket](#Socket)&emsp;&emsp;[IO多路转接](#IO多路转接)&emsp;&emsp;[UDP](#UDP)
+---
+
+## 目录索引
+
+### linux基础
+
+- [文件系统特性](#基础)
+- [用户与权限管理](#用户组-权限)
+- [目录结构解析](#bin-和-sbin)
+- [关键配置文件](#passwd-文件)
+
+### 系统管理
+
+- [用户/组操作命令](#用户组-权限)
+- [系统监控命令](#系统相关)
+- [服务管理命令](#系统相关)
+- [SSH远程操作](#ssh)
+- [打包压缩工具](#打包压缩)
+
+### 开发工具
+
+- [Vim编辑器](#vim)
+- [GCC编译器](#gcc)
+- [静态库/动态库](#库)
+- [Makefile构建](#makefile)
+- [CMake工程管理](#cmake)
+- [GDB调试技巧](#gdb调试)
+
+### 进程与线程
+
+- [进程控制](#进程控制)
+- [进程通信方式](#进程通信)
+- [守护进程创建](#守护进程)
+- [线程特性](#线程)
+- [虚拟地址空间](#虚拟地址空间)
+
+### 网络通信
+
+- [套接字基础](#概念)
+- [TCP服务端/客户端](#socket)
+- [IO多路复用](#io多路转接)
+- [UDP通信特性](#udp)
+- [广播与组播](#广播)
+
+---
+
+<div align="center">
+  <a href="#基础" style="color: #2E86C1">▶ 开始阅读</a> | 
+  <a href="#开发工具" style="color: #2E86C1">▶ 开发工具</a> | 
+  <a href="#网络通信" style="color: #2E86C1">▶ 网络专题</a>
+</div>
+
+
+
+
+
 
 ## 基础
 
