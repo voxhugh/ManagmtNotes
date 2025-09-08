@@ -377,8 +377,9 @@ if(m_Ptr != NULL)
 
 ## this指针
 
-**本质**：指针常量
+`Person* const this`
 
+**本质**：指针常量
 
 
 - 隐含在每一个非静态成员函数内，指向 被调用的成员函数 所属的对象
@@ -1753,3 +1754,4 @@ void cast()
 - async可以指定任务执行策略
   - *launch::async* 创建线程并执行任务
   - *launch::deferred* 延迟调用执行任务
+
