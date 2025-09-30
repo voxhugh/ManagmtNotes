@@ -276,7 +276,7 @@ struct stu1 { union { int a1; char a2[5]; }a; struct stu2 b; int c; };
 
 **调用**：
 
-`Person p`                                                   				     		 		// 默认构造
+`Person p`                                                   				     		 		// 默认构造，唯零原则自动生成
 
 - **注意**：不要加()，编译器会认为是函数的声明；堆区推荐 `new Person()`
 
@@ -308,7 +308,7 @@ struct stu1 { union { int a1; char a2[5]; }a; struct stu2 b; int c; };
 
 **显式指定**：
 
-`Person() = default`				// 显式指定为默认构造函数，只能修饰六大函数
+`Person() = default`				// 显式指定编译器生成默认构造，只能修饰六大函数
 
 `void func(char c) = delete`		// 显式删除函数，可有效禁用重载时的隐式类型转换
 
@@ -322,7 +322,7 @@ struct stu1 { union { int a1; char a2[5]; }a; struct stu2 b; int c; };
 
 ## 拷贝构造
 
-`Person (const Person &p)`					// 是一种构造函数，而且必然存在
+`Person (const Person &p)`
 
 
 
@@ -345,6 +345,8 @@ struct stu1 { union { int a1; char a2[5]; }a; struct stu2 b; int c; };
 **移动构造**：
 
 `Person(Person&& p) : m_P(p.m_P) {p.m_P = nullptr;}`		// 赋右值时会优先调用来转移属性所有权
+
+- **注意**：自定义拷贝或析构会抑制隐式移动操作
 
 
 
@@ -1588,17 +1590,15 @@ b->ap = a;		// B::shared_ptr<A> ap
 
 
 
+**<span style="color: red">零原则</span>**
+
+类要么为管理资源而完整定义特殊成员函数，要么完全不定义。
+
+
+
 **零开销原则**
 
 未使用的抽象不产生运行时开销，且其实现效率与最优手写代码等同。
-
-
-
-**三/五/零法则**
-
-- 三: 类若需自定义*析构*、*拷贝构造*、*拷贝赋值*之一，则必须定义全部三者。
-- 五: 需移动语义的类，若自定义*析构*、*拷贝构造*、*拷贝赋值*之一，必定义全部五个特殊成员函数。
-- <span style="color: red">零</span>: 类要么为管理资源而完整定义特殊成员函数，要么完全不定义。
 
 
 
