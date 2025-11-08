@@ -432,7 +432,7 @@ Vim中共有三种模式： **命令模式**  **末行模式**  **编辑模式**
 
 ### GCC
 
-`gcc -o Dest a.c`
+`gcc -o App a.c b.c ...`
 
 - **注意：c文件gcc，cpp文件g++**
 
