@@ -384,12 +384,12 @@ if(m_Ptr != NULL)
 
 ## this指针
 
-`Person* const this`
+`T* const this`
 
 **本质**：指针常量
 
 
-- 非静态成员函数签名隐含 `func(Person* const this, ...)`，this指向其所属对象
+- 非静态成员函数签名隐含 `func(T* const this, ...)`，this指向其所属对象
 
 `*this` 			// 返回对象本身，链式编程思想
 
