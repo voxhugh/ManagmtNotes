@@ -221,6 +221,8 @@ struct stu1 { union { int a1; char a2[5]; }a; struct stu2 b; int c; };
 |  🔵   |  🔵   |  🔵   |  🔵   |  🔵   |  🔵   |  🔵   |  🔵   |  🟤   |  🟤   |  🟤   |  🟤   |  🟤   |  🟤   |  -   |  -   |
 |  🔴   |  🔴   |  🔴   |  🔴   |  -   |  -   |  -   |  -   |      |      |      |      |      |      |      |      |
 
+> **注意**：虚表指针参与内存对齐
+
 
 
 ## 指针
@@ -256,7 +258,7 @@ struct stu1 { union { int a1; char a2[5]; }a; struct stu2 b; int c; };
 `int& a = b`				// 引用变量是一个别名，本质是指针常量实现
 
 - 可作为函数形参和返回值，且返回值是左值
-- C限定左值引用可绑定右值
+- c限定左值引用可绑定右值
 
 ------
 
@@ -387,11 +389,18 @@ if(m_Ptr != NULL)
 
 ## 对象模型
 
+**数据**：非静态成员变量
 
+**布局**：
 
-- 只有 **非静态成员变量** ∈类的对象			// 子类会继承父类所有非静态成员属性
-- 静态成员变量类内声明，类外初始化
-- 空对象：1B
+```c++
+class A { virtual void a(); int x_0x8; };							// A_vtable* vtable_0x0;
+class B { virtual void b(); int y_0x8; };							// B_vtable* vtable_0x0;
+class C : public A, public B { virtual void c(); int z_0x20; };		// A inherit__0x0; B inherit__0x10;
+```
+
+- 空类 1B，空基类优化
+- 访问控制对内存布局无影响
 
 **开发人员命令提示工具**：
 
@@ -512,9 +521,11 @@ ostream & operator<<(ostream &cout,Person &p)			// 左移运算符重载
 - 父类所有非静态成员属性都会被继承
 - 父类私有成员继承后被编译器隐藏，访问不到
 
+> C++允许多继承，但实际开发不建议用
 
+---
 
-**C++默认采用静态绑定，编译期确定**
+**隐藏**：
 
 *当子类与父类拥有同名的成员且非重写：*
 
@@ -528,9 +539,9 @@ Son::Base::m_Age				// 静态成员通过子类类名访问父类成员
 	第二个:: 父类作用域下	*/
 ```
 
+> C++默认采用静态绑定，编译期确定
 
-
-- C++允许多继承，但实际开发不建议用
+---
 
 **菱形继承**：（🦙）
 
@@ -557,40 +568,49 @@ vbtable里含有相对偏移，可以定位到唯一的m_Age*/
 
 **分类**：
 
-- 静态多态：重载，模板
+- 静态多态：重载、模板
 - 动态多态：重写（动态绑定）
-
-一般指动态多态，子类重写父类虚函数实现函数地址晚绑定
-
-> 虚⇔可重写，纯虚⇔声明
 
 **实现**：
 
-继承 + 虚函数
+- **虚函数表**：编译时生成的静态数组，存储虚函数指针，按声明顺序排列
+- **虚表指针**：位于对象起始位置，初始化指向为当前类虚表
 
-- *虚函数表（vftable）*：每个**类**维护一张虚函数地址表。
-- *虚函数指针（vfptr）*：每个**对象**含指向所属类 vftable 的指针。  
+**规则**：
 
-基类指针/引用调用虚函数时，通过对象的 vfptr 找到类 vftable，再查表确定实际调用的派生类函数。
+- 基类和派生类虚表物理独立
+- `vtable[0]` 栈析构，`vtable[1]` 堆析构
+- 派生类重写的虚函数覆盖基类对应位置
+- 派生类新增虚函数追加在虚表末尾
+- 多继承多个vptr，新增函数追加在主虚表
+- 非主基类调用虚函数时通过thunk调整this指针
 
-```C++
-/*当Animal中多了虚函数会生成一个vfptr
+```c++
+==================================================
+      C++ Multiple Inheritance VTable Layout
+==================================================
 
-vfptr指向vftable，vftable存有 &Animal::function
-
-Cat继承Animal，各自的vfptr指向各自vftable
-
-Cat 虚函数表内也存有 &Animal::function
-
-当发生函数重写，&Cat::function会覆盖Cat表内容*/
+[Derived Object]
+├─ vptr1 (0x00) → Base1 vtable (main)
+│   ├─ vtable1[0]: ~Derived() [complete]
+│   ├─ vtable1[1]: ~Derived() [deleting]
+│   ├─ vtable1[2]: Derived::f1()        // override
+│   ├─ vtable1[3]: __cxa_pure_virtual   // PURE VIRTUAL STUB
+│   └─ vtable1[4]: Derived::dv_func()   // new
+│
+└─ vptr2 (0x10) → Base2 vtable
+    ├─ vtable2[0]: thunk to ~Derived() [complete]
+    ├─ vtable2[1]: thunk to ~Derived() [deleting]
+    └─ vtable2[2]: thunk to Derived::f2() // override
 ```
 
-- 开发提倡开闭原则：对扩展进行开放，对修改进行关闭
+**纯虚**：
 
-`virtual void func()=0;`			// 纯虚函数，实质是一条声明
+`virtual void func()=0;`			// 声明，虚表中用特殊占位符表示，调用导致运行时错误
 
 - 抽象类：含纯虚函数的类，无法实例化对象，一般不写构造函数
-- 案例：零件抽象类，电脑类里写组装函数，维护指针来调用接口，零件厂商实现
+
+> 开发提倡开闭原则：对扩展进行开放，对修改进行关闭
 
 
 
@@ -1622,11 +1642,11 @@ b->ap = a;		// B::shared_ptr<A> ap
 
 
 
-`#pragma once`					// 防止头文件重复包含
+**头文件**：预处理的源码文本复用，`#pragma once` 防止重复包含
 
-`class Person`					// 前向声明
+**前向声明**：无类体的不完全类型声明，接受 指针/引用
 
-*头文件是预处理时的代码注入，前向声明使编译器接受未定义类型的指针/引用*
+静态成员变量类内声明，类外初始化
 
 - **注意**：源文件需指明作用域 `Person::`, `Person<int>::`
 
@@ -1819,7 +1839,6 @@ void cast()
 - async可以指定任务执行策略
   - *launch::async* 创建线程并执行任务
   - *launch::deferred* 延迟调用执行任务
-
 
 
 
