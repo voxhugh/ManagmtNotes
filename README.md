@@ -574,15 +574,15 @@ vbtable里含有相对偏移，可以定位到唯一的m_Age*/
 **实现**：
 
 - **虚函数表**：编译时生成的静态数组，存储虚函数指针，按声明顺序排列
-- **虚表指针**：位于对象起始位置，初始化指向为当前类虚表
+- **虚表指针**：位于对象（基类子对象）起始位置，初始化指向当前类虚表
 
 **规则**：
 
-- 基类和派生类虚表物理独立
-- `vtable[0]` 栈析构，`vtable[1]` 堆析构
-- 派生类重写的虚函数覆盖基类对应位置
-- 派生类新增虚函数追加在虚表末尾
-- 多继承多个vptr，新增函数追加在主虚表
+- 基派生类虚表物理独立
+- 虚析构则析构对在虚表末尾
+- 派生类重写虚函数覆盖基类对应位置
+- 派生类新增虚函数追加至普通虚函数末尾
+- 多继承多vptr，新增函数追加至主虚表
 - 非主基类调用虚函数时通过thunk调整this指针
 
 ```c++
@@ -592,21 +592,21 @@ vbtable里含有相对偏移，可以定位到唯一的m_Age*/
 
 [Derived Object]
 ├─ vptr1 (0x00) → Base1 vtable (main)
-│   ├─ vtable1[0]: ~Derived() [complete]
-│   ├─ vtable1[1]: ~Derived() [deleting]
-│   ├─ vtable1[2]: Derived::f1()        // override
-│   ├─ vtable1[3]: __cxa_pure_virtual   // PURE VIRTUAL STUB
-│   └─ vtable1[4]: Derived::dv_func()   // new
+│   ├─ vtable1[0]: Derived::f1()        // override
+│   ├─ vtable1[1]: __cxa_pure_virtual   // PURE VIRTUAL STUB
+│   ├─ vtable1[2]: Derived::dv_func()   // new
+│   ├─ vtable1[3]: ~Derived() [complete]
+│   └─ vtable1[4]: ~Derived() [deleting]
 │
 └─ vptr2 (0x10) → Base2 vtable
-    ├─ vtable2[0]: thunk to ~Derived() [complete]
-    ├─ vtable2[1]: thunk to ~Derived() [deleting]
-    └─ vtable2[2]: thunk to Derived::f2() // override
+    ├─ vtable2[0]: thunk to Derived::f2() // override
+    ├─ vtable2[1]: thunk to ~Derived() [complete]
+    └─ vtable2[2]: thunk to ~Derived() [deleting]
 ```
 
 **纯虚**：
 
-`virtual void func()=0;`			// 声明，虚表中用特殊占位符表示，调用导致运行时错误
+`virtual void func()=0;`			// 声明，虚表中以专用占位指针表示，调用触发运行时错误
 
 - 抽象类：含纯虚函数的类，无法实例化对象，一般不写构造函数
 
