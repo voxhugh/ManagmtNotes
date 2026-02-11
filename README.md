@@ -303,7 +303,7 @@ struct stu1 { union { int a1; char a2[5]; }a; struct stu2 b; int c; };
 
 `T(V1 a,V2 b) :m_a(a), m_b(b) {}`		// 按声明顺序，显式初始化类成员
 
-`T t{arg1, arg2...}`					   // 列表初始化
+`T t{arg1, arg2...}`					   // 列表初始化，作 **实参**、**return** 简写 `{...}`
 
 `initializer_list<T>` , `size()` , `begin()` , `end()`	// 动态初始化列表容器
 
