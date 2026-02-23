@@ -14,12 +14,11 @@
 - 函数的形参默认值在定义时给定，只计算一次，后续调用之间共享
 - 关键字参数 arg1 = 25 在函数调用时指定形参的值
 - 表达式内部赋值必须显式使用 海象运算符 `:=`
+- 赋值是 **绑定**
 
 
 
 ### 控制流
-
-
 
 ##### if
 
@@ -97,8 +96,6 @@ def f(arg1: str, arg2: int = 2) -> list[str]:
 
 ### 数据结构
 
-
-
 #### list
 
 `[a, b, c]`
@@ -174,9 +171,126 @@ dict(sape=4139, guido=4127, jack=4098)
 
 
 
+### IO
+
+#### 字符串
+
+```python
+f'Days of the {year}'		# 格式化字符串，简称 f-字符串
+
+print(f'Pi is approximately {math.pi:.3f}.')		# x:宽度
+
+print(f'My hovercraft is full of {animals!r}.')		# !a => ascii() ，!s => str()，!r => repr()
+
+bugs = 13
+print(f'Debugging {bugs=}')		# x= 输出为 x=value
+```
+
+`str(x)`			  # 转为字符串
+
+`repr(x)`			# 转为字符串（保留 ' 和 \）
+
+`format(...)`		# 插入变量到字符串中（支持位置{0}，关键字{name}）
+
+`join(x)`			# 将序列元素拼接为字符串
+
+`rjust(x)`			# 右对齐
+
+
+
+#### 文件
+
+`open(file, mode, encoding=None)`	# 打开文件
+
+- `'r'`   读（默认）
+- `'w'`   写
+- `'a'`   追加
+- `'r+'` 读写
+
+```python
+with open('workfile', encoding="utf-8") as f:		# with 保证文件自动关闭，close()手动关闭
+    read_data = f.read()
+```
+
+`read(size)`				# 读取文件
+
+`readline()`				# 读取一行
+
+`write(str)`				# 写入文件
+
+`tell()`					# 当前位置
+
+`seek(offset, whence)`	   # 位置偏移
+
+- `0`  开头（默认）
+- `1`  当前位置
+- `2`  末尾
+
+
+
+#### json
+
+`dumps(x)`		# 显示为json形式
+
+> 注意：JSON 文件必须以 UTF-8 编码
+
+
+
+### 异常
+
+```python
+def divide(x, y):
+    try:
+        result = x / y
+    except ZeroDivisionError:			# 支持协变
+        print("division by zero!")
+    else:								# 无异常时执行
+        print("result is", result)
+    finally:							# 必定执行
+        print("executing finally clause")
+        raise							# 强制触发异常
+```
+
+
+
+### 类
+
+```python
+class A:
+    
+    q = 'canine'	# 静态变量
+    
+    def __init__(self, realpart, imagpart):		# 构造函数
+        self.r = realpart						# self是this指针
+        self.i = imagpart						# r, i 非静态变量
+        self._p = '0'							# 约定俗成的私有变量
+        
+class B(A):		# 继承
+
+
+from dataclasses import dataclass
+@dataclass		# 数据类
+class Employee:
+    name: str
+    dept: str
+    salary: int
+```
+
+> 注意：`global` 表征全局变量，`nonlocal` 表征外部变量
+
+
+
+### 标准库
+
+`dir(x)`	  	# 模块符号表
+
+`help(x)`		# 文档字符串
+
+`sys.argv`		# 命令行参数
+
+
+
 ### 其他
-
-
 
 #### del
 
@@ -199,4 +313,46 @@ dict(sape=4139, guido=4127, jack=4098)
 - 分割：空行
 - 注释：单独一行
 - 命名：`ClsName` ,  `func_with_add()`
+
+
+
+#### 模块
+
+`import os`	# 导入模块
+
+`from MA import A as a`	# 从模块导入名称
+
+
+
+#### 虚拟环境
+
+`python -m venv wkspace`			# 创建
+
+`source wkspace/bin/activate`	     # 激活（source即加载）
+
+`deactivate`						 # 撤销激活
+
+---
+
+**pip包管理**
+
+`python -m pip install requests==2.6.0`		   # 安装
+
+`python -m pip install --upgrade`				# 升级
+
+`python -m pip uninstall`						 # 卸载
+
+`python -m pip list`							   # 已安装包
+
+> 注意：`freeze > requirements.txt` 可以打包为列表，方便 `install -r requirements.txt` 容器化部署
+
+
+
+#### py脚本
+
+```python
+#!/usr/bin/env python3
+```
+
+首行添加可直接执行
 
