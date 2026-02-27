@@ -192,6 +192,8 @@ print(f'Debugging {bugs=}')		# x= 输出为 x=value
 
 `format(...)`		# 插入变量到字符串中（支持位置{0}，关键字{name}）
 
+`split(sep)`		  # 分割字符串
+
 `join(x)`			# 将序列元素拼接为字符串
 
 `rjust(x)`			# 右对齐
