@@ -1305,7 +1305,7 @@ m[4] = 40; 			// 建议获取某个key的value，而非修改
 
 ### 谓词
 
-返回bool类型的仿函数
+返回bool类型的可调用对象
 
 ```c++
 class Predicate
