@@ -330,7 +330,7 @@ class Employee:
 
 `python -m venv wkspace`			# 创建
 
-`source wkspace/bin/activate`	     # 激活（source即加载）
+`source wkspace/bin/activate`	     # 激活
 
 `deactivate`						 # 撤销激活
 
