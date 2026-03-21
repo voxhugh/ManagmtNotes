@@ -707,14 +707,24 @@ class HSTVector<X, 5, std::vector>;
 - 实例化时，按偏序选择最优匹配：全特化 > 偏特化 > 主模板
 - 类模板仅实例化被使用的成员，相同实例链接时合并
 
-**重载决议**：
+**重载**：
 
 1. 函数模板支持重载
 2. 函数模板和普通函数相同，优先普通函数
 3. 函数模板匹配更好时，优先函数模板
 4. 空模板参数列表 `f<>(a)` ，能强制调用函数模板
 
-**其他**：
+**别名**：
+
+```c++
+template <typename> class TypeTraits;    // 萃取器
+template <template <typename, typename> typename C, typename U, typename V>
+class TypeTraits<C<U, V>> { public: using First = U; using Second = V; using Full = C<U, V>; };
+
+template <typename C> using First_t = typename TypeTraits<C>::First;    // 别名模板
+```
+
+**补充**：
 
 - 函数模板的类型推导 `f(a)` 不发生转换
 - `typeid(T).name()`  返回T的具体类型
