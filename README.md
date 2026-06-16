@@ -1678,8 +1678,8 @@ b->ap = a;		// B::shared_ptr<A> ap
 
 **类模板**：
 
-1. 声明与实现合并至 .hpp 文件，后缀为约定俗成
-2. 分文件编写需 **显式实例化** `template class HSTVector<int>`
+- **Header-Only**: 约定俗成 .hpp
+- **Separate**: 显式实例化 `template class HSTVector<int>`
 
 
 
