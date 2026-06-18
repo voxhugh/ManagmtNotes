@@ -54,9 +54,9 @@
 
 ### 📦 STL 容器
 
-| [vector](#vector容器) | [deque](#deque容器) | [list](#list容器)     | [set/map](#setmultiset-容器) |
-| --------------------- | ------------------- | --------------------- | ---------------------------- |
-| [stack](#stack容器)   | [queue](#queue容器) | [string](#string容器) | [智能指针](#智能指针)        |
+| [vector](#vector) | [deque](#deque) | [list](#list)     | [set/map](#setmultiset) |
+| ----------------- | --------------- | ----------------- | ----------------------- |
+| [stack](#stack)   | [queue](#queue) | [string](#string) | [智能指针](#智能指针)   |
 
 ### ⚙️ 高级特性
 
@@ -206,7 +206,7 @@
 
 ---
 
-**对齐**:
+**内存对齐**:
 
 类型的内存布局属性，规定对象地址必为其对齐值的整数倍
 
@@ -238,6 +238,7 @@ struct stu1 { union { int a1; char a2[5]; }a; struct stu2 b; int c; };
 **指针即地址**，其操作与栈帧、堆区等内存结构密切相关
 
 - *解引用，&取址
+- `&` 升级，`*/[]` 降级
 - 指针的作用是间址
 - 指针变量所占大小为一个字长
 - int * 不是指针标志，是一种数据类型
@@ -738,7 +739,7 @@ template <typename C> using First_t = typename TypeTraits<C>::First;    // 别�
 
 - 容器、算法、迭代器、仿函数、适配器、空间配置器
 
-- 迭代器：指针
+- 迭代器：aka 指针
 
 `for(vector<Person>::iterator it=v.begin();it!=v.end();it++)`			// 迭代器遍历容器
 
@@ -750,7 +751,7 @@ template <typename C> using First_t = typename TypeTraits<C>::First;    // 别�
 
 tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证容器支持的迭代器了
 
-### string容器
+### string
 
 - string是一个类，char *是一个指针
 
@@ -847,9 +848,11 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 ​	`string substr(int pos=0,int n=npos) const;`
 
-### ==vector容器==
+### vector
 
 <img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/vector容器.jpg" style="zoom:130%;" />
+
+
 
 **构造**：
 
@@ -883,17 +886,19 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 **插入和删除**：
 
-​	`push_back(ele);`  				// 平替：*emplace_back()*，直接初始化，性能更高
+​	`push_back(ele);`  				// *emplace_back()*，原地构造，性能更高
 
 ​	`pop_back();`   
 
-​	`insert(const_iterator pos, ele);`  		// 平替：*emplace()*
+​	`insert(const_iterator pos, ele);`  	  // *emplace()*
 
 ​	`insert(const_iterator pos, int count,ele);`
 
 ​	`erase(const_iterator pos);` 
 
 ​	`erase(const_iterator start, const_iterator end);`
+
+​	`resize();`                                              // 调整个数，保证有效性，可能重分配
 
 ​	`clear();`
 
@@ -909,11 +914,11 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 **互换容器**：
 
-​	`swap(vec);` 				// 可以使两个容器互换，达到实用的收缩内存效果
+​	`swap(vec);` 				// 互换容器，达到实用的收缩内存效果
 
 **预留空间**：
 
-​	`reserve(int len);`		// 预留len个元素长度，预留位置不初始化，元素不可访问
+​	`reserve(int len);`		   // 扩容
 
 ```c++
 /*利用动态扩展机制，统计开辟次数*/
@@ -928,7 +933,7 @@ for (int i = 0; i < 100000; i++) {
 }
 ```
 
-### deque容器
+### deque
 
 双端数组，头部增删速度比vector快，但元素访问速度要慢
 
@@ -1010,7 +1015,7 @@ void printDeque(const deque<int>& d)
 
 ​	`sort(iterator beg, iterator end)`		// 默认升序，属于标准算法
 
-### stack容器
+### stack
 
 栈中只有顶端的元素才可以被外界使用，因此栈不允许有遍历行为（遍历是非质变算法）
 
@@ -1040,7 +1045,7 @@ void printDeque(const deque<int>& d)
 
 ​	`size();`
 
-### queue容器
+### queue
 
 队列中只有队头和队尾才可以被外界使用，因此队列不允许有遍历行为
 
@@ -1076,7 +1081,7 @@ void printDeque(const deque<int>& d)
 
 ​	`size();` 
 
-### list容器
+### list
 
 双向循环链表，list中的迭代器只支持前移和后移，属于**双向迭代器**
 
@@ -1150,11 +1155,9 @@ void printDeque(const deque<int>& d)
 
 ​	`sort();` 		// 默认升序，是list容器的成员算法
 
-### set/multiset 容器
+### set/multiset
 
 属于**关联式容器**，底层结构是用**二叉树**实现，所有元素都会在插入时自动被排序
-
-`unordered_set<T>`	哈希集合， 平均时间复杂度O(1)
 
 
 
@@ -1239,12 +1242,11 @@ void test01(){	set<Person,Compare> s;}
 
 - **注意**：自定义数据类型必须指定规则
 
-### map/ multimap容器
+### map/ multimap
 
 属于**关联式容器**，底层结构是用**二叉树**实现，所有元素都会在插入时自动被排序
 
 - 所有元素都是`pair<key,value>`，可以根据key值快速找到value值
-- `unordered_map<K,V>`	哈希映射， 平均时间复杂度O(1)
 
 
 
@@ -1289,6 +1291,10 @@ m[4] = 40; 			// 建议获取某个key的value，而非修改
 ​	`find(key);`                 // 用法同set
 
 ​	`count(key);`
+
+### unordered_set/map
+
+哈希表， 平均时间复杂度O(1)
 
 ## STL - 函数对象
 
