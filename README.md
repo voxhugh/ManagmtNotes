@@ -776,13 +776,13 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 ​	`string& operator=(char c);`
 
-​	`string& assign=(const char* s);`
+​	`string& assign(const char* s);`
 
-​	`string& assign=(const char* s,int n);`
+​	`string& assign(const char* s,int n);`
 
-​	`string& assign=(const string &s);`
+​	`string& assign(const string &s);`
 
-​	`string& assign=(int n,char c);`
+​	`string& assign(int n,char c);`
 
 **字符串拼接**：
 
@@ -898,7 +898,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 ​	`erase(const_iterator start, const_iterator end);`
 
-​	`resize();`                                              // 调整个数，保证有效性，可能重分配
+​	`resize();`                                              // 调整个数，保证有效性，必要时重分配
 
 ​	`clear();`
 
