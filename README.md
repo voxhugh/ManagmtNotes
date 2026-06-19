@@ -694,9 +694,6 @@ ifs >> ch				// 判断空文件
 ifs.eof()
 ```
 
-- 尽量不用c++字符串而是用字符数组，底层是c写的
-
-
 
 
 ## 模板
@@ -770,164 +767,19 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 
 - string类内封装了char*，是一个char*型的容器
 
-
-**构造**：
-
-​	`string();`
-
-​	`string(const char* s);`
-
-​	`string(const string &str);`
-
-​	`string(int n,char c);`
-
-**赋值**：
-
-​	`string& operator=(const char* s);`
-
-​	`string& operator=(const string& s);`
-
-​	`string& operator=(char c);`
-
-​	`string& assign(const char* s);`
-
-​	`string& assign(const char* s,int n);`
-
-​	`string& assign(const string &s);`
-
-​	`string& assign(int n,char c);`
-
-**字符串拼接**：
-
-​	`string& operator+=(const char* str);`
-
-​	`string& operator+=(const char c);`
-
-​	`string& operator+=(const string& str);`
-
-​	`string& append(const char* s);`
-
-​	`string& append(const char* s,int n);`
-
-​	`string& append(const string &s);`
-
-​	`string& append(const string &s,int pos,int n);`
-
-**查找和替换**：
-
-​	`int find(const string& str,int pos=0) const;`
-
-​	`int find(const char* s,int pos=0) const;`
-
-​	`int find(const char* s,int pos,int n) const;`
-
-​	`int find(const char c,int pos=0) const;`
-
-​	`int rfind(const string& str,int pos=npos) const;`		//   rfind是从右向左查
-
-​	`int rfind(const char* s,int pos=npos) const;`
-
-​	`int rfind(const char* s,int pos,int n) const;`
-
-​	`int rfind(const char c,int pos=0) const;`
-
-​	`string& replace(int pos,int n,const string& str);`
-
-​	`string& replace(int pos,int n,const char* s);`
-
-**字符串比较**：
-
-​	`int compare(const string &s) const;`			//  相等返回0
-
-​	`int compare(const char * s) const;`
-
-**字符存取**：
-
-​	`char& operator[](int n);`
-
-​	`char& at(int n);`
-
-**字符串插入和删除**：
-
-​	`string& insert(int pos,const char* s);`
-
-​	`string& insert(int pos,const string& str);`
-
-​	`string& insert(int pos,int n,char c);`
-
-​	`string& erase(int pos,int n=npos);`
-
-**子串获取**：
-
-​	`string substr(int pos=0,int n=npos) const;`
-
 ### vector
 
 <img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/vector容器.jpg" style="zoom:130%;" />
 
 
 
-**构造**：
+​	`resize(int num);` 		    // 调整个数，保证有效性，必要时重分配
 
-​	`vector<T> v;`
-
-​	`vector(v.begin(), v.end());`
-
-​	`vector(n, elem);`
-
-​	`vector(const vector &vec);`
-
-**赋值**：
-
-​	`vector& operator=(const vector &vec);`
-
-​	`assign(beg, end);`
-
-​	`assign(n, elem);`
-
-**容量和大小**：
-
-​	`empty(); `
-
-​	`capacity();`
-
-​	`size();`  
-
-​	`resize(int num);` 				// 调整个数，保证有效性，必要时重分配
-
-​	`resize(int num, elem);` 
-
-**插入和删除**：
-
-​	`push_back(ele);`  				// *emplace_back()*，原地构造，性能更高
+​	`push_back(ele);`  		     // *emplace_back()*，原地构造，性能更高
 
 ​	`pop_back();`   
 
-​	`insert(const_iterator pos, ele);`  	  // *emplace()*
-
-​	`insert(const_iterator pos, int count,ele);`
-
-​	`erase(const_iterator pos);` 
-
-​	`erase(const_iterator start, const_iterator end);`
-
-​	`clear();`
-
-**数据存取**：
-
-​	`at(int idx); `
-
-​	`operator[]; ` 
-
-​	`front(); `
-
-​	`back();` 
-
-**互换容器**：
-
 ​	`swap(vec);` 				// 互换容器，达到实用的收缩内存效果
-
-**预留空间**：
 
 ​	`reserve(int len);`		   // 扩容
 
@@ -952,24 +804,6 @@ for (int i = 0; i < 100000; i++) {
 
 ![deque内部工作原理](https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/中控器.jpg)
 
-**构造**：
-
-​	`deque<T> deqT;`
-
-​	`deque(beg, end);` 
-
-​	`deque(n, elem);` 
-
-​	`deque(const deque &deq);`
-
-**赋值**：
-
-​	`deque& operator=(const deque &deq); `
-
-​	`assign(beg, end);`
-
-​	`assign(n, elem);` 
-
 ```c++
 void printDeque(const deque<int>& d) 
 {			/*限制容器为只读状态时，相应的迭代器也要用const_iterator*/
@@ -980,47 +814,9 @@ void printDeque(const deque<int>& d)
 }
 ```
 
-**大小**：
-
-​	`deque.empty();`
-
-​	`deque.size();` 				// deque没有容量的概念
-
-​	`deque.resize(num);` 
-
-​	`deque.resize(num, elem);`
-
-**插入和删除**：
-
-​	`push_back(elem);`
-
 ​	`push_front(elem);`
 
-​	`pop_back();`
-
 ​	`pop_front();`
-
-​	`insert(pos,elem);`
-
-​	`insert(pos,n,elem);`
-
-​	`insert(pos,beg,end);`
-
-​	`clear();`
-
-​	`erase(beg,end);`
-
-​	`erase(pos);`
-
-**数据存取**：
-
-​	`at(int idx); `
-
-​	`operator[]; `
-
-​	`front(); `
-
-​	`back();`
 
 **排序**：
 
@@ -1032,29 +828,11 @@ void printDeque(const deque<int>& d)
 
 <img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/stack容器.jpg"  />
 
-**构造**：
-
-​	`stack<T> stk;`
-
-​	`stack(const stack &stk);`
-
-**赋值**：
-
-​	`stack& operator=(const stack &stk);`
-
-**数据存取**：
-
 ​	`push(elem);`
 
 ​	`pop();` 
 
 ​	`top();`
-
-**大小**：
-
-​	`empty();`
-
-​	`size();`
 
 ### queue
 
@@ -1064,20 +842,6 @@ void printDeque(const deque<int>& d)
 
 `priority_queue<T, fd_Container, cmp_type> q(cmp)`		 优先队列，默认大堆
 
-
-
-**构造**：
-
-​	`queue<T> que;`
-
-​	`queue(const queue &que);`
-
-**赋值**：
-
-​	`queue& operator=(const queue &que);`
-
-**数据存取**：
-
 ​	`push(elem);`
 
 ​	`pop();` 
@@ -1085,12 +849,6 @@ void printDeque(const deque<int>& d)
 ​	`back();` 
 
 ​	`front();` 
-
-**大小**：
-
-​	`empty();` 
-
-​	`size();` 
 
 ### list
 
@@ -1100,65 +858,7 @@ void printDeque(const deque<int>& d)
 
 插入操作和删除操作都不会造成原有list迭代器的失效，这在vector是不成立的
 
-**构造**：
-
-​	`list<T> lst;` 
-
-​	`list(beg,end);` 
-
-​	`list(n,elem);` 
-
-​	`list(const list &lst);`
-
-**赋值和交换**：
-
-​	`assign(beg, end);`
-
-​	`assign(n, elem);`
-
-​	`list& operator=(const list &lst);`
-
-​	`swap(lst);` 
-
-**大小**：
-
-​	`size();`
-
-​	`empty();`
-
-​	`resize(num);` 
-
-​	`resize(num, elem);` 
-
-**插入和删除**：
-
-​	`push_back(elem);`
-
-​	`pop_back();`
-
-​	`push_front(elem);`
-
-​	`pop_front();`
-
-​	`insert(pos,elem);`
-
-​	`insert(pos,n,elem);`
-
-​	`insert(pos,beg,end);`
-
-​	`clear();`
-
-​	`erase(beg,end);`
-
-​	`erase(pos);`
-
 ​	`remove(elem);`
-
-**数据存取**：
-
-​	`front();`
-
-​	`back();`
 
 **反转和排序**：
 
@@ -1172,33 +872,9 @@ void printDeque(const deque<int>& d)
 
 
 
-**构造和赋值**：
-
-​	`set<T> st;`
-
-​	`set(const set &st);`
-
-​	`set& operator=(const set &st);`
-
-**大小和交换**：
-
-​	`size();`
-
-​	`empty();`
-
-​	`swap(st);` 
-
-**插入和删除**：
-
 ​	`insert(elem);`
 
-​	`clear();`
-
 ​	`erase(pos);`
-
-​	`erase(beg, end);` 
-
-​	`erase(elem);`
 
 **查找和统计**：
 
@@ -1259,49 +935,7 @@ void test01(){	set<Person,Compare> s;}
 
 - 所有元素都是`pair<key,value>`，可以根据key值快速找到value值
 
-
-
-**构造和赋值**：
-
-​	`map<T1, T2> mp;`
-
-​	`map(const map &mp);`
-
-​	`map& operator=(const map &mp);`
-
-**大小和交换**：
-
-​	`size();`
-
-​	`empty();`
-
-​	`swap(st);`
-
-**插入和删除**：
-
-​	`insert(elem);`
-
-```c++
-	/*四种插入方式*/
-m.insert(pair<int, int>(1, 10));
-m.insert(make_pair(2, 20));
-m.insert(map<int, int>::value_type(3, 30));
-m[4] = 40; 			// 建议获取某个key的value，而非修改
-```
-
-​	`clear();`
-
-​	`erase(pos);`
-
-​	`erase(beg, end);`
-
-​	`erase(key);`
-
-**查找和统计**：
-
-​	`find(key);`                 // 用法同set
-
-​	`count(key);`
+​	`operator[](key);`           // 在key不存在时插入
 
 ### unordered_set/map
 
