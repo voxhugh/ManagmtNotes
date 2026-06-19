@@ -568,24 +568,37 @@ Son::Base::m_Age				// 静态成员通过派生类类名访问基类成员
 
 ---
 
-**菱形继承**：（🦙）
+**菱形继承**：（💎）
 
 派生类继承两份相同数据，导致资源浪费，用虚继承来解决
 
-- *虚基类表（VBT）*：记录虚基类成员在对象中的偏移量。
-- *虚基类指针（VBPtr）*：对象通过 VBPtr 访问 VBT，定位唯一的虚基类成员副本。  
+```c++
+==================================================
+   Itanium ABI: Diamond Virtual Inheritance
+==================================================
 
-```C++
-class Sheep : virtual public Animal{}
+[ D3 ]
+├─ D1 (0x00) — main
+│   ├─ vptr1 (0x00) ─────────>  [ VTable for D1-in-D3 ]
+│   │                              ├─ [-2]: vbase_offset = 0x28
+│   │                              └─ [-1]: typeinfo for D3
+│   └─ d1 (0x08)
+├─ D2 (0x10) — sec
+│   ├─ vptr2 (0x10) ─────────>  [ VTable for D2-in-D3 ]
+│   │                              ├─ [-2]: vbase_offset = 0x18
+│   │                              └─ [-1]: typeinfo for D3
+│   └─ d2 (0x18)
+├─ d3 (0x20)
+└─ Base (0x28) — virtual (unique)
+    ├─ vptr_base (0x28) ─────>  [ VTable for Base-in-D3 ]
+    └─ b (0x30)
 
-/*在中间类虚拟继承，此时Animal变为虚基类
-
-SheepTuo继承Sheep和Tuo的vbptr
-
-vbptr指向各自的vbtable
-
-vbtable里含有相对偏移，可以定位到唯一的m_Age*/
+sizeof(D3) = 0x38 (56 bytes)
 ```
+
+- 虚基类最先构造
+- 虚基类非主基类
+- 无普通基类则自身为主基类
 
 
 
