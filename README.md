@@ -751,27 +751,21 @@ template <typename C> using First_t = typename TypeTraits<C>::First;    // 别�
 
 - 迭代器：aka 指针
 
-`for(vector<Person>::iterator it=v.begin();it!=v.end();it++)`			// 迭代器遍历容器
+`for(vector<Person>::iterator it=v.begin(); it!=v.end(); ++it)`			// 迭代器遍历容器
 
 `#include <algorithm>`		// 所有不支持随机访问迭代器的容器，不可以用标准算法
 
-`vector<Person>`				// *it是<>里面的Person
 
 
-
-tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证容器支持的迭代器了
+tips：让迭代器 `++,--,it = it +1`，观察编译器是否报错就能验证容器支持的迭代器了
 
 ### string
 
-- string是一个类，char *是一个指针
-
-- string类内封装了char*，是一个char*型的容器
+封装的 const char*，物理上以ASCII 0结尾
 
 ### vector
 
 <img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/vector容器.jpg" style="zoom:130%;" />
-
-
 
 ​	`resize(int num);` 		    // 调整个数，保证有效性，必要时重分配
 
@@ -787,7 +781,7 @@ tips：让迭代器`++,--,it = it +1`，观察编译器是否报错就能验证�
 /*利用动态扩展机制，统计开辟次数*/
 int num = 0;
 int* p = NULL;
-for (int i = 0; i < 100000; i++) {
+for (int i = 0; i < 100000; ++i) {
     v.push_back(i);
     if (p != &v[0]) {
         p = &v[0];
@@ -818,10 +812,6 @@ void printDeque(const deque<int>& d)
 
 ​	`pop_front();`
 
-**排序**：
-
-​	`sort(iterator beg, iterator end)`		// 默认升序，属于标准算法
-
 ### stack
 
 栈中只有顶端的元素才可以被外界使用，因此栈不允许有遍历行为（遍历是非质变算法）
@@ -840,8 +830,6 @@ void printDeque(const deque<int>& d)
 
 <img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/queue容器.jpg" alt="queue容器"  />
 
-`priority_queue<T, fd_Container, cmp_type> q(cmp)`		 优先队列，默认大堆
-
 ​	`push(elem);`
 
 ​	`pop();` 
@@ -849,6 +837,8 @@ void printDeque(const deque<int>& d)
 ​	`back();` 
 
 ​	`front();` 
+
+`priority_queue<T, fd_Container, cmp_type> q(cmp)`		 优先队列，默认大堆
 
 ### list
 
@@ -859,8 +849,6 @@ void printDeque(const deque<int>& d)
 插入操作和删除操作都不会造成原有list迭代器的失效，这在vector是不成立的
 
 ​	`remove(elem);`
-
-**反转和排序**：
 
 ​	`reverse();`
 
@@ -875,8 +863,6 @@ void printDeque(const deque<int>& d)
 ​	`insert(elem);`
 
 ​	`erase(pos);`
-
-**查找和统计**：
 
 ​	`find(key);`                  // 查找key是否存在：存在返回该键的元素的迭代器；不存在，返回`set.end();`
 
@@ -943,15 +929,9 @@ void test01(){	set<Person,Compare> s;}
 
 ## STL - 函数对象
 
+重载**函数调用操作符**的类对象，也叫**仿函数**
 
-
-### 函数对象
-
-重载**函数调用操作符**的类的对象，也叫**仿函数**
-
-- **本质**：是一个**类**，不是一个函数
-
-
+- 本质是一个**类实例**
 
 * 使用时像普通函数：`p()`
 * 可以有自己的状态：`int m_count`
@@ -971,53 +951,17 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 
 ### 内建函数对象
 
-`#include<functional>`
-
-
-
-**算数仿函数**：
-
-​	`template<class T> T plus<T>`             	   // 加法
-
-​	`template<class T> T minus<T>`        	      // 减法
-
-​	`template<class T> T multiplies<T>`  	  // 乘法
-
-​	`template<class T> T divides<T>`      	   // 除法
-
-​	`template<class T> T modulus<T>`     	    // 取模
-
-​	`template<class T> T negate<T>`       	    // 取反
-
-**关系仿函数**：
-
 ​	`template<class T> bool equal_to<T>`                    // 等于
 
-​	`template<class T> bool not_equal_to<T>`            // 不等于
-
-​	`template<class T> bool greater<T>`      		// 大于
-
-​	`template<class T> bool greater_equal<T>` 	// 大于等于
-
 ​	`template<class T> bool less<T>` 			 // 小于
-
-​	`template<class T> bool less_equal<T>`     	 // 小于等于
-
-**逻辑仿函数**：
-
-​	`template<class T> bool logical_and<T>`	    	// 与
-
-​	`template<class T> bool logical_or<T>`                	// 或
-
-​	`template<class T> bool logical_not<T>`              	// 非
 
 ## STL - 算法
 
 `#include <algorithm>`			   // 比较、 交换、查找、遍历操作、复制、修改等等
 
-`#include <functional>` 			// 定义了一些模板类,用以声明函数对象
+`#include <functional>` 			// 内建函数对象
 
-`#include <numeric>`				// 只包括几个在序列上面进行简单数学运算的模板函数
+`#include <numeric>`				// 序列上的简单数学运算函数
 
 
 
@@ -1027,7 +971,7 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 
 `for_each(iterator beg, iterator end, _func);`
 
--  遍历容器，尾参为函数指针或者函数对象
+-  遍历容器
 
 
 
@@ -1042,12 +986,6 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 `find(iterator beg, iterator end, value);`
 
 -  按值查找元素	【重载operator==】
-
-
-
-`find_if(iterator beg, iterator end, _Pred);`
-
-- 按条件查找元素
 
 
 
@@ -1069,21 +1007,9 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 
 
 
-`count_if(iterator beg, iterator end, _Pred);`
-
-- 按条件统计元素个数
-
-
-
 `lower_bound(iterator beg, iterator end, value, _Pred);`
 
 - 二分查找指定元素起始位置
-
-
-
-`upper_bound(iterator beg, iterator end, value, _Pred);`
-
-- 二分查找指定元素上界
 
 
 
@@ -1133,19 +1059,11 @@ public:				/*一个参数叫一元谓词，两个叫二元谓词*/
 
 
 
-`replace_if(iterator beg, iterator end, _pred, newvalue);`
-
-- 按条件替换元素，满足条件的替换成指定元素
-
-
-
 `swap(container c1, container c2);`
 
 - 互换两个容器的元素
 
 ### 算术生成算法
-
-属于小型算法，使用时包含的头文件 `#include <numeric>`
 
 
 
@@ -1292,6 +1210,46 @@ b->ap = a;		// B::shared_ptr<A> ap
 
 
 ## 惯用法
+
+**CRTP**&nbsp;&nbsp;&nbsp;奇特重现模板模式
+
+派生类以自身实例化基类模板，实现编译期多态。
+
+```cpp
+template<typename D> struct B {
+    void name() { static_cast<D*>(this)->impl(); }  // 推导 this 可以简化 CRTP
+protected:
+    B() = default;
+};
+struct D1 : B<D1> { void impl() { puts("D1"); } };
+struct D2 : B<D2> { void impl() { puts("D2"); } };
+```
+
+
+
+**PImpl**&nbsp;&nbsp;&nbsp;指向实现的指针
+
+用不透明指针构筑编译防火墙。
+
+```cpp
+// widget.h
+#include <memory>
+class widget {
+    struct impl;
+    std::unique_ptr<impl> pImpl;
+public:
+    widget();
+    ~widget();
+};
+
+// widget.cpp
+#include "widget.h"
+struct widget::impl {};
+widget::widget() : pImpl(std::make_unique<impl>()) {}
+widget::~widget() = default;
+```
+
+
 
 **RAII**&nbsp;&nbsp;&nbsp;资源获取即初始化
 
