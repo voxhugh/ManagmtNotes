@@ -698,7 +698,7 @@ ifs.eof()
 
 ## 模板
 
-**意义**：基于类型参数化，实现零开销安全复用
+基于类型参数化，实现零开销安全复用
 
 **语法**：
 
@@ -707,41 +707,35 @@ template <typename, auto, template <typename> typename>         // 主模板
 /* 声明 */;
 ```
 
-```c++
+**规则**：
+
+&nbsp;&nbsp;*特化*：为特定实参定制模板实现&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*实例化*：编译器从模板生成具体实体
+
+```cpp
 template <>                                                     // 全特化
 class HSTVector<X, 5, std::vector>;
 ```
 
-**规则**：
-
-*特化*：为特定实参定制模板实现&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*实例化*：编译器从模板生成具体实体
-
 - 嵌套模板特化，依赖外层实例化
 - 实例化时，按偏序选择最优匹配：全特化 > 偏特化 > 主模板
 - 类模板仅实例化被使用的成员，相同实例链接时合并
+- 函数模板支持重载，优先普通函数，除非模板匹配更佳
+- `f<>()` 强制调用函数模板
 
-**重载**：
-
-1. 函数模板支持重载
-2. 函数模板和普通函数相同，优先普通函数
-3. 函数模板匹配更好时，优先函数模板
-4. 空模板参数列表 `f<>(a)` ，能强制调用函数模板
-
-**别名**：
+**工具**：
 
 ```c++
-template <typename> class TypeTraits;    // 萃取器
+// 类型萃取
+template <typename> class TypeTraits;
 template <template <typename, typename> typename C, typename U, typename V>
 class TypeTraits<C<U, V>> { public: using First = U; using Second = V; using Full = C<U, V>; };
 
-template <typename C> using First_t = typename TypeTraits<C>::First;    // 别名模板
+// 别名模板
+template <typename C> using First_t = typename TypeTraits<C>::First;
+
+// 类模板占位符
+template<std::array> void f(); f<std::array<double, 8>{}>();
 ```
-
-**补充**：
-
-- 函数模板的类型推导 `f(a)` 不发生转换
-- `typeid(T).name()`  返回T的具体类型
-- 全局函数配合友元在类模板外实现，需要先声明类模板再实现全局函数
 
 
 
@@ -757,7 +751,7 @@ template <typename C> using First_t = typename TypeTraits<C>::First;    // 别�
 
 
 
-tips：让迭代器 `++,--,it = it +1`，观察编译器是否报错就能验证容器支持的迭代器了
+tips：尝试 `it + 1`，观察编译是否通过即可判断迭代器类别
 
 ### string
 
@@ -1233,7 +1227,6 @@ struct D2 : B<D2> { void impl() { puts("D2"); } };
 
 ```cpp
 // widget.h
-#include <memory>
 class widget {
     struct impl;
     std::unique_ptr<impl> pImpl;
@@ -1243,7 +1236,6 @@ public:
 };
 
 // widget.cpp
-#include "widget.h"
 struct widget::impl {};
 widget::widget() : pImpl(std::make_unique<impl>()) {}
 widget::~widget() = default;
