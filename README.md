@@ -139,59 +139,47 @@
 |    **const_cast**    | **cv限定转换**                 |
 | **reinterpret_cast** | **底层实现依赖的位模式重解释** |
 
-`(void)a`				// 显式忽略未使用变量
+`(void)a`				                                                           // 显式弃值，消除未使用警告
 
-`size_t`				  // 自然数，大小：1字长
+`uint64_t`, `uint32_t`, `uint16_t`, `uint8_t`                             // 无符号类型
 
-`to_string()`			// 数值转字符串
+`NULL` , `nullptr`		  	                                                   // NULL：宏常量0
 
-`stoi()` , `stod()`		  // 字符串转数值
+`using` , `typedef`			                                                   // using与typedef类似，但using能定义模板别名
 
-`gcd(n1,n2,…)`		      // 最大公因数
+`using namespace` 						                        // 后续代码使用指定命名空间
 
-`isdigit()` , `isalpha()`	    // 是否为数字、字母
+`::std`                                                                                              // 全局命名空间查找 std
 
-`distance(it1, it2)`		// 求迭代器间距，随机访问迭代器可以直接相减
+`while(expr)`					                                         // 表达式是合法条件
 
-`NULL` , `nullptr`		  	// NULL：宏常量0	nullptr：初始化空指针，隐式匹配指针类型
+`for(int i=0;i<len;++i)`			   	                        // 条件<长度，使用更高效的前置自增
 
-`using` , `typedef`			// using与typedef类似，但using能定义模板别名
+`for(const auto& it : v)`				                         // 基于范围的for循环，先确定迭代范围，高效遍历
 
-`using namespace` 						  // 后续代码使用指定命名空间
+`void func() final{}`			                                         // final修饰虚函数不可被重写，修饰类不可被继承
 
-`while(expression)`					      // 表达式是合法条件
+`void func() override{}`		                                           // override显式表明重写
 
-`for(int i=0;i<len;++i)`			   	// 条件<长度，使用更高效的前置自增
+`void func() noexcept{}`		                                           // noexcept修饰的函数不会抛出异常
 
-`for(const auto& it : v)`				 // 基于范围的for循环，先确定迭代范围，高效遍历
+`void func() const{}`		                                                 // 常函数，const修饰this指针	常对象只能调用常函数
 
-`void func() final{}`			// final修饰虚函数不可被重写，修饰类不可被继承
+`mutable int m_a;`			                                               // mutable修饰的属性常函数里仍可写
 
-`void func() override{}`		 // override显式表明重写
+`const` , `constexpr`			                                              // const ⇔ constexpr，“只读”const，“常量”constexpr 
 
-`void func() noexcept{}`		 // noexcept修饰的函数不会抛出异常
+`R"(D:\Steam\kanon.exe)"`		                                        // 原始字面量，表示字符串的实际含义
 
-`void func() const{}`		  // 常函数，const修饰this指针	常对象只能调用常函数
+`static_assert(sizeof(long) == 8, "not 64!")`	      // 静态断言，编译期检查，false警告
 
-`mutable int m_a;`			// mutable修饰的属性常函数里仍可写
-
-`const` , `constexpr`			// const ⇔ constexpr，“只读”const，“常量”constexpr 
-
-`long long num = 123456789LL`				// long long 类型，至少8B
-
-`string str = R"(D:\Steam\kanon.exe)"`		// 原始字面量，表示字符串的实际含义
-
-`static_assert(sizeof(long) == 8, "错误, 非64位平台")`	// 静态断言，编译时检查，违反警告
-
-`enum class Colors :char { Red, Green, Blue }`		// 定义强类型枚举，指定底层类型为char
+`enum class Colors :char { Red, Green, Blue }`             // 定义强类型枚举，指定底层类型为char
 
 
 
 ## 内存四区
 
 `new`				   // 堆区开辟内存，返回对应类型指针（*`operator new()`分配内存→构造初始化*）
-
-`new (&n)`			// 定位放置new，指定在已分配内存创建对象
 
 `delete`		    	// 接地址释放堆区单个内存，数组加 []（*析构销毁→`operator delete()`释放内存*）
 
@@ -225,7 +213,7 @@ struct stu1 { union { int a1; char a2[5]; }a; struct stu2 b; int c; };
 |  🔵   |  🔵   |  🔵   |  🔵   |  🔵   |  🔵   |  🔵   |  🔵   |  🟤   |  🟤   |  🟤   |  🟤   |  🟤   |  🟤   |  -   |  -   |
 |  🔴   |  🔴   |  🔴   |  🔴   |  -   |  -   |  -   |  -   |      |      |      |      |      |      |      |      |
 
-> **注意**：虚表指针参与内存对齐
+> 虚表指针参与内存对齐
 
 
 
@@ -323,7 +311,7 @@ struct stu1 { union { int a1; char a2[5]; }a; struct stu2 b; int c; };
 
 *复制消除*：无拷贝与移动构造，零复制传值
 
-> **注意**：标准库默认值初始化
+> 标准库默认值初始化
 
 
 
@@ -435,7 +423,7 @@ class C : public A, public B { virtual void c(); int z_0x20; };		// A inherit__0
 
 ## this指针
 
-`C* const this`
+`C* const`
 
 **本质**：指针常量
 
