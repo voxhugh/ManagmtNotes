@@ -141,9 +141,11 @@
 
 `(void)a`				                                                           // 显式弃值，消除未使用警告
 
+`NULL` , `nullptr`		  	                                                   // NULL：宏常量0
+
 `uint64_t`, `uint32_t`, `uint16_t`, `uint8_t`                             // 无符号类型
 
-`NULL` , `nullptr`		  	                                                   // NULL：宏常量0
+`memset`, `memcpy`, `memcmp`                                                            // C 库内存操作函数
 
 `using` , `typedef`			                                                   // using与typedef类似，但using能定义模板别名
 
