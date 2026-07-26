@@ -32,9 +32,9 @@ x86 是指CPU是32位版本的。
 
 数据库是以表为组织单位存储数据的。
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_01.png)
+![](images/20250105_01.png)
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_02.png)
+![](images/20250105_02.png)
 
 ------
 
@@ -333,7 +333,7 @@ SELECT * FROM student ORDER BY php DESC, java ASC;
 -- 需求：查询男女分别有多少人
 ```
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_03.png)
+![](images/20250105_03.png)
 
 ```sql
 SELECT gender,COUNT(id) FROM student GROUP BY gender;
@@ -391,7 +391,7 @@ INSERT INTO teacher(NAME) VALUES('zhangsan');
 
 学生表、班级表、课程表、班级课程表
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_04.png)
+![](images/20250105_04.png)
 
 - inner join  left join
 
@@ -403,7 +403,7 @@ INSERT INTO teacher(NAME) VALUES('zhangsan');
 | 李四     | 男       | Java1812 | UI     |
 | 李四     | 男       | Java1812 | H5     |
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_05.png)
+![](images/20250105_05.png)
 
 ```sql
 -- 多对多
@@ -479,9 +479,9 @@ SELECT * FROM student WHERE banji_id IN(SELECT id FROM banji WHERE `name`='java1
 
 ------
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_06.png)
+![](images/20250105_06.png)
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_07.png)
+![](images/20250105_07.png)
 
 ```sql
 -- 列出所有学生学习的课程名称
@@ -489,11 +489,11 @@ SELECT * FROM student WHERE banji_id IN(SELECT id FROM banji WHERE `name`='java1
 -- 学生姓名  班级名称  课程名称  学分
 ```
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_08.png)
+![](images/20250105_08.png)
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_09.png)
+![](images/20250105_09.png)
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_10.png)
+![](images/20250105_10.png)
 
 ------
 
@@ -503,7 +503,7 @@ SELECT * FROM student WHERE banji_id IN(SELECT id FROM banji WHERE `name`='java1
 -- right join on 右表都显示，左表没有显示空
 ```
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_11.png)
+![](images/20250105_11.png)
 
 ```sql
 SELECT * 
@@ -514,7 +514,7 @@ SELECT *
  on s.banji_id=b.id;
 ```
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_12.png)
+![](images/20250105_12.png)
 
 ```sql
 SELECT * 
@@ -522,7 +522,7 @@ FROM student as s RIGHT JOIN banji as b
 on s.banji_id=b.id;
 ```
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_13.png)
+![](images/20250105_13.png)
 
 ```sql
 -- 没有分配课程也显示出来。
@@ -534,7 +534,7 @@ LEFT JOIN course as c
 ON bc.course_id=c.id;
 ```
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_14.png)
+![](images/20250105_14.png)
 
 总结：多表查询主要是账务下面两点
 
@@ -554,7 +554,7 @@ INNER JOIN banji as b
 ON s.banji_id=b.id;
 ```
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_15.png)
+![](images/20250105_15.png)
 
 **把inner join之后查询的结果当成一张表来使用**， 在这个结果集里面根据班级id统计每个班级下面学生数量。
 
@@ -582,9 +582,9 @@ ON s.banji_id=b.id;
 
 where是表达式，值为真或者假（true或者false）
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_16.png)
+![](images/20250105_16.png)
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_17.png)
+![](images/20250105_17.png)
 
 ```sql
 SELECT b.`name` AS '班级名称',COUNT(s.id) as '学生数量' 
@@ -594,7 +594,7 @@ ON s.banji_id=b.id
 GROUP BY s.banji_id;
 ```
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_18.png)
+![](images/20250105_18.png)
 
 ```sql
 -- 在上面基础上筛选出班级人数>1班级的名称和人数
@@ -606,7 +606,7 @@ GROUP BY s.banji_id
 HAVING COUNT(s.id)>1;
 ```
 
-![](https://github.com/voxhugh/Appendix/blob/main/SQL_IMGs/20250105_19.png)
+![](images/20250105_19.png)
 
 ------
 
