@@ -749,7 +749,7 @@ tips：尝试 `it + 1`，观察编译是否通过即可判断迭代器类别
 
 ### vector
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/vector容器.jpg" style="zoom:130%;" />
+<img src="images/vector容器.jpg" style="zoom:130%;" />
 
 ​	`resize(int num);` 		    // 调整个数，保证有效性，必要时重分配
 
@@ -778,9 +778,9 @@ for (int i = 0; i < 100000; ++i) {
 
 双端数组，头部增删速度比vector快，但元素访问速度要慢
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/deque容器.jpg" alt="deque容器" style="zoom:130%;" />
+<img src="images/deque容器.jpg" alt="deque容器" style="zoom:130%;" />
 
-![deque内部工作原理](https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/中控器.jpg)
+![deque内部工作原理](images/中控器.jpg)
 
 ```c++
 void printDeque(const deque<int>& d) 
@@ -800,7 +800,7 @@ void printDeque(const deque<int>& d)
 
 栈中只有顶端的元素才可以被外界使用，因此栈不允许有遍历行为（遍历是非质变算法）
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/stack容器.jpg"  />
+<img src="images/stack容器.jpg"  />
 
 ​	`push(elem);`
 
@@ -812,7 +812,7 @@ void printDeque(const deque<int>& d)
 
 队列中只有队头和队尾才可以被外界使用，因此队列不允许有遍历行为
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/queue容器.jpg" alt="queue容器"  />
+<img src="images/queue容器.jpg" alt="queue容器"  />
 
 ​	`push(elem);`
 
@@ -828,7 +828,7 @@ void printDeque(const deque<int>& d)
 
 双向循环链表，list中的迭代器只支持前移和后移，属于**双向迭代器**
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/list容器.jpg" alt="list容器"  />
+<img src="images/list容器.jpg" alt="list容器"  />
 
 插入操作和删除操作都不会造成原有list迭代器的失效，这在vector是不成立的
 
