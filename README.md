@@ -79,7 +79,7 @@
 
 ​	权限 硬链接数 拥有者 组大小 时间 名称
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/Rights.png" style="zoom:70%;" />
+<img src="images/Rights.png" style="zoom:70%;" />
 
 **passwd 文件**
 
@@ -797,7 +797,7 @@ Linux中一切皆文件
 
 - 进程数据经 CPU 中 MMU 从虚拟地址空间映射到物理内存
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/virtual_add_space.png" style="zoom:70%;" />
+<img src="images/virtual_add_space.png" style="zoom:70%;" />
 
 - **保留区**：位于最底部，未赋予物理地址，任何对其引用均非法，程序中空指针所指的地址
 - **.text段**：程序的机器指令，只读
@@ -813,7 +813,7 @@ Linux中一切皆文件
 
 fd：进程打开或新建文件时，内核返回对应文件描述符。
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/fd_table.png" style="zoom:70%;" />
+<img src="images/fd_table.png" style="zoom:70%;" />
 
 - 终端是设备文件，当前终端可用 `/dev/tty` 表示
 - 每个进程 fd 表的文件打开上限默认为 1024，多 fd 可共用同一磁盘文件
@@ -856,14 +856,14 @@ fd：进程打开或新建文件时，内核返回对应文件描述符。
 
 `fork()` 用于创建子进程
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/fork.png" style="zoom:70%;" />
+<img src="images/fork.png" style="zoom:70%;" />
 
 函数调用成功后，各自的虚拟地址空间中：
 
 - 父进程：返回子进程pid
 - 子进程：返回0
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/process_exe_loca.png" style="zoom:70%;" />
+<img src="images/process_exe_loca.png" style="zoom:70%;" />
 
 父进程成功创建子进程后，子进程拥有父进程代码区所有代码，且从父进程调用 **fork()函数之后** 开始执行。
 
@@ -892,7 +892,7 @@ for(int i=0; i<3; ++i)
 
 本质是内核缓冲区内存，数据存于其中的环形队列，无法直接操作。
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/pipe.png" style="zoom:70%;" />
+<img src="images/pipe.png" style="zoom:70%;" />
 
 - 队列大小固定，默认为4k
 - 分读写两端，写端进、读端出，管道操作即文件 IO
@@ -944,7 +944,7 @@ Daemon是独立于控制终端、生存期长的后台服务进程，常以 d �
 
 套接字是一套网络通信的接口，包含于标头 `<sys/socket.h>` 。
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/socket.png" style="zoom:70%;" />
+<img src="images/socket.png" style="zoom:70%;" />
 
 ### 概念
 
@@ -1281,16 +1281,16 @@ void FD_SET(int fd, fd_set *set);		// 添加fd
 void FD_ZERO(fd_set *set);				// 清空set
 ```
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/fd_set_1.png" style="zoom:70%;" />
+<img src="images/fd_set_1.png" style="zoom:70%;" />
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/fd_set_2.png" style="zoom:70%;" />
+<img src="images/fd_set_2.png" style="zoom:70%;" />
 
 内核遍历读集合时，将无数据的fd在fd_set中标志位置0，有数据则保持1；
 select解除阻塞后，标志位为1的描述符就绪可通信
 
 **处理流程**
 
-<img src="https://github.com/voxhugh/Appendix/blob/main/Cpp_IMGs/select.png" style="zoom:70%;" />
+<img src="images/select.png" style="zoom:70%;" />
 
 - server
 
