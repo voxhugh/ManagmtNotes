@@ -141,7 +141,7 @@
 
 `(void)a`				                                                           // 显式弃值，消除未使用警告
 
-`NULL` , `nullptr`		  	                                                   // NULL：宏常量0
+`NULL` , `nullptr`		  	                                                   // 宏常量0，空指针
 
 `uint64_t`, `uint32_t`, `uint16_t`, `uint8_t`                             // 无符号类型
 
@@ -159,17 +159,15 @@
 
 `for(const auto& it : v)`				                         // 基于范围的for循环，先确定迭代范围，高效遍历
 
-`void func() final{}`			                                         // final修饰虚函数不可被重写，修饰类不可被继承
+`void f() final{}`			                                         // final修饰虚函数不可被重写，修饰类不可被继承
 
-`void func() override{}`		                                           // override显式表明重写
+`void f() override{}`		                                           // override显式表明重写
 
-`void func() noexcept{}`		                                           // noexcept修饰的函数不会抛出异常
-
-`void func() const{}`		                                                 // 常函数，const修饰this指针	常对象只能调用常函数
+`void f() noexcept{}`		                                           // noexcept修饰的函数不会抛出异常
 
 `mutable int m_a;`			                                               // mutable修饰的属性常函数里仍可写
 
-`const` , `constexpr`			                                              // const ⇔ constexpr，“只读”const，“常量”constexpr 
+`const` , `constexpr`			                                              // const 只读，constexpr 常量
 
 `R"(D:\Steam\kanon.exe)"`		                                        // 原始字面量，表示字符串的实际含义
 
@@ -204,7 +202,7 @@
 - *size*: 成员偏移与整体大小为相应对齐值的整数倍，不足则填充
 
 ```c++
-// case
+// e.g.
 struct stu2 { char x; int y; double z; char v[6]; };
 struct stu1 { union { int a1; char a2[5]; }a; struct stu2 b; int c; };
 ```
@@ -243,8 +241,7 @@ struct stu1 { union { int a1; char a2[5]; }a; struct stu2 b; int c; };
 
 
 
-
-`p + n ⇔ p + n * sizeof(T)`			// T* p，即 p 的 offset 加 n*T
+`p + n => p + n * sizeof(T)`			// T* p，即 p 的 offset 加 n*T
 
 
 
@@ -409,9 +406,22 @@ if(m_Ptr != NULL)
 **布局**：
 
 ```c++
-class A { virtual void a(); int x_0x8; };							// A_vtable* vtable_0x0;
-class B { virtual void b(); int y_0x8; };							// B_vtable* vtable_0x0;
-class C : public A, public B { virtual void c(); int z_0x20; };		// A inherit__0x0; B inherit__0x10;
+class A {
+    virtual void a();
+    // A_vtable* vtable_0x0;
+    int x_0x8; 
+};
+class B {
+    virtual void b();
+    // B_vtable* vtable_0x0;
+    int y_0x8; 
+};
+class C : public A, public B {
+    virtual void c();
+    // A inherit__0x0;
+    // B inherit__0x10;
+    int z_0x20; 
+};
 ```
 
 - 空类 1B，空基类优化
@@ -425,12 +435,13 @@ class C : public A, public B { virtual void c(); int z_0x20; };		// A inherit__0
 
 ## this指针
 
-`C* const`
+```c++
+void f(T* const this);           // 指向所属对象的常指针
+```
 
-**本质**：指针常量
 
-
-- 非静态成员函数签名隐含 `func(C* const this, ...)`，this指向其所属对象
+- 非静态成员函数签名隐含this
+- 常对象的this受const限定，只能调用常函数
 
 `*this` 			// 返回对象本身，链式编程思想
 
@@ -615,7 +626,7 @@ sizeof(D3) = 0x38 (56 bytes)
 
 ```c++
 ==================================================
-      C++ Multiple Inheritance VTable Layout
+                  C++ VTable
 ==================================================
 
 [Derived Object]
